@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{unsupportedbrowser}}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nexio</title>
+    {{themecss}}
+    {{appicons}}
+    {{manifest}}
+    {{startupimages}}
+  </head>
+
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+    <script>
+      // Open signup through the modeled navigation, retaining the Guest sign-in home.
+      let nexioSignupEntry = new URLSearchParams(window.location.search).get("signup") === "1";
+      const nexioSignupAuthorized = nexioSignupEntry;
+      let nexioOpeningSignup = false;
+      const openNexioSignIn = () => {
+        if (nexioSignupEntry) {
+          if (document.querySelector(".nexio-signup-page")) {
+            nexioSignupEntry = false;
+            const signupUrl = new URL(window.location.href);
+            signupUrl.searchParams.delete("signup");
+            window.history.replaceState(null, "", signupUrl.href);
+            return;
+          }
+          if (nexioOpeningSignup) return;
+          const signupLink = Array.from(document.querySelectorAll(".mx-navigationtree a")).find(link => link.textContent.trim() === "Create account");
+          if (signupLink) {
+            nexioOpeningSignup = true;
+            window.history.replaceState(null, "", window.location.pathname);
+            signupLink.click();
+          }
+          return;
+        }
+        if (document.querySelector(".nexio-login-redirect") || (!nexioSignupAuthorized && document.querySelector(".nexio-signup-page"))) {
+          window.location.replace(new URL("login.html", document.baseURI).href);
+        }
+      };
+      new MutationObserver(openNexioSignIn).observe(document.getElementById("root"), { childList: true, subtree: true });
+      openNexioSignIn();
+    </script>
+    <script src="dist/index.js?{{cachebust}}" type="module"></script>
+    <script>  
+      if (!document.cookie || !document.cookie.match(/(^|;) *originURI=/gi)) {
+        const url = new URL(window.location.href);
+        const subPath = url.pathname.substring(0, url.pathname.lastIndexOf("/"));
+      
+        document.cookie = `originURI=${subPath}/login.html${window.location.protocol === "https:" ? ";SameSite=None;Secure" : ""}`;
+      }
+    </script>
+  </body>
+</html>

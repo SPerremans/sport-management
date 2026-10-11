@@ -1,0 +1,83 @@
+<svg width="800" height="240" viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Nexio — Where every club connects.</title>
+  <desc>Nexio CRM horizontal logo lockup on deep navy background. Circular slate-blue icon with sky-teal connected person at centre and six member nodes around the ring, alongside the Nexio wordmark and slogan.</desc>
+
+  <!-- Background -->
+  <rect width="800" height="240" rx="24" fill="#0A1E38"/>
+
+  <!-- Subtle inner border -->
+  <rect x="1" y="1" width="798" height="238" rx="23" fill="none" stroke="#38BDF8" stroke-width="0.5" stroke-opacity="0.12"/>
+
+  <!-- ── ICON centred vertically at x=120 ── -->
+  <g transform="translate(120, 120)">
+
+    <!-- Outer circle -->
+    <circle cx="0" cy="0" r="95" fill="#0C2540"/>
+
+    <!-- Segmented discipline ring -->
+    <circle cx="0" cy="0" r="88" fill="none" stroke="#38BDF8" stroke-width="7" stroke-dasharray="57 12" stroke-dashoffset="0"/>
+
+    <!-- Inner ring hint -->
+    <circle cx="0" cy="0" r="76" fill="none" stroke="#38BDF8" stroke-width="0.8" stroke-opacity="0.18"/>
+
+    <!-- 6 spokes from hub to member nodes -->
+    <line x1="0"     y1="-76" x2="0"     y2="-46" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.65" stroke-linecap="round"/>
+    <line x1="65.8"  y1="-38" x2="39.8"  y2="-23" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.65" stroke-linecap="round"/>
+    <line x1="65.8"  y1="38"  x2="39.8"  y2="23"  stroke="#38BDF8" stroke-width="2" stroke-opacity="0.65" stroke-linecap="round"/>
+    <line x1="0"     y1="76"  x2="0"     y2="46"  stroke="#38BDF8" stroke-width="2" stroke-opacity="0.65" stroke-linecap="round"/>
+    <line x1="-65.8" y1="38"  x2="-39.8" y2="23"  stroke="#38BDF8" stroke-width="2" stroke-opacity="0.65" stroke-linecap="round"/>
+    <line x1="-65.8" y1="-38" x2="-39.8" y2="-23" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.65" stroke-linecap="round"/>
+
+    <!-- 6 member nodes -->
+    <circle cx="0"     cy="-76" r="10" fill="#1565C0"/>
+    <circle cx="65.8"  cy="-38" r="10" fill="#1565C0"/>
+    <circle cx="65.8"  cy="38"  r="10" fill="#1565C0"/>
+    <circle cx="0"     cy="76"  r="10" fill="#1565C0"/>
+    <circle cx="-65.8" cy="38"  r="10" fill="#1565C0"/>
+    <circle cx="-65.8" cy="-38" r="10" fill="#1565C0"/>
+
+    <!-- Person heads on nodes -->
+    <circle cx="0"     cy="-81" r="5.5" fill="white"/>
+    <circle cx="65.8"  cy="-43" r="5.5" fill="white"/>
+    <circle cx="65.8"  cy="33"  r="5.5" fill="white"/>
+    <circle cx="0"     cy="71"  r="5.5" fill="white"/>
+    <circle cx="-65.8" cy="33"  r="5.5" fill="white"/>
+    <circle cx="-65.8" cy="-43" r="5.5" fill="white"/>
+
+    <!-- Hub ring -->
+    <circle cx="0" cy="0" r="40" fill="#1565C0"/>
+    <circle cx="0" cy="0" r="34" fill="#0C2540"/>
+
+    <!-- Central connected person -->
+    <circle cx="0" cy="-11" r="11" fill="#38BDF8"/>
+    <path d="M-13,3 Q-16,23 0,25 Q16,23 13,3 Q8,-6 0,-6 Q-8,-6 -13,3 Z" fill="#38BDF8"/>
+    <!-- Brotherhood arc -->
+    <path d="M-16,26 Q0,36 16,26" fill="none" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.5"/>
+
+  </g>
+
+  <!-- Vertical rule separator -->
+  <line x1="232" y1="52" x2="232" y2="188" stroke="white" stroke-width="1" stroke-opacity="0.1"/>
+
+  <!-- Wordmark -->
+  <text x="256" y="148"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="72"
+    font-weight="400"
+    letter-spacing="-1"
+    fill="white">Nexio</text>
+
+  <!-- Slogan on one line: muted part + teal italic part using tspan -->
+  <text x="258" y="182"
+    font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="14.5"
+    font-weight="400"
+    letter-spacing="0.05em"
+    fill="rgba(255,255,255,0.45)">WHERE EVERY CLUB <tspan
+      font-family="Georgia, 'Times New Roman', serif"
+      font-style="italic"
+      font-size="15"
+      letter-spacing="0.02em"
+      fill="#38BDF8">connects.</tspan></text>
+
+</svg>

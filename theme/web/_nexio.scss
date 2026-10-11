@@ -1,0 +1,455 @@
+/* Nexio: shared brand, surfaces, spacing and component states. */
+:root, :root.theme-dark, :root.theme-neutral {
+  --nexio-navy: #0A1E38;
+  --nexio-slate: #0F2D52;
+  --nexio-accent: #38BDF8;
+  --nexio-pale: #BAE6FD;
+  --nexio-surface: #FFFFFF;
+  --nexio-light: #F4F7FB;
+  --nexio-muted: #4A6380;
+  --nexio-line: #DDE8F0;
+  --nexio-success-ink: #065F46;
+  --nexio-success-tint: #D1FAE5;
+  --nexio-warning-ink: #92400E;
+  --nexio-warning-tint: #FEF3C7;
+  --nexio-info-ink: #075985;
+  --nexio-info-tint: #E0F2FE;
+
+  --brand-primary: #1565C0;
+  --brand-success: #0D9373;
+  --brand-warning: #D97706;
+  --brand-danger: #DC2626;
+  --brand-info: #0284C7;
+  --brand-default: #EEF4F8;
+  --color-base: var(--nexio-surface);
+  --color-contrast: var(--nexio-navy);
+  --bg-color: var(--nexio-navy);
+  --bg-color-secondary: var(--nexio-surface);
+  --font-family-base: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-size-default: 15px;
+  --font-size-h1: 36px;
+  --font-size-h2: 25px;
+  --font-size-h3: 20px;
+  --font-weight-header: 700;
+  --line-height-base: 1.55;
+  --font-color-default: #2E527A;
+  --font-color-header: var(--nexio-navy);
+  --font-color-detail: var(--nexio-muted);
+  --link-color: var(--brand-primary);
+  --link-hover-color: var(--nexio-slate);
+  --border-color-default: var(--nexio-line);
+  --border-radius-s: 8px;
+  --border-radius-m: 14px;
+  --border-radius-l: 22px;
+  --border-radius-default: var(--border-radius-m);
+
+  --topbar-minimalheight: 76px;
+  --navtopbar-bg: var(--nexio-navy);
+  --navsidebar-bg: var(--nexio-slate);
+  --navbar-brand-name: var(--nexio-surface);
+  --navigation-bg: transparent;
+  --navigation-bg-hover: #1E3A5F;
+  --navigation-bg-active: var(--brand-primary);
+  --navigation-color: var(--nexio-surface);
+  --navigation-color-hover: var(--nexio-surface);
+  --navigation-color-active: var(--nexio-surface);
+  --navigation-border-radius: 12px;
+  --form-input-border-radius: 12px;
+  --form-input-border-color: #6B8299;
+  --form-input-border-focus-color: var(--brand-primary);
+  --form-input-bg: var(--nexio-surface);
+  --form-input-color: var(--nexio-navy);
+  --form-input-bg-disabled: var(--brand-default);
+  --form-input-disabled-color: var(--nexio-muted);
+  --form-input-placeholder-color: var(--nexio-muted);
+  --form-input-padding-y: 11px;
+  --form-input-padding-x: 14px;
+  --focus-outline: 3px solid var(--brand-primary);
+  --focus-outline-offset: 3px;
+}
+
+body {
+  background: var(--nexio-navy);
+  font-family: var(--font-family-base);
+}
+.layout-atlas .region-content {
+  background: radial-gradient(ellipse at 8% 0%, rgba(56,189,248,.12), transparent 48%), var(--nexio-navy);
+}
+.layout-atlas .region-topbar {
+  border-bottom: 1px solid rgba(186,230,253,.18);
+  box-shadow: 0 8px 28px rgba(0,0,0,.14);
+}
+.layout-atlas .region-topbar .navbar-brand img {
+  content: url("./branding/nexio_logo.svg");
+  width: 208px;
+  height: 62px;
+  object-fit: contain;
+  margin: 0;
+}
+.layout-atlas .region-topbar .navbar-brand a {
+  font-size: 0;
+}
+.layout-atlas .region-sidebar .navbar-brand img,
+.layout-atlas .region-sidebar .brand-logo img {
+  content: url("./branding/nexio_appicon.svg");
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+.layout-atlas .region-sidebar a,
+.layout-atlas .region-topbar a,
+.layout-atlas .toggle-btn {
+  color: var(--nexio-surface);
+}
+.layout-atlas .region-sidebar a:focus-visible,
+.layout-atlas .region-topbar a:focus-visible,
+.layout-atlas .toggle-btn:focus-visible {
+  outline: 3px solid var(--nexio-accent);
+  outline-offset: 3px;
+}
+.mx-navigationtree li.active > a,
+.mx-navigationtree a[aria-current="page"] {
+  border-left: 4px solid var(--nexio-accent);
+  font-weight: 700;
+}
+.layout-atlas .region-content .mx-placeholder,
+.layout-atlas .region-content [class*="mx-name-placeholder"] {
+  width: min(1180px, calc(100% - 64px));
+  margin: 36px auto 56px;
+  padding: 34px 36px;
+  background: var(--nexio-surface);
+  border: 1px solid var(--nexio-line);
+  border-radius: var(--border-radius-l);
+  color: var(--font-color-default);
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  box-shadow: 0 18px 44px rgba(0,0,0,.16);
+}
+.layout-atlas .mx-layoutgrid.container {
+  width: 100%;
+  padding: 0;
+}
+.layout-atlas .region-content h1 {
+  color: var(--nexio-navy);
+  font-size: clamp(28px, 3vw, 38px);
+  letter-spacing: -.035em;
+  margin: 0 0 12px;
+}
+.layout-atlas .region-content h1::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 4px;
+  margin-top: 18px;
+  border-radius: 4px;
+  background: var(--nexio-accent);
+}
+.layout-atlas .mx-name-nexioPageSubtitle {
+  color: var(--nexio-muted);
+  font-size: 16px;
+  margin: 0 0 30px;
+  max-width: 780px;
+}
+.mx-layoutgrid > .row:first-child > [class*="col-"] > p {
+  color: var(--nexio-pale);
+  font-size: 16px;
+  margin: 0 0 28px;
+  max-width: 740px;
+}
+.mx-layoutgrid > .row > [class*="col-"] > section {
+  background: var(--nexio-surface);
+  color: var(--font-color-default);
+  border: 1px solid var(--nexio-line);
+  border-radius: var(--border-radius-l);
+  padding: clamp(22px, 3vw, 36px);
+  box-shadow: 0 18px 44px rgba(0,0,0,.14);
+  margin-bottom: 24px;
+}
+section h2, section h3, section h4 {
+  color: var(--nexio-navy);
+}
+section p {
+  overflow-wrap: anywhere;
+}
+.mx-dataview .control-label {
+  color: var(--nexio-navy);
+  font-weight: 600;
+}
+.form-control, .mx-textbox input, .mx-textarea textarea {
+  border-radius: var(--form-input-border-radius);
+  box-shadow: none;
+}
+.form-control:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(21,101,192,.12);
+}
+.mx-dataview-footer, section > footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--nexio-line);
+  padding-top: 22px;
+  margin-top: 24px;
+}
+.btn, .mx-button {
+  min-height: 44px;
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 11px 20px;
+  transition: background-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+section > .btn, section > .mx-button {
+  margin: 0 10px 10px 0;
+}
+.btn-primary {
+  background: var(--brand-primary);
+  color: var(--nexio-surface);
+  border-color: var(--brand-primary);
+  box-shadow: 0 5px 14px rgba(21,101,192,.22);
+}
+.btn-primary:hover, .btn-primary:active {
+  background: var(--brand-primary-700);
+  color: var(--nexio-surface);
+}
+.btn-success {
+  background: var(--nexio-success-tint);
+  color: var(--nexio-success-ink);
+  border-color: var(--brand-success);
+}
+.btn-success:hover, .btn-success:active {
+  background: color-mix(in srgb, var(--nexio-success-tint) 85%, var(--brand-success));
+  color: var(--nexio-success-ink);
+}
+.btn-warning {
+  background: var(--nexio-warning-tint);
+  color: var(--nexio-warning-ink);
+  border-color: var(--brand-warning);
+}
+.btn-danger {
+  background: var(--brand-danger);
+  color: var(--nexio-surface);
+  border-color: var(--brand-danger);
+}
+.btn-danger:hover, .btn-danger:active {
+  background: var(--brand-danger-700);
+  color: var(--nexio-surface);
+}
+.btn-info {
+  background: var(--nexio-info-tint);
+  color: var(--nexio-info-ink);
+  border-color: var(--brand-info);
+}
+.btn-default {
+  background: var(--brand-default);
+  color: var(--nexio-navy);
+  border-color: #6B8299;
+}
+.btn-default:hover, .btn-default:active {
+  background: var(--nexio-pale);
+  color: var(--nexio-navy);
+}
+.mx-listview > ul {
+  display: grid;
+  gap: 16px;
+  padding: 0;
+}
+.mx-listview > ul > li {
+  background: var(--nexio-light);
+  border: 1px solid var(--nexio-line);
+  border-radius: 16px;
+  padding: 22px;
+}
+.mx-listview > ul > li h2,
+.mx-listview > ul > li h3 {
+  color: var(--brand-primary);
+  margin: 0 0 14px;
+}
+.mx-listview > ul > li .btn {
+  margin: 10px 10px 0 0;
+}
+.mx-listview .mx-listview > ul > li {
+  padding: 14px;
+  background: var(--nexio-surface);
+  box-shadow: none;
+}
+.mx-tabcontainer > .nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 0;
+  padding: 6px;
+  margin-bottom: 24px;
+  background: var(--brand-default);
+  border-radius: 16px;
+}
+.mx-tabcontainer > .nav-tabs > li {
+  margin: 0;
+}
+.mx-tabcontainer > .nav-tabs > li > a {
+  color: var(--nexio-slate);
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 600;
+}
+.mx-tabcontainer > .nav-tabs > li.active > a,
+.mx-tabcontainer > .nav-tabs > li > a[aria-selected="true"] {
+  background: var(--brand-primary);
+  color: var(--nexio-surface);
+  box-shadow: 0 3px 10px rgba(21,101,192,.18);
+}
+.mx-tabcontainer > .nav-tabs > li > a:hover {
+  background: var(--nexio-pale);
+  color: var(--nexio-navy);
+}
+.mx-tabcontainer > .nav-tabs > li.active > a:hover {
+  background: var(--brand-primary-700);
+  color: var(--nexio-surface);
+}
+@media (max-width: 767px) {
+  .layout-atlas .region-content .mx-placeholder,
+  .layout-atlas .region-content [class*="mx-name-placeholder"] {
+    width: calc(100% - 28px);
+    margin: 20px auto 36px;
+    padding: 26px 18px;
+    border-radius: 18px;
+  }
+  .layout-atlas .mx-layoutgrid.container {
+    padding: 0;
+  }
+  .mx-layoutgrid > .row > [class*="col-"] > section {
+    padding: 22px 18px;
+    border-radius: 18px;
+  }
+  .mx-dataview .control-label {
+    margin-bottom: 7px;
+  }
+  .mx-dataview-footer > .btn {
+    flex: 1 1 140px;
+  }
+  .mx-tabcontainer > .nav-tabs > li > a {
+    padding: 10px 12px;
+  }
+  .layout-atlas .region-topbar .navbar-brand img {
+    width: 170px;
+    height: 52px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .mx-button {
+    transition: none;
+  }
+}
+
+/* The standard Mendix sign-in screen uses the same Nexio identity. */
+.loginpage {
+  background: var(--nexio-navy);
+  color: var(--nexio-surface);
+}
+.loginpage-left {
+  background: radial-gradient(ellipse at 20% 20%, rgba(56,189,248,.22), transparent 65%), var(--nexio-navy);
+}
+.loginpage-image {
+  background-image: url("./branding/nexio_iconmark.svg");
+  background-size: min(58%, 360px);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.loginpage-right {
+  background: var(--nexio-light);
+  color: var(--font-color-default);
+}
+.loginpage-formwrapper {
+  background: var(--nexio-surface);
+  border: 1px solid var(--nexio-line);
+  border-radius: 22px;
+  padding: 36px;
+  box-shadow: 0 16px 44px rgba(15,45,82,.10);
+}
+.loginpage-formwrapper h2 {
+  color: var(--nexio-navy);
+}
+.nexio-auth-title {
+  margin: 0 0 12px;
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--nexio-navy);
+}
+.nexio-auth-intro {
+  margin-bottom: 26px;
+  color: var(--nexio-muted);
+  line-height: 1.6;
+}
+.nexio-auth-create {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--nexio-line);
+}
+.nexio-auth-create p { margin-bottom: 10px; }
+.nexio-auth-create .btn { width: 100%; }
+.nexio-login-redirect { visibility: hidden; }
+.loginpage-logo {
+  display: none;
+}
+@media (max-width: 767px) {
+  .loginpage-formwrapper {
+    padding: 26px 20px;
+    border-radius: 18px;
+  }
+}
+
+.layout-atlas .mx-placeholder > .mx-button {
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+.loginpage #loginButton {
+  background: var(--brand-primary);
+  color: var(--nexio-surface);
+  border-color: var(--brand-primary);
+}
+.loginpage #loginButton:hover {
+  background: var(--brand-primary-700);
+  color: var(--nexio-surface);
+}
+@media (max-width: 767px) {
+  .layout-atlas .mx-placeholder > .mx-button {
+    align-self: stretch;
+    margin-bottom: 10px;
+  }
+}
+
+/* Stack labels consistently, keeping long field names readable at every width. */
+.layout-atlas .mx-dataview .form-group {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+}
+.layout-atlas .mx-dataview .form-group > .control-label,
+.layout-atlas .mx-dataview .form-group > [class*="col-"] {
+  width: 100%;
+  flex: 0 0 auto;
+  max-width: 100%;
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.layout-atlas .mx-dataview .form-group > .control-label {
+  text-align: left;
+  white-space: normal;
+  overflow: visible;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.layout-atlas .mx-placeholder > div > .mx-button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.layout-atlas .mx-scrollcontainer-open > .region-sidebar .mx-navigationtree a {
+  white-space: normal;
+  line-height: 1.5;
+}
