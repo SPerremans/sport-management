@@ -1,0 +1,276 @@
+[
+  {
+    "name": "BCO_Season_Validate",
+    "folder": "CRM/Seasons",
+    "entity": "Season",
+    "old": "VAL_Season",
+    "parameter": "Season",
+    "params": [
+      [
+        "Season",
+        "MyFirstModule.Season"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "$Type": "Microflows$MicroflowCallAction",
+        "microflowCall": {
+          "$Type": "Microflows$MicroflowCall",
+          "microflow": "MyFirstModule.VAL_Season",
+          "parameterMappings": [
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.VAL_Season.Season",
+              "argument": "$Season"
+            }
+          ]
+        },
+        "outputVariableName": "Valid"
+      },
+      {
+        "end": "$Valid"
+      }
+    ]
+  },
+  {
+    "name": "BCO_Membership_Validate",
+    "folder": "CRM/Members",
+    "entity": "Membership",
+    "old": "VAL_Membership_Lifecycle",
+    "parameter": "Membership",
+    "params": [
+      [
+        "Membership",
+        "MyFirstModule.Membership"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "$Type": "Microflows$MicroflowCallAction",
+        "microflowCall": {
+          "$Type": "Microflows$MicroflowCall",
+          "microflow": "MyFirstModule.VAL_Membership_Lifecycle",
+          "parameterMappings": [
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.VAL_Membership_Lifecycle.Membership",
+              "argument": "$Membership"
+            }
+          ]
+        },
+        "outputVariableName": "Valid"
+      },
+      {
+        "end": "$Valid"
+      }
+    ]
+  },
+  {
+    "name": "BCO_MembershipType_Validate",
+    "folder": "CRM/Clubs",
+    "entity": "MembershipType",
+    "old": "VAL_MembershipType",
+    "parameter": "MembershipType",
+    "params": [
+      [
+        "MembershipType",
+        "MyFirstModule.MembershipType"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "$Type": "Microflows$MicroflowCallAction",
+        "microflowCall": {
+          "$Type": "Microflows$MicroflowCall",
+          "microflow": "MyFirstModule.VAL_MembershipType",
+          "parameterMappings": [
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.VAL_MembershipType.MembershipType",
+              "argument": "$MembershipType"
+            }
+          ]
+        },
+        "outputVariableName": "Valid"
+      },
+      {
+        "end": "$Valid"
+      }
+    ]
+  },
+  {
+    "name": "BCO_ClubPermission_Validate",
+    "folder": "CRM/Team",
+    "entity": "ClubPermission",
+    "old": "VAL_ClubPermission",
+    "parameter": "Permission",
+    "params": [
+      [
+        "Permission",
+        "MyFirstModule.ClubPermission"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "$Type": "Microflows$MicroflowCallAction",
+        "microflowCall": {
+          "$Type": "Microflows$MicroflowCall",
+          "microflow": "MyFirstModule.VAL_ClubPermission",
+          "parameterMappings": [
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.VAL_ClubPermission.Permission",
+              "argument": "$Permission"
+            }
+          ]
+        },
+        "outputVariableName": "Valid"
+      },
+      {
+        "end": "$Valid"
+      }
+    ]
+  },
+  {
+    "name": "BCO_ClubBillingPolicy_Validate",
+    "folder": "CRM/Billing/SeasonPolicies",
+    "entity": "ClubBillingPolicy",
+    "old": "VAL_ClubBillingPolicy_Phase3",
+    "parameter": "Policy",
+    "params": [
+      [
+        "Policy",
+        "MyFirstModule.ClubBillingPolicy"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "$Type": "Microflows$MicroflowCallAction",
+        "microflowCall": {
+          "$Type": "Microflows$MicroflowCall",
+          "microflow": "MyFirstModule.VAL_ClubBillingPolicy_Phase3",
+          "parameterMappings": [
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.VAL_ClubBillingPolicy_Phase3.Policy",
+              "argument": "$Policy"
+            }
+          ]
+        },
+        "outputVariableName": "Valid"
+      },
+      {
+        "end": "$Valid"
+      }
+    ]
+  },
+  {
+    "name": "BCO_InvoiceStyle_Validate",
+    "folder": "CRM/Billing/Appearance",
+    "entity": "InvoiceStyle",
+    "old": "VAL_InvoiceStyle_Phase3",
+    "parameter": "Style",
+    "params": [
+      [
+        "Style",
+        "MyFirstModule.InvoiceStyle"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "$Type": "Microflows$MicroflowCallAction",
+        "microflowCall": {
+          "$Type": "Microflows$MicroflowCall",
+          "microflow": "MyFirstModule.VAL_InvoiceStyle_Phase3",
+          "parameterMappings": [
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.VAL_InvoiceStyle_Phase3.Style",
+              "argument": "$Style"
+            }
+          ]
+        },
+        "outputVariableName": "Valid"
+      },
+      {
+        "end": "$Valid"
+      }
+    ]
+  },
+  {
+    "name": "VAL_Federation_BillingMethod",
+    "folder": "CRM/Federations",
+    "params": [
+      [
+        "Federation",
+        "MyFirstModule.Federation"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "end": "$Federation/BillingMethod = 'ACTIVE_AT_CENSUS' or $Federation/BillingMethod = 'UNIQUE_DURING_YEAR' or $Federation/BillingMethod = 'PRORATA_ACTIVE_DAYS'"
+      }
+    ]
+  },
+  {
+    "name": "BCO_RegistrationRequest_ValidateFinance",
+    "folder": "CRM/Registration",
+    "entity": "RegistrationRequest",
+    "parameter": "Request",
+    "params": [
+      [
+        "Request",
+        "MyFirstModule.RegistrationRequest"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "end": "$Request/RequestedInstallments >= 1 and $Request/RequestedInstallments <= 12 and $Request/ApprovedInstallments >= 1 and $Request/ApprovedInstallments <= $Request/RequestedInstallments and ($Request/InstalmentStatus = 'NotRequested' or $Request/InstalmentStatus = 'Pending' or $Request/InstalmentStatus = 'Approved' or $Request/InstalmentStatus = 'Rejected')"
+      }
+    ]
+  },
+  {
+    "name": "BCO_ClubEvent_Validate",
+    "folder": "CRM/Content",
+    "entity": "ClubEvent",
+    "parameter": "Item",
+    "params": [
+      [
+        "Item",
+        "MyFirstModule.ClubEvent"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "end": "$Item/Title != empty and trim($Item/Title) != '' and $Item/StartsAt != empty"
+      }
+    ]
+  },
+  {
+    "name": "BCO_NewsItem_Validate",
+    "folder": "CRM/Content",
+    "entity": "NewsItem",
+    "parameter": "Item",
+    "params": [
+      [
+        "Item",
+        "MyFirstModule.NewsItem"
+      ]
+    ],
+    "returnType": "Boolean",
+    "steps": [
+      {
+        "end": "$Item/Title != empty and trim($Item/Title) != ''"
+      }
+    ]
+  }
+]

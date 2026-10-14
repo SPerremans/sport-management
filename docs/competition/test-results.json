@@ -1,0 +1,25 @@
+{
+  "framework": "Mendix Unit Testing 10.0.8",
+  "suite": "MyFirstModule",
+  "passed": 12,
+  "failed": 0,
+  "source": "Studio Pro runtime console",
+  "event": "2026-10-12 21:53:08.222 CompetitionFramework.Passed=12; Failed=0",
+  "tests": [
+    "UT_Competition_FreeCalendar",
+    "UT_Competition_ClosedAvailability",
+    "UT_Competition_WrongHostClub",
+    "UT_Competition_BeforeOpening",
+    "UT_Competition_AfterClosing",
+    "UT_Competition_CapacityAllowsTwo",
+    "UT_Competition_ExclusiveEndBoundary",
+    "UT_Competition_TeamOncePerDay",
+    "UT_Competition_DailyHostLimit",
+    "UT_Competition_ClubConcurrencyLimit",
+    "UT_Competition_VenueCapacity",
+    "UT_Competition_SharedPlayer"
+  ],
+  "scope": "Actual Mendix placement microflows and framework assertions. Synthetic uncommitted fixtures; no user accounts or mail. Role-based registration and approval scenarios require separate integration validation.",
+  "startup": "Restored to UnitTesting.Startup",
+  "remoteApiEnabled": false
+}

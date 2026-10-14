@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-13",
+  "build": "Latest model and Java build successful",
+  "mendixErrors": 0,
+  "sampleData": {
+    "state": "Loaded",
+    "observedClubs": 4,
+    "observedLeagues": 2,
+    "verifiedOnFirstGeneration": [
+      "generate",
+      "repeat without duplicates",
+      "cleanup including new dependent",
+      "preserve original and unrelated records",
+      "regenerate"
+    ],
+    "extraLinkedRecordGuard": "Implemented; executes on the next new sample batch"
+  },
+  "playerDirectory": {
+    "navigation": "Players",
+    "projection": [
+      "PlayerName",
+      "ClubName"
+    ],
+    "mixedCaseClubQuery": "rIvErSiDe",
+    "clubResults": 12,
+    "mixedCasePlayerQuery": "pLaYeR 14",
+    "playerResults": 1
+  },
+  "administratorWorkspace": {
+    "allClubList": "Verified: original club and four sample clubs",
+    "openClub": "Verified: Northside workspace, ten tabs and editable settings",
+    "memberData": "Exact Administrator access rules approved and applied; signed-in runtime member-data verification not yet repeated"
+  },
+  "roleIsolation": "Separate ordinary-user session not exercised",
+  "seasonAndRoleChanges": {
+    "generatorCompile": "Successful with JDK 21",
+    "featureUpgrade": "features:season-roles-v2 implemented, not yet executed",
+    "model": "Zero Mendix consistency errors; app built and started",
+    "lastObservedError": "Resolved: SelectedCount is configured as Count of Selected",
+    "verification": "Consistency and compilation passed. New demo upgrade and signed-in history/role scenarios have not yet been executed."
+  }
+}

@@ -1,0 +1,447 @@
+{
+  "entities": [
+    [
+      "CompetitionLeague",
+      {
+        "Name": "String",
+        "SeasonName": "String",
+        "StartsOn": "DateTime",
+        "EndsOn": "DateTime",
+        "RegistrationOpens": "DateTime",
+        "RegistrationCloses": "DateTime",
+        "ChangesOpen": "DateTime",
+        "ChangesClose": "DateTime",
+        "MaxTeamsPerPoule": "Integer",
+        "RequestedPoules": "Integer",
+        "Format": "Enumeration",
+        "DurationMinutes": "Integer",
+        "Stage": "String",
+        "Info": "String"
+      }
+    ],
+    [
+      "CompetitionTeam",
+      {
+        "Name": "String",
+        "ClubName": "String",
+        "IsActive": "Boolean",
+        "SeasonName": "String"
+      }
+    ],
+    [
+      "CompetitionPlayer",
+      {
+        "MemberName": "String",
+        "MemberKey": "String",
+        "PersonKey": "String"
+      }
+    ],
+    [
+      "LeagueEntry",
+      {
+        "TeamName": "String",
+        "ClubName": "String",
+        "ClubKey": "String",
+        "EntryKey": "String",
+        "Order": "Integer"
+      }
+    ],
+    [
+      "CompetitionPoule",
+      {
+        "Name": "String",
+        "Number": "Integer",
+        "TeamCount": "Integer"
+      }
+    ],
+    [
+      "CompetitionVenue",
+      {
+        "Name": "String",
+        "Address": "String",
+        "IsActive": "Boolean",
+        "VenueKey": "String"
+      }
+    ],
+    [
+      "VenueAvailability",
+      {
+        "StartsAt": "DateTime",
+        "EndsAt": "DateTime",
+        "Capacity": "Integer",
+        "VenueName": "String",
+        "ClubKey": "String",
+        "VenueKey": "String",
+        "IsActive": "Boolean"
+      }
+    ],
+    [
+      "ClubCompetitionPolicy",
+      {
+        "MaxHostedPerDay": "Integer",
+        "MaxConcurrent": "Integer",
+        "ClubKey": "String"
+      }
+    ],
+    [
+      "CompetitionFixture",
+      {
+        "HomeName": "String",
+        "AwayName": "String",
+        "HomeKey": "String",
+        "AwayKey": "String",
+        "HomeClubKey": "String",
+        "AwayClubKey": "String",
+        "VenueName": "String",
+        "VenueKey": "String",
+        "StartsAt": "DateTime",
+        "EndsAt": "DateTime",
+        "Status": "String",
+        "Version": "Integer",
+        "PairKey": "String",
+        "Leg": "Integer",
+        "Issue": "String"
+      }
+    ],
+    [
+      "FixtureChange",
+      {
+        "ProposedStartsAt": "DateTime",
+        "ProposedEndsAt": "DateTime",
+        "HomeApproved": "Boolean",
+        "AwayApproved": "Boolean",
+        "ExpectedVersion": "Integer",
+        "Status": "String",
+        "Reason": "String",
+        "ProposedBy": "String",
+        "OverrideReason": "String",
+        "CreatedAt": "DateTime"
+      }
+    ],
+    [
+      "FederationCompetitionDelegate",
+      {
+        "Email": "String",
+        "Name": "String",
+        "IsActive": "Boolean",
+        "CanManageLeagues": "Boolean",
+        "CanAllocate": "Boolean",
+        "CanSchedule": "Boolean",
+        "CanOverride": "Boolean"
+      }
+    ],
+    [
+      "CompetitionAudit",
+      {
+        "Action": "String",
+        "Reason": "String",
+        "Actor": "String",
+        "At": "DateTime"
+      }
+    ],
+    [
+      "CompetitionGate",
+      {
+        "Key": "String",
+        "Revision": "Integer"
+      }
+    ],
+    [
+      "CompetitionMutationClaim",
+      {
+        "Key": "String"
+      }
+    ],
+    [
+      "CompetitionForm",
+      {
+        "Name": "String",
+        "Description": "String",
+        "SeasonName": "String",
+        "StartsAt": "DateTime",
+        "EndsAt": "DateTime",
+        "RegistrationOpens": "DateTime",
+        "RegistrationCloses": "DateTime",
+        "ChangesOpen": "DateTime",
+        "ChangesClose": "DateTime",
+        "MaxTeamsPerPoule": "Integer",
+        "RequestedPoules": "Integer",
+        "DurationMinutes": "Integer",
+        "Format": "Enumeration",
+        "Capacity": "Integer",
+        "MaxHostedPerDay": "Integer",
+        "MaxConcurrent": "Integer",
+        "IsActive": "Boolean",
+        "AllowSameClub": "Boolean",
+        "Reason": "String",
+        "Email": "String",
+        "CanManageLeagues": "Boolean",
+        "CanAllocate": "Boolean",
+        "CanSchedule": "Boolean",
+        "CanOverride": "Boolean",
+        "SelectedName": "String"
+      }
+    ],
+    [
+      "AllocationChoice",
+      {
+        "Score": "Integer",
+        "Load": "Integer"
+      }
+    ]
+  ],
+  "assocPairs": [
+    [
+      "CompetitionLeague_Federation",
+      "CompetitionLeague",
+      "Federation"
+    ],
+    [
+      "CompetitionTeam_Club",
+      "CompetitionTeam",
+      "Club"
+    ],
+    [
+      "CompetitionPlayer_Team",
+      "CompetitionPlayer",
+      "CompetitionTeam"
+    ],
+    [
+      "CompetitionPlayer_Membership",
+      "CompetitionPlayer",
+      "Membership"
+    ],
+    [
+      "LeagueEntry_League",
+      "LeagueEntry",
+      "CompetitionLeague"
+    ],
+    [
+      "LeagueEntry_Team",
+      "LeagueEntry",
+      "CompetitionTeam"
+    ],
+    [
+      "LeagueEntry_Club",
+      "LeagueEntry",
+      "Club"
+    ],
+    [
+      "LeagueEntry_Poule",
+      "LeagueEntry",
+      "CompetitionPoule"
+    ],
+    [
+      "CompetitionPoule_League",
+      "CompetitionPoule",
+      "CompetitionLeague"
+    ],
+    [
+      "CompetitionVenue_Club",
+      "CompetitionVenue",
+      "Club"
+    ],
+    [
+      "VenueAvailability_Venue",
+      "VenueAvailability",
+      "CompetitionVenue"
+    ],
+    [
+      "VenueAvailability_Club",
+      "VenueAvailability",
+      "Club"
+    ],
+    [
+      "ClubCompetitionPolicy_Club",
+      "ClubCompetitionPolicy",
+      "Club"
+    ],
+    [
+      "CompetitionFixture_League",
+      "CompetitionFixture",
+      "CompetitionLeague"
+    ],
+    [
+      "CompetitionFixture_Poule",
+      "CompetitionFixture",
+      "CompetitionPoule"
+    ],
+    [
+      "CompetitionFixture_Home",
+      "CompetitionFixture",
+      "LeagueEntry"
+    ],
+    [
+      "CompetitionFixture_Away",
+      "CompetitionFixture",
+      "LeagueEntry"
+    ],
+    [
+      "CompetitionFixture_HomeClub",
+      "CompetitionFixture",
+      "Club"
+    ],
+    [
+      "CompetitionFixture_AwayClub",
+      "CompetitionFixture",
+      "Club"
+    ],
+    [
+      "CompetitionFixture_Slot",
+      "CompetitionFixture",
+      "VenueAvailability"
+    ],
+    [
+      "FixtureChange_Fixture",
+      "FixtureChange",
+      "CompetitionFixture"
+    ],
+    [
+      "FixtureChange_Slot",
+      "FixtureChange",
+      "VenueAvailability"
+    ],
+    [
+      "FederationCompetitionDelegate_Federation",
+      "FederationCompetitionDelegate",
+      "Federation"
+    ],
+    [
+      "CompetitionAudit_League",
+      "CompetitionAudit",
+      "CompetitionLeague"
+    ],
+    [
+      "CompetitionAudit_Fixture",
+      "CompetitionAudit",
+      "CompetitionFixture"
+    ],
+    [
+      "AllocationChoice_Poule",
+      "AllocationChoice",
+      "CompetitionPoule"
+    ],
+    [
+      "CompetitionForm_Club",
+      "CompetitionForm",
+      "Club"
+    ],
+    [
+      "CompetitionForm_Federation",
+      "CompetitionForm",
+      "Federation"
+    ],
+    [
+      "CompetitionForm_CompetitionLeague",
+      "CompetitionForm",
+      "CompetitionLeague"
+    ],
+    [
+      "CompetitionForm_CompetitionTeam",
+      "CompetitionForm",
+      "CompetitionTeam"
+    ],
+    [
+      "CompetitionForm_Membership",
+      "CompetitionForm",
+      "Membership"
+    ],
+    [
+      "CompetitionForm_LeagueEntry",
+      "CompetitionForm",
+      "LeagueEntry"
+    ],
+    [
+      "CompetitionForm_CompetitionPoule",
+      "CompetitionForm",
+      "CompetitionPoule"
+    ],
+    [
+      "CompetitionForm_CompetitionVenue",
+      "CompetitionForm",
+      "CompetitionVenue"
+    ],
+    [
+      "CompetitionForm_VenueAvailability",
+      "CompetitionForm",
+      "VenueAvailability"
+    ],
+    [
+      "CompetitionForm_CompetitionFixture",
+      "CompetitionForm",
+      "CompetitionFixture"
+    ],
+    [
+      "CompetitionForm_FixtureChange",
+      "CompetitionForm",
+      "FixtureChange"
+    ],
+    [
+      "CompetitionForm_FederationCompetitionDelegate",
+      "CompetitionForm",
+      "FederationCompetitionDelegate"
+    ]
+  ],
+  "indices": {
+    "ClubSearch": 0,
+    "PaymentVerification": 1,
+    "Invoice": 2,
+    "NewsItem": 3,
+    "ClubEvent": 4,
+    "FormResponse": 5,
+    "FormField": 6,
+    "RegistrationRequest": 7,
+    "Membership": 8,
+    "MembershipType": 9,
+    "Club": 10,
+    "ClubAdminAssignment": 11,
+    "FeeAdjustment": 12,
+    "RegistrationApproval": 13,
+    "ClubOffer": 14,
+    "ClubStaffAssignment": 15,
+    "ClubStaff": 16,
+    "ClubPermission": 17,
+    "ClubRole": 18,
+    "SeasonFee": 19,
+    "Season": 20,
+    "ClubCapabilities": 21,
+    "InvoiceMail": 22,
+    "RenewalOffer": 23,
+    "InvoiceLine": 24,
+    "BillingPlan": 25,
+    "ClubBillingPolicy": 26,
+    "InvoiceStyle": 27,
+    "FederationBillingForm": 28,
+    "FederationRegistration": 29,
+    "FederationAffiliation": 30,
+    "FederationRate": 31,
+    "FederationType": 32,
+    "FederationAdminAssignment": 33,
+    "Federation": 34,
+    "InvitationDelivery": 35,
+    "PasswordResetForm": 36,
+    "InvitationClaim": 37,
+    "AccountInvitation": 38,
+    "AdminAccountForm": 39,
+    "BillingClaim": 40,
+    "FederationBillingSlice": 41,
+    "FederationBillingQuote": 42,
+    "InstalmentDecision": 43,
+    "CompetitionLeague": 44,
+    "CompetitionTeam": 45,
+    "CompetitionPlayer": 46,
+    "LeagueEntry": 47,
+    "CompetitionPoule": 48,
+    "CompetitionVenue": 49,
+    "VenueAvailability": 50,
+    "ClubCompetitionPolicy": 51,
+    "CompetitionFixture": 52,
+    "FixtureChange": 53,
+    "FederationCompetitionDelegate": 54,
+    "CompetitionAudit": 55,
+    "CompetitionGate": 56,
+    "CompetitionMutationClaim": 57,
+    "CompetitionForm": 58,
+    "AllocationChoice": 59
+  }
+}

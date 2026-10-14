@@ -1,0 +1,644 @@
+{
+  "authorization": "User: The admin of Mendix should also be able to go into the admin section of each club.",
+  "scope": "Only MyFirstModule.Administrator; union of existing club-owner field rights on 13 club entities. No ordinary-user or club-admin access expansion. No payment verification, passwords or private claims.",
+  "rules": [
+    {
+      "i": 3,
+      "name": "NewsItem",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.NewsItem.Title",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.NewsItem.Body",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.NewsItem.PublishedAt",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.NewsItem.IsImportant",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.NewsItem.IsPublished",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.NewsItem_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 4,
+      "name": "ClubEvent",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.ClubEvent.Title",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubEvent.Description",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubEvent.StartsAt",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubEvent.Location",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubEvent.IsPublished",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.ClubEvent_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 5,
+      "name": "FormResponse",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FormResponse.Label",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FormResponse.HelpText",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FormResponse.Kind",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FormResponse.IsRequired",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FormResponse.SortOrder",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FormResponse.Answer",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FormResponse_FormField",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FormResponse_RegistrationRequest",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 6,
+      "name": "FormField",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FormField.Label",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FormField.HelpText",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FormField.Kind",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FormField.IsRequired",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FormField.SortOrder",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FormField.IsActive",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FormField_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 7,
+      "name": "RegistrationRequest",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.MemberEmail",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.SubmittedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.Approval",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.Payment",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.Fee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.Currency",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.RejectionReason",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.NextAction",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.RegistrationKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.RequiresApproval",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.RequiresPayment",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.FeeAdjustmentReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.OriginalFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.SeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.IsRenewal",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.InstalmentStatus",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.ApprovedInstallments",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.RequestedInstallments",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.InstallmentDecisionReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.InstallmentDecisionBy",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RegistrationRequest.InstallmentDecisionAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RegistrationRequest_Membership",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RegistrationRequest_MembershipType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RegistrationRequest_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RegistrationRequest_SeasonFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RegistrationRequest_Season",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RegistrationRequest_Person",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 8,
+      "name": "Membership",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.Membership.MemberName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Membership.MemberEmail",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Membership.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.Membership.JoinedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.Membership.RegistrationKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.Membership.SeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.Membership.RenewalPreference",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.Membership.EndedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.Membership_MembershipType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.Membership_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.Membership_Season",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.Membership_Person",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 9,
+      "name": "MembershipType",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.MembershipType.Name",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.MembershipType.Description",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.MembershipType.Fee",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.MembershipType.Currency",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.MembershipType.IsAvailable",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.MembershipType.AvailableUntil",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.MembershipType.AvailableFrom",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.MembershipType.IsCompetitionPlayer",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.MembershipType_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.MembershipType_FederationType",
+            "accessRights": "ReadWrite"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 12,
+      "name": "FeeAdjustment",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FeeAdjustment.OriginalFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FeeAdjustment.AdjustedFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FeeAdjustment.Reason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FeeAdjustment.AdjustedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FeeAdjustment.AdjustedBy",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FeeAdjustment_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FeeAdjustment_RegistrationRequest",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 16,
+      "name": "ClubStaff",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.ClubStaff.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.ClubStaff.Email",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.ClubStaff.IsActive",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.ClubStaff_ClubRole",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.ClubStaff_Person",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 17,
+      "name": "ClubPermission",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.ClubPermission.Resource",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.ClubPermission.CanRead",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubPermission.CanCreate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubPermission.CanUpdate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubPermission.CanDelete",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubPermission.SupportsDelete",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.ClubPermission.SupportsCreate",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.ClubPermission_ClubRole",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 18,
+      "name": "ClubRole",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.ClubRole.Name",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubRole.Description",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubRole.IsActive",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubRole.CanAdjustFee",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.ClubRole_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 19,
+      "name": "SeasonFee",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.SeasonFee.Amount",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.SeasonFee.Currency",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.SeasonFee.IsAvailable",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.SeasonFee_MembershipType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.SeasonFee_Season",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.SeasonFee_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    },
+    {
+      "i": 20,
+      "name": "Season",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.Season.Name",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Season.StartsOn",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Season.EndsOn",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Season.IsPublished",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.Season_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "documentation": "User requested that the Mendix platform administrator can administer every club. Mirrors existing club-owner field permissions; payment/workflow keys remain protected. ClubAdmin and User rules are unchanged."
+      }
+    }
+  ]
+}

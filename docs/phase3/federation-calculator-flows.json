@@ -1,0 +1,1401 @@
+[
+  {
+    "name": "SUB_FederationBilling_CreateSlice",
+    "params": [
+      [
+        "Member",
+        "MyFirstModule.FederationRegistration"
+      ],
+      [
+        "Rate",
+        "MyFirstModule.FederationRate"
+      ],
+      [
+        "Affiliation",
+        "MyFirstModule.FederationAffiliation"
+      ],
+      {
+        "name": "ClubKey",
+        "type": "String"
+      },
+      {
+        "name": "From",
+        "type": "DateTime"
+      },
+      {
+        "name": "Until",
+        "type": "DateTime"
+      }
+    ],
+    "returnType": "Object",
+    "returnTypeEntity": "MyFirstModule.FederationBillingSlice",
+    "steps": [
+      {
+        "guard": "$Member/JoinedAt != empty and $Member/SeasonStartsOn != empty and $Member/SeasonEndsOn != empty and $Affiliation/StartsOn != empty"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Start",
+        "variableType": "DateTime",
+        "initialValue": "max($From,$Member/JoinedAt,$Member/SeasonStartsOn,$Affiliation/StartsOn)"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "End",
+        "variableType": "DateTime",
+        "initialValue": "min($Until,addDaysUTC(trimToDaysUTC($Member/SeasonEndsOn),1),if $Member/EndedAt = empty then $Until else $Member/EndedAt,if $Affiliation/EndsOn = empty then $Until else addDaysUTC(trimToDaysUTC($Affiliation/EndsOn),1))"
+      },
+      {
+        "guard": "$End > $Start"
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.FederationBillingSlice",
+        "outputVariableName": "Slice",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingSlice.MemberKey",
+            "value": "$Member/MemberKey"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingSlice.MemberName",
+            "value": "$Member/MemberName"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingSlice.TypeName",
+            "value": "$Member/TypeName"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingSlice.ClubKey",
+            "value": "$ClubKey"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingSlice.StartsAt",
+            "value": "$Start"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingSlice.EndsAt",
+            "value": "$End"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingSlice.AnnualFee",
+            "value": "if $Rate = empty then 0 else $Rate/AnnualFee"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "end": "$Slice"
+      }
+    ]
+  },
+  {
+    "name": "SUB_FederationBilling_Prepare",
+    "params": [
+      [
+        "Federation",
+        "MyFirstModule.Federation"
+      ],
+      {
+        "name": "Year",
+        "type": "Integer"
+      },
+      {
+        "name": "Method",
+        "type": "String"
+      },
+      {
+        "name": "CensusDate",
+        "type": "DateTime"
+      }
+    ],
+    "returnType": "Object",
+    "returnTypeEntity": "MyFirstModule.FederationBillingQuote",
+    "steps": [
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "From",
+        "variableType": "DateTime",
+        "initialValue": "parseDateTimeUTC(toString($Year) + '-01-01', 'yyyy-MM-dd')"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Until",
+        "variableType": "DateTime",
+        "initialValue": "addYearsUTC($From,1)"
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.FederationBillingQuote",
+        "outputVariableName": "Quote",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingQuote.Valid",
+            "value": "true"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$CreateListAction",
+        "entity": "MyFirstModule.FederationBillingSlice",
+        "outputVariableName": "Slices"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byDatabaseQuery": {
+          "entity": "MyFirstModule.FederationRegistration",
+          "xPathConstraint": "[MyFirstModule.FederationRegistration_Federation = $Federation][JoinedAt != empty and JoinedAt < $Until and (EndedAt = empty or EndedAt > $From)]",
+          "takeOnlyFirst": false
+        },
+        "outputVariableName": "Members"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byDatabaseQuery": {
+          "entity": "MyFirstModule.FederationType",
+          "xPathConstraint": "[MyFirstModule.FederationType_Federation = $Federation]",
+          "takeOnlyFirst": false
+        },
+        "outputVariableName": "Types"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byDatabaseQuery": {
+          "entity": "MyFirstModule.FederationRate",
+          "xPathConstraint": "[Year = $Year][MyFirstModule.FederationRate_FederationType/MyFirstModule.FederationType/MyFirstModule.FederationType_Federation = $Federation]",
+          "takeOnlyFirst": false
+        },
+        "outputVariableName": "Rates"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byDatabaseQuery": {
+          "entity": "MyFirstModule.FederationAffiliation",
+          "xPathConstraint": "[MyFirstModule.FederationAffiliation_Federation = $Federation][StartsOn < $Until and (EndsOn = empty or EndsOn >= $From)]",
+          "takeOnlyFirst": false
+        },
+        "outputVariableName": "Affiliations"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byDatabaseQuery": {
+          "entity": "MyFirstModule.Club",
+          "xPathConstraint": "[MyFirstModule.FederationAffiliation_Club/MyFirstModule.FederationAffiliation/MyFirstModule.FederationAffiliation_Federation = $Federation]",
+          "takeOnlyFirst": false
+        },
+        "outputVariableName": "Clubs"
+      },
+      {
+        "loop": "Members",
+        "iterator": "Member",
+        "body": [
+          {
+            "$Type": "Microflows$RetrieveAction",
+            "byAssociation": {
+              "startVariableName": "Member",
+              "association": "MyFirstModule.FederationRegistration_Club"
+            },
+            "outputVariableName": "MemberClub"
+          },
+          {
+            "$Type": "Microflows$RetrieveAction",
+            "byAssociation": {
+              "startVariableName": "Member",
+              "association": "MyFirstModule.FederationRegistration_FederationType"
+            },
+            "outputVariableName": "FedType"
+          },
+          {
+            "if": "$MemberClub != empty and $FedType != empty and $Member/MemberKey != '' and $Member/SeasonStartsOn != empty and $Member/SeasonEndsOn != empty",
+            "then": [
+              {
+                "$Type": "Microflows$JavaActionCallAction",
+                "javaAction": "CommunityCommons.getGUID",
+                "parameterMappings": [
+                  {
+                    "$Type": "Microflows$JavaActionParameterMapping",
+                    "parameter": "CommunityCommons.getGUID.item",
+                    "parameterValue": {
+                      "$Type": "Microflows$BasicCodeActionParameterValue",
+                      "argument": "$MemberClub"
+                    }
+                  }
+                ],
+                "outputVariableName": "ClubId",
+                "useReturnVariable": true
+              },
+              {
+                "$Type": "Microflows$JavaActionCallAction",
+                "javaAction": "CommunityCommons.getGUID",
+                "parameterMappings": [
+                  {
+                    "$Type": "Microflows$JavaActionParameterMapping",
+                    "parameter": "CommunityCommons.getGUID.item",
+                    "parameterValue": {
+                      "$Type": "Microflows$BasicCodeActionParameterValue",
+                      "argument": "$FedType"
+                    }
+                  }
+                ],
+                "outputVariableName": "TypeId",
+                "useReturnVariable": true
+              },
+              {
+                "$Type": "Microflows$ListOperationAction",
+                "operation": {
+                  "$Type": "Microflows$FindByExpression",
+                  "listVariableName": "Rates",
+                  "expression": "$currentObject/RateKey = toString($TypeId) + ':' + toString($Year)"
+                },
+                "outputVariableName": "Rate"
+              },
+              {
+                "loop": "Affiliations",
+                "iterator": "Affiliation",
+                "body": [
+                  {
+                    "$Type": "Microflows$RetrieveAction",
+                    "byAssociation": {
+                      "startVariableName": "Affiliation",
+                      "association": "MyFirstModule.FederationAffiliation_Club"
+                    },
+                    "outputVariableName": "AffiliatedClub"
+                  },
+                  {
+                    "if": "$AffiliatedClub = $MemberClub",
+                    "then": [
+                      {
+                        "$Type": "Microflows$MicroflowCallAction",
+                        "microflowCall": {
+                          "$Type": "Microflows$MicroflowCall",
+                          "microflow": "MyFirstModule.SUB_FederationBilling_CreateSlice",
+                          "parameterMappings": [
+                            {
+                              "$Type": "Microflows$MicroflowCallParameterMapping",
+                              "parameter": "MyFirstModule.SUB_FederationBilling_CreateSlice.Member",
+                              "argument": "$Member"
+                            },
+                            {
+                              "$Type": "Microflows$MicroflowCallParameterMapping",
+                              "parameter": "MyFirstModule.SUB_FederationBilling_CreateSlice.Rate",
+                              "argument": "$Rate"
+                            },
+                            {
+                              "$Type": "Microflows$MicroflowCallParameterMapping",
+                              "parameter": "MyFirstModule.SUB_FederationBilling_CreateSlice.Affiliation",
+                              "argument": "$Affiliation"
+                            },
+                            {
+                              "$Type": "Microflows$MicroflowCallParameterMapping",
+                              "parameter": "MyFirstModule.SUB_FederationBilling_CreateSlice.ClubKey",
+                              "argument": "toString($ClubId)"
+                            },
+                            {
+                              "$Type": "Microflows$MicroflowCallParameterMapping",
+                              "parameter": "MyFirstModule.SUB_FederationBilling_CreateSlice.From",
+                              "argument": "$From"
+                            },
+                            {
+                              "$Type": "Microflows$MicroflowCallParameterMapping",
+                              "parameter": "MyFirstModule.SUB_FederationBilling_CreateSlice.Until",
+                              "argument": "$Until"
+                            }
+                          ]
+                        },
+                        "outputVariableName": "Slice"
+                      },
+                      {
+                        "if": "$Slice != empty and ($Method != 'ACTIVE_AT_CENSUS' or ($Slice/StartsAt <= $CensusDate and $Slice/EndsAt > $CensusDate))",
+                        "then": [
+                          {
+                            "if": "$Rate != empty and $Rate/Currency = $Federation/Currency and $Rate/AnnualFee >= 0",
+                            "then": [
+                              {
+                                "$Type": "Microflows$ChangeListAction",
+                                "changeVariableName": "Slices",
+                                "value": "$Slice"
+                              }
+                            ],
+                            "else": [
+                              {
+                                "$Type": "Microflows$ChangeObjectAction",
+                                "changeVariableName": "Quote",
+                                "items": [
+                                  {
+                                    "$Type": "Microflows$MemberChange",
+                                    "attribute": "MyFirstModule.FederationBillingQuote.Valid",
+                                    "value": "false"
+                                  },
+                                  {
+                                    "$Type": "Microflows$MemberChange",
+                                    "attribute": "MyFirstModule.FederationBillingQuote.Message",
+                                    "value": "'A required yearly rate is missing or its currency does not match the federation.'"
+                                  }
+                                ],
+                                "refreshInClient": true
+                              }
+                            ]
+                          }
+                        ],
+                        "else": []
+                      }
+                    ],
+                    "else": []
+                  }
+                ]
+              }
+            ],
+            "else": [
+              {
+                "$Type": "Microflows$ChangeObjectAction",
+                "changeVariableName": "Quote",
+                "items": [
+                  {
+                    "$Type": "Microflows$MemberChange",
+                    "attribute": "MyFirstModule.FederationBillingQuote.Valid",
+                    "value": "false"
+                  },
+                  {
+                    "$Type": "Microflows$MemberChange",
+                    "attribute": "MyFirstModule.FederationBillingQuote.Message",
+                    "value": "'A federation registration has incomplete member, season or type information.'"
+                  }
+                ],
+                "refreshInClient": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Quote",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "association": "MyFirstModule.FederationBillingQuote_Slices",
+            "value": "$Slices"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "association": "MyFirstModule.FederationBillingQuote_Clubs",
+            "value": "$Clubs"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "end": "$Quote"
+      }
+    ]
+  },
+  {
+    "name": "SUB_FederationBilling_DayRate",
+    "params": [
+      {
+        "name": "Slices",
+        "type": "List",
+        "entity": "MyFirstModule.FederationBillingSlice"
+      },
+      {
+        "name": "Day",
+        "type": "DateTime"
+      }
+    ],
+    "returnType": "Decimal",
+    "steps": [
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Rate",
+        "variableType": "Decimal",
+        "initialValue": "-1"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "NextDay",
+        "variableType": "DateTime",
+        "initialValue": "addDaysUTC($Day,1)"
+      },
+      {
+        "loop": "Slices",
+        "iterator": "Slice",
+        "body": [
+          {
+            "if": "$Slice/StartsAt < $NextDay and $Slice/EndsAt > $Day",
+            "then": [
+              {
+                "$Type": "Microflows$ChangeVariableAction",
+                "changeVariableName": "Rate",
+                "value": "max($Rate,$Slice/AnnualFee)"
+              }
+            ],
+            "else": []
+          }
+        ]
+      },
+      {
+        "end": "$Rate"
+      }
+    ]
+  },
+  {
+    "name": "SUB_FederationBilling_MemberLine",
+    "params": [
+      [
+        "Invoice",
+        "MyFirstModule.Invoice"
+      ],
+      [
+        "SelectedSlice",
+        "MyFirstModule.FederationBillingSlice"
+      ],
+      {
+        "name": "AllSlices",
+        "type": "List",
+        "entity": "MyFirstModule.FederationBillingSlice"
+      },
+      {
+        "name": "Method",
+        "type": "String"
+      },
+      {
+        "name": "Year",
+        "type": "Integer"
+      },
+      {
+        "name": "CensusDate",
+        "type": "DateTime"
+      }
+    ],
+    "returnType": "Object",
+    "returnTypeEntity": "MyFirstModule.InvoiceLine",
+    "steps": [
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "From",
+        "variableType": "DateTime",
+        "initialValue": "parseDateTimeUTC(toString($Year) + '-01-01', 'yyyy-MM-dd')"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Until",
+        "variableType": "DateTime",
+        "initialValue": "addYearsUTC($From,1)"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "YearDays",
+        "variableType": "Integer",
+        "initialValue": "floor(daysBetween($From,$Until))"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "AllSlices",
+          "expression": "$currentObject/MemberKey = $SelectedSlice/MemberKey"
+        },
+        "outputVariableName": "Slices"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "HasMember",
+        "variableType": "Boolean",
+        "initialValue": "false"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Highest",
+        "variableType": "Decimal",
+        "initialValue": "0"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Weighted",
+        "variableType": "Decimal",
+        "initialValue": "0"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "ActiveDays",
+        "variableType": "Integer",
+        "initialValue": "0"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Day",
+        "variableType": "DateTime",
+        "initialValue": "$From"
+      },
+      {
+        "if": "$Method = 'PRORATA_ACTIVE_DAYS'",
+        "then": [
+          {
+            "while": "$Day < $Until",
+            "body": [
+              {
+                "$Type": "Microflows$MicroflowCallAction",
+                "microflowCall": {
+                  "$Type": "Microflows$MicroflowCall",
+                  "microflow": "MyFirstModule.SUB_FederationBilling_DayRate",
+                  "parameterMappings": [
+                    {
+                      "$Type": "Microflows$MicroflowCallParameterMapping",
+                      "parameter": "MyFirstModule.SUB_FederationBilling_DayRate.Slices",
+                      "argument": "$Slices"
+                    },
+                    {
+                      "$Type": "Microflows$MicroflowCallParameterMapping",
+                      "parameter": "MyFirstModule.SUB_FederationBilling_DayRate.Day",
+                      "argument": "$Day"
+                    }
+                  ]
+                },
+                "outputVariableName": "DayRate"
+              },
+              {
+                "if": "$DayRate >= 0",
+                "then": [
+                  {
+                    "$Type": "Microflows$ChangeVariableAction",
+                    "changeVariableName": "HasMember",
+                    "value": "true"
+                  },
+                  {
+                    "$Type": "Microflows$ChangeVariableAction",
+                    "changeVariableName": "ActiveDays",
+                    "value": "$ActiveDays + 1"
+                  },
+                  {
+                    "$Type": "Microflows$ChangeVariableAction",
+                    "changeVariableName": "Weighted",
+                    "value": "$Weighted + $DayRate"
+                  }
+                ],
+                "else": []
+              },
+              {
+                "$Type": "Microflows$ChangeVariableAction",
+                "changeVariableName": "Day",
+                "value": "addDaysUTC($Day,1)"
+              }
+            ]
+          }
+        ],
+        "else": [
+          {
+            "loop": "Slices",
+            "iterator": "Slice",
+            "body": [
+              {
+                "if": "$Method = 'UNIQUE_DURING_YEAR' or ($Slice/StartsAt <= $CensusDate and $Slice/EndsAt > $CensusDate)",
+                "then": [
+                  {
+                    "$Type": "Microflows$ChangeVariableAction",
+                    "changeVariableName": "HasMember",
+                    "value": "true"
+                  },
+                  {
+                    "$Type": "Microflows$ChangeVariableAction",
+                    "changeVariableName": "Highest",
+                    "value": "max($Highest,$Slice/AnnualFee)"
+                  }
+                ],
+                "else": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "guard": "$HasMember"
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.InvoiceLine",
+        "outputVariableName": "Line",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.MemberKey",
+            "value": "$SelectedSlice/MemberKey"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.MemberName",
+            "value": "$SelectedSlice/MemberName"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.MembershipType",
+            "value": "$SelectedSlice/TypeName"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.Description",
+            "value": "if $Method = 'PRORATA_ACTIVE_DAYS' then 'Annual federation membership, prorated by active days' else 'Annual federation membership'"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.Quantity",
+            "value": "if $Method = 'PRORATA_ACTIVE_DAYS' then $ActiveDays div $YearDays else 1"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.ActiveDays",
+            "value": "$ActiveDays"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.AnnualDays",
+            "value": "$YearDays"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.UnitPrice",
+            "value": "if $Method = 'PRORATA_ACTIVE_DAYS' then $Weighted div $ActiveDays else $Highest"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.InvoiceLine.Amount",
+            "value": "if $Method = 'PRORATA_ACTIVE_DAYS' then floor(($Weighted * 100) div $YearDays + 0.5) div 100 else $Highest"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "association": "MyFirstModule.InvoiceLine_Invoice",
+            "value": "$Invoice"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "end": "$Line"
+      }
+    ]
+  },
+  {
+    "name": "SUB_FederationBilling_ClubQuote",
+    "params": [
+      [
+        "Federation",
+        "MyFirstModule.Federation"
+      ],
+      {
+        "name": "Year",
+        "type": "Integer"
+      },
+      {
+        "name": "CensusDate",
+        "type": "DateTime"
+      },
+      {
+        "name": "Method",
+        "type": "String"
+      },
+      [
+        "Club",
+        "MyFirstModule.Club"
+      ],
+      {
+        "name": "AllSlices",
+        "type": "List",
+        "entity": "MyFirstModule.FederationBillingSlice"
+      },
+      {
+        "name": "ExistingInvoices",
+        "type": "List",
+        "entity": "MyFirstModule.Invoice"
+      },
+      {
+        "name": "ExistingClaims",
+        "type": "List",
+        "entity": "MyFirstModule.BillingClaim"
+      },
+      [
+        "Style",
+        "MyFirstModule.InvoiceStyle"
+      ]
+    ],
+    "returnType": "Object",
+    "returnTypeEntity": "MyFirstModule.FederationBillingQuote",
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Federation"
+            }
+          }
+        ],
+        "outputVariableName": "FederationId",
+        "useReturnVariable": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Club"
+            }
+          }
+        ],
+        "outputVariableName": "ClubId",
+        "useReturnVariable": true
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Key",
+        "variableType": "String",
+        "initialValue": "'FED:' + toString($FederationId) + ':' + toString($ClubId) + ':' + toString($Year)"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FindByExpression",
+          "listVariableName": "ExistingInvoices",
+          "expression": "$currentObject/BillingKey = $Key"
+        },
+        "outputVariableName": "ExistingInvoice"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FindByExpression",
+          "listVariableName": "ExistingClaims",
+          "expression": "$currentObject/Key = $Key"
+        },
+        "outputVariableName": "ExistingClaim"
+      },
+      {
+        "guard": "$ExistingInvoice = empty and $ExistingClaim = empty"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "AllSlices",
+          "expression": "$currentObject/ClubKey = toString($ClubId)"
+        },
+        "outputVariableName": "Slices"
+      },
+      {
+        "guard": "length($Slices) > 0"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "From",
+        "variableType": "DateTime",
+        "initialValue": "parseDateTimeUTC(toString($Year) + '-01-01', 'yyyy-MM-dd')"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Until",
+        "variableType": "DateTime",
+        "initialValue": "addYearsUTC($From,1)"
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.Invoice",
+        "outputVariableName": "Invoice",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.Number",
+            "value": "$Key"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.BillingKey",
+            "value": "$Key"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.Kind",
+            "value": "'FederationAnnual'"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.BillingYear",
+            "value": "$Year"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.BillingMethod",
+            "value": "$Method"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.CalculationVersion",
+            "value": "'NEXIO-FED-1'"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.PeriodStart",
+            "value": "$From"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.PeriodEnd",
+            "value": "$Until"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.CensusDate",
+            "value": "if $Method = 'ACTIVE_AT_CENSUS' then $CensusDate else empty"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.Currency",
+            "value": "$Federation/Currency"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.DueDate",
+            "value": "addDaysUTC([%CurrentDateTime%],30)"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.Description",
+            "value": "'Annual federation membership — ' + toString($Year)"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.RecipientName",
+            "value": "$Club/Name"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.IssuerName",
+            "value": "$Federation/Name"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.BrandTone",
+            "value": "'blue'"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.LayoutPreset",
+            "value": "'modern'"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.Status",
+            "value": "MyFirstModule.InvoiceStatus.Draft"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "association": "MyFirstModule.Invoice_Federation",
+            "value": "$Federation"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "association": "MyFirstModule.Invoice_RecipientClub",
+            "value": "$Club"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$CreateListAction",
+        "entity": "MyFirstModule.InvoiceLine",
+        "outputVariableName": "Lines"
+      },
+      {
+        "loop": "Slices",
+        "iterator": "Slice",
+        "body": [
+          {
+            "$Type": "Microflows$ListOperationAction",
+            "operation": {
+              "$Type": "Microflows$FindByExpression",
+              "listVariableName": "Lines",
+              "expression": "$currentObject/MemberKey = $Slice/MemberKey"
+            },
+            "outputVariableName": "ExistingLine"
+          },
+          {
+            "if": "$ExistingLine = empty",
+            "then": [
+              {
+                "$Type": "Microflows$MicroflowCallAction",
+                "microflowCall": {
+                  "$Type": "Microflows$MicroflowCall",
+                  "microflow": "MyFirstModule.SUB_FederationBilling_MemberLine",
+                  "parameterMappings": [
+                    {
+                      "$Type": "Microflows$MicroflowCallParameterMapping",
+                      "parameter": "MyFirstModule.SUB_FederationBilling_MemberLine.Invoice",
+                      "argument": "$Invoice"
+                    },
+                    {
+                      "$Type": "Microflows$MicroflowCallParameterMapping",
+                      "parameter": "MyFirstModule.SUB_FederationBilling_MemberLine.SelectedSlice",
+                      "argument": "$Slice"
+                    },
+                    {
+                      "$Type": "Microflows$MicroflowCallParameterMapping",
+                      "parameter": "MyFirstModule.SUB_FederationBilling_MemberLine.AllSlices",
+                      "argument": "$Slices"
+                    },
+                    {
+                      "$Type": "Microflows$MicroflowCallParameterMapping",
+                      "parameter": "MyFirstModule.SUB_FederationBilling_MemberLine.Method",
+                      "argument": "$Method"
+                    },
+                    {
+                      "$Type": "Microflows$MicroflowCallParameterMapping",
+                      "parameter": "MyFirstModule.SUB_FederationBilling_MemberLine.Year",
+                      "argument": "$Year"
+                    },
+                    {
+                      "$Type": "Microflows$MicroflowCallParameterMapping",
+                      "parameter": "MyFirstModule.SUB_FederationBilling_MemberLine.CensusDate",
+                      "argument": "$CensusDate"
+                    }
+                  ]
+                },
+                "outputVariableName": "Line"
+              },
+              {
+                "if": "$Line != empty",
+                "then": [
+                  {
+                    "$Type": "Microflows$ChangeListAction",
+                    "changeVariableName": "Lines",
+                    "value": "$Line"
+                  }
+                ],
+                "else": []
+              }
+            ],
+            "else": []
+          }
+        ]
+      },
+      {
+        "guard": "length($Lines) > 0"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Amount",
+        "variableType": "Decimal",
+        "initialValue": "0"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Units",
+        "variableType": "Decimal",
+        "initialValue": "0"
+      },
+      {
+        "loop": "Lines",
+        "iterator": "Item",
+        "body": [
+          {
+            "$Type": "Microflows$ChangeVariableAction",
+            "changeVariableName": "Amount",
+            "value": "$Amount + $Item/Amount"
+          },
+          {
+            "$Type": "Microflows$ChangeVariableAction",
+            "changeVariableName": "Units",
+            "value": "$Units + $Item/Quantity"
+          }
+        ]
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Invoice",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.Amount",
+            "value": "$Amount"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.BillableUnits",
+            "value": "$Units"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.Invoice.MemberCount",
+            "value": "length($Lines)"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "if": "$Style != empty",
+        "then": [
+          {
+            "$Type": "Microflows$MicroflowCallAction",
+            "microflowCall": {
+              "$Type": "Microflows$MicroflowCall",
+              "microflow": "MyFirstModule.SUB_Invoice_CopyStyle",
+              "parameterMappings": [
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_Invoice_CopyStyle.Invoice",
+                  "argument": "$Invoice"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_Invoice_CopyStyle.Style",
+                  "argument": "$Style"
+                }
+              ]
+            },
+            "useReturnVariable": false,
+            "outputVariableName": ""
+          }
+        ],
+        "else": []
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.BillingClaim",
+        "outputVariableName": "Claim",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.BillingClaim.Key",
+            "value": "$Key"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.FederationBillingQuote",
+        "outputVariableName": "Quote",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.FederationBillingQuote.Valid",
+            "value": "true"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "association": "MyFirstModule.FederationBillingQuote_Invoice",
+            "value": "$Invoice"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "association": "MyFirstModule.FederationBillingQuote_Lines",
+            "value": "$Lines"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "association": "MyFirstModule.FederationBillingQuote_Claim",
+            "value": "$Claim"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "end": "$Quote"
+      }
+    ]
+  },
+  {
+    "name": "SUB_FederationBilling_Drafts",
+    "params": [
+      [
+        "Federation",
+        "MyFirstModule.Federation"
+      ],
+      {
+        "name": "Year",
+        "type": "Integer"
+      },
+      {
+        "name": "CensusDate",
+        "type": "DateTime"
+      },
+      {
+        "name": "Method",
+        "type": "String"
+      }
+    ],
+    "returnType": "Boolean",
+    "serial": true,
+    "steps": [
+      {
+        "guard": "$Federation != empty and $Year >= 2000 and $Year <= 2100 and ($Method = 'ACTIVE_AT_CENSUS' or $Method = 'UNIQUE_DURING_YEAR' or $Method = 'PRORATA_ACTIVE_DAYS')"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "From",
+        "variableType": "DateTime",
+        "initialValue": "parseDateTimeUTC(toString($Year) + '-01-01', 'yyyy-MM-dd')"
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Until",
+        "variableType": "DateTime",
+        "initialValue": "addYearsUTC($From,1)"
+      },
+      {
+        "guard": "if $Method = 'ACTIVE_AT_CENSUS' then $CensusDate != empty and $CensusDate >= $From and $CensusDate < $Until and $CensusDate <= [%CurrentDateTime%] else $Until <= [%CurrentDateTime%]",
+        "message": "Choose a past census instant, or a completed year for year-wide and prorated billing."
+      },
+      {
+        "$Type": "Microflows$MicroflowCallAction",
+        "microflowCall": {
+          "$Type": "Microflows$MicroflowCall",
+          "microflow": "MyFirstModule.SUB_FederationBilling_Prepare",
+          "parameterMappings": [
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.SUB_FederationBilling_Prepare.Federation",
+              "argument": "$Federation"
+            },
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.SUB_FederationBilling_Prepare.Year",
+              "argument": "$Year"
+            },
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.SUB_FederationBilling_Prepare.Method",
+              "argument": "$Method"
+            },
+            {
+              "$Type": "Microflows$MicroflowCallParameterMapping",
+              "parameter": "MyFirstModule.SUB_FederationBilling_Prepare.CensusDate",
+              "argument": "$CensusDate"
+            }
+          ]
+        },
+        "outputVariableName": "Prepared"
+      },
+      {
+        "guard": "$Prepared != empty and $Prepared/Valid"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Prepared",
+          "association": "MyFirstModule.FederationBillingQuote_Slices"
+        },
+        "outputVariableName": "Slices"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Prepared",
+          "association": "MyFirstModule.FederationBillingQuote_Clubs"
+        },
+        "outputVariableName": "Clubs"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byDatabaseQuery": {
+          "entity": "MyFirstModule.Invoice",
+          "xPathConstraint": "[MyFirstModule.Invoice_Federation = $Federation and BillingYear = $Year]",
+          "takeOnlyFirst": false
+        },
+        "outputVariableName": "ExistingInvoices"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Federation"
+            }
+          }
+        ],
+        "outputVariableName": "FederationId",
+        "useReturnVariable": true
+      },
+      {
+        "$Type": "Microflows$CreateVariableAction",
+        "variableName": "Prefix",
+        "variableType": "String",
+        "initialValue": "'FED:' + toString($FederationId) + ':'"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byDatabaseQuery": {
+          "entity": "MyFirstModule.BillingClaim",
+          "xPathConstraint": "[starts-with(Key,$Prefix)]",
+          "takeOnlyFirst": false
+        },
+        "outputVariableName": "ExistingClaims"
+      },
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byDatabaseQuery": {
+          "entity": "MyFirstModule.InvoiceStyle",
+          "xPathConstraint": "[MyFirstModule.InvoiceStyle_Federation = $Federation]",
+          "takeOnlyFirst": true
+        },
+        "outputVariableName": "Style"
+      },
+      {
+        "$Type": "Microflows$CreateListAction",
+        "entity": "MyFirstModule.Invoice",
+        "outputVariableName": "Invoices"
+      },
+      {
+        "$Type": "Microflows$CreateListAction",
+        "entity": "MyFirstModule.InvoiceLine",
+        "outputVariableName": "Lines"
+      },
+      {
+        "$Type": "Microflows$CreateListAction",
+        "entity": "MyFirstModule.BillingClaim",
+        "outputVariableName": "Claims"
+      },
+      {
+        "loop": "Clubs",
+        "iterator": "Club",
+        "body": [
+          {
+            "$Type": "Microflows$MicroflowCallAction",
+            "microflowCall": {
+              "$Type": "Microflows$MicroflowCall",
+              "microflow": "MyFirstModule.SUB_FederationBilling_ClubQuote",
+              "parameterMappings": [
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.Federation",
+                  "argument": "$Federation"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.Year",
+                  "argument": "$Year"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.CensusDate",
+                  "argument": "$CensusDate"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.Method",
+                  "argument": "$Method"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.Club",
+                  "argument": "$Club"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.AllSlices",
+                  "argument": "$Slices"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.ExistingInvoices",
+                  "argument": "$ExistingInvoices"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.ExistingClaims",
+                  "argument": "$ExistingClaims"
+                },
+                {
+                  "$Type": "Microflows$MicroflowCallParameterMapping",
+                  "parameter": "MyFirstModule.SUB_FederationBilling_ClubQuote.Style",
+                  "argument": "$Style"
+                }
+              ]
+            },
+            "outputVariableName": "ClubQuote"
+          },
+          {
+            "if": "$ClubQuote != empty",
+            "then": [
+              {
+                "$Type": "Microflows$RetrieveAction",
+                "byAssociation": {
+                  "startVariableName": "ClubQuote",
+                  "association": "MyFirstModule.FederationBillingQuote_Invoice"
+                },
+                "outputVariableName": "NewInvoice"
+              },
+              {
+                "$Type": "Microflows$RetrieveAction",
+                "byAssociation": {
+                  "startVariableName": "ClubQuote",
+                  "association": "MyFirstModule.FederationBillingQuote_Lines"
+                },
+                "outputVariableName": "NewLines"
+              },
+              {
+                "$Type": "Microflows$RetrieveAction",
+                "byAssociation": {
+                  "startVariableName": "ClubQuote",
+                  "association": "MyFirstModule.FederationBillingQuote_Claim"
+                },
+                "outputVariableName": "NewClaim"
+              },
+              {
+                "$Type": "Microflows$ChangeListAction",
+                "changeVariableName": "Invoices",
+                "value": "$NewInvoice"
+              },
+              {
+                "$Type": "Microflows$ChangeListAction",
+                "changeVariableName": "Lines",
+                "value": "$NewLines"
+              },
+              {
+                "$Type": "Microflows$ChangeListAction",
+                "changeVariableName": "Claims",
+                "value": "$NewClaim"
+              }
+            ],
+            "else": []
+          }
+        ]
+      },
+      {
+        "$Type": "Microflows$CommitAction",
+        "commitVariableName": "Claims",
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$CommitAction",
+        "commitVariableName": "Invoices",
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$CommitAction",
+        "commitVariableName": "Lines",
+        "refreshInClient": true
+      },
+      {
+        "end": "true"
+      }
+    ]
+  }
+]

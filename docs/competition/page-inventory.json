@@ -1,0 +1,78 @@
+[
+  {
+    "qualifiedName": "MyFirstModule.LeagueEntry_Move",
+    "folderPath": "CRM/Competition/Registrations"
+  },
+  {
+    "qualifiedName": "MyFirstModule.LeagueEntry_Poule",
+    "folderPath": "CRM/Competition/Registrations"
+  },
+  {
+    "qualifiedName": "MyFirstModule.LeagueEntry_Register",
+    "folderPath": "CRM/Competition/Registrations"
+  },
+  {
+    "qualifiedName": "MyFirstModule.VenueAvailability_Edit",
+    "folderPath": "CRM/Competition/Venues"
+  },
+  {
+    "qualifiedName": "MyFirstModule.ClubCompetitionPolicy_Edit",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.Competition_Overview",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionAllocation_Edit",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionDelegate_Edit",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionFederation_Workspace",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionLeague_Edit",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionLeague_Workspace",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionPlayer_Add",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionTeam_Edit",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionTeam_Workspace",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionVenue_Edit",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionVenue_Workspace",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.FixturePlacement_Edit",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.FixtureChange_Propose",
+    "folderPath": "CRM/Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionChecks_Overview",
+    "folderPath": "CRM/Competition/Tests"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "approvedAndApplied": "UnitTesting.TestRunner assigned only to the Administrator app role, with explicit user approval on 2026-10-12.",
+  "effect": "The platform administrator can run unit tests and view their reports. The framework runner remains unavailable to guest, member, club-admin and federation-admin roles.",
+  "framework": "Official Mendix Unit Testing, component 390, version 10.0.8",
+  "remoteApiEnabled": false,
+  "productionEnabled": false,
+  "testData": "Placement tests create uncommitted synthetic objects and never create accounts, business records or mail.",
+  "navigation": "UnitTesting.UnitTestOverview microflow, gated by UnitTesting.TestRunner."
+}

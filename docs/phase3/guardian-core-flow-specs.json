@@ -1,0 +1,297 @@
+{
+  "status": "Prepared private server-flow specifications; not yet created in Mendix. A database-unique GuardianMutationClaim.Key is required before using the revision flow.",
+  "flows": [
+    {
+      "name": "SUB_Profile_HasPermission",
+      "params": [
+        [
+          "Profile",
+          "MyFirstModule.MemberProfile"
+        ],
+        {
+          "name": "Permission",
+          "type": "String"
+        }
+      ],
+      "returnType": "Boolean",
+      "steps": [
+        {
+          "guard": "$Profile != empty"
+        },
+        {
+          "guard": "$Permission = 'Register' or $Permission = 'Pay' or $Permission = 'ViewMemberships' or $Permission = 'ManageGuardians'"
+        },
+        {
+          "$Type": "Microflows$RetrieveAction",
+          "byDatabaseQuery": {
+            "entity": "MyFirstModule.MemberProfile",
+            "xPathConstraint": "[id = $Profile][State = 'Active']",
+            "takeOnlyFirst": true
+          },
+          "outputVariableName": "StoredProfile"
+        },
+        {
+          "guard": "$StoredProfile != empty"
+        },
+        {
+          "$Type": "Microflows$RetrieveAction",
+          "byDatabaseQuery": {
+            "entity": "MyFirstModule.MemberProfile",
+            "xPathConstraint": "[id = $StoredProfile][MyFirstModule.MemberProfile_Account = '[%CurrentUser%]']",
+            "takeOnlyFirst": true
+          },
+          "outputVariableName": "OwnedProfile"
+        },
+        {
+          "$Type": "Microflows$CreateVariableAction",
+          "variableName": "Allowed",
+          "variableType": "Boolean",
+          "initialValue": "$OwnedProfile != empty"
+        },
+        {
+          "if": "not($Allowed)",
+          "then": [
+            {
+              "if": "$Permission = 'ManageGuardians'",
+              "then": [
+                {
+                  "$Type": "Microflows$RetrieveAction",
+                  "byAssociation": {
+                    "startVariableName": "StoredProfile",
+                    "association": "MyFirstModule.MemberProfile_MainGuardian"
+                  },
+                  "outputVariableName": "MainLink"
+                },
+                {
+                  "if": "$MainLink != empty",
+                  "then": [
+                    {
+                      "$Type": "Microflows$RetrieveAction",
+                      "byDatabaseQuery": {
+                        "entity": "MyFirstModule.GuardianLink",
+                        "xPathConstraint": "[id = $MainLink][MyFirstModule.GuardianLink_Profile = $StoredProfile][MyFirstModule.GuardianLink_Account = '[%CurrentUser%]'][State = 'Active'][VerifiedAt != empty]",
+                        "takeOnlyFirst": true
+                      },
+                      "outputVariableName": "OwnedMain"
+                    },
+                    {
+                      "$Type": "Microflows$ChangeVariableAction",
+                      "changeVariableName": "Allowed",
+                      "value": "$OwnedMain != empty"
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "else": [
+                {
+                  "$Type": "Microflows$RetrieveAction",
+                  "byDatabaseQuery": {
+                    "entity": "MyFirstModule.GuardianLink",
+                    "xPathConstraint": "[MyFirstModule.GuardianLink_Profile = $StoredProfile][MyFirstModule.GuardianLink_Account = '[%CurrentUser%]'][State = 'Active'][VerifiedAt != empty]",
+                    "takeOnlyFirst": true
+                  },
+                  "outputVariableName": "Link"
+                },
+                {
+                  "if": "$Link != empty",
+                  "then": [
+                    {
+                      "$Type": "Microflows$ChangeVariableAction",
+                      "changeVariableName": "Allowed",
+                      "value": "if $Permission = 'Register' then $Link/CanRegister else if $Permission = 'Pay' then $Link/CanPay else $Link/CanViewMemberships"
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "end": "$Allowed"
+        }
+      ]
+    },
+    {
+      "name": "SUB_Profile_ClaimRevision",
+      "params": [
+        [
+          "Profile",
+          "MyFirstModule.MemberProfile"
+        ],
+        {
+          "name": "ExpectedRevision",
+          "type": "Integer"
+        }
+      ],
+      "returnType": "Boolean",
+      "steps": [
+        {
+          "guard": "$Profile != empty and $ExpectedRevision >= 0 and $ExpectedRevision < 2147483647"
+        },
+        {
+          "$Type": "Microflows$RetrieveAction",
+          "byDatabaseQuery": {
+            "entity": "MyFirstModule.MemberProfile",
+            "xPathConstraint": "[id = $Profile][State = 'Active'][Revision = $ExpectedRevision]",
+            "takeOnlyFirst": true
+          },
+          "outputVariableName": "CurrentProfile"
+        },
+        {
+          "guard": "$CurrentProfile != empty",
+          "message": "This person's details changed. Refresh and try again."
+        },
+        {
+          "$Type": "Microflows$JavaActionCallAction",
+          "javaAction": "CommunityCommons.getGUID",
+          "parameterMappings": [
+            {
+              "$Type": "Microflows$JavaActionParameterMapping",
+              "parameter": "CommunityCommons.getGUID.item",
+              "parameterValue": {
+                "$Type": "Microflows$BasicCodeActionParameterValue",
+                "argument": "$CurrentProfile"
+              }
+            }
+          ],
+          "outputVariableName": "ProfileId",
+          "useReturnVariable": true
+        },
+        {
+          "$Type": "Microflows$CreateVariableAction",
+          "variableName": "Key",
+          "variableType": "String",
+          "initialValue": "'PROFILE:' + toString($ProfileId) + ':' + toString($ExpectedRevision)"
+        },
+        {
+          "$Type": "Microflows$RetrieveAction",
+          "byDatabaseQuery": {
+            "entity": "MyFirstModule.GuardianMutationClaim",
+            "xPathConstraint": "[Key = $Key]",
+            "takeOnlyFirst": true
+          },
+          "outputVariableName": "Existing"
+        },
+        {
+          "guard": "$Existing = empty",
+          "message": "Another update is already using this person's details. Refresh and try again."
+        },
+        {
+          "$Type": "Microflows$CreateObjectAction",
+          "entity": "MyFirstModule.GuardianMutationClaim",
+          "outputVariableName": "Claim",
+          "items": [
+            {
+              "$Type": "Microflows$MemberChange",
+              "attribute": "MyFirstModule.GuardianMutationClaim.Key",
+              "value": "$Key"
+            },
+            {
+              "$Type": "Microflows$MemberChange",
+              "attribute": "MyFirstModule.GuardianMutationClaim.CreatedAt",
+              "value": "[%CurrentDateTime%]"
+            }
+          ],
+          "commit": "Yes",
+          "refreshInClient": true
+        },
+        {
+          "$Type": "Microflows$ChangeObjectAction",
+          "changeVariableName": "CurrentProfile",
+          "items": [
+            {
+              "$Type": "Microflows$MemberChange",
+              "attribute": "MyFirstModule.MemberProfile.Revision",
+              "value": "$ExpectedRevision + 1"
+            }
+          ],
+          "commit": "Yes",
+          "refreshInClient": true
+        },
+        {
+          "end": "true"
+        }
+      ]
+    },
+    {
+      "name": "VAL_MemberProfile_Invariants",
+      "params": [
+        [
+          "Profile",
+          "MyFirstModule.MemberProfile"
+        ]
+      ],
+      "returnType": "Boolean",
+      "steps": [
+        {
+          "$Type": "Microflows$CreateVariableAction",
+          "variableName": "Valid",
+          "variableType": "Boolean",
+          "initialValue": "trim($Profile/FullName) != '' and trim($Profile/ProfileKey) != '' and ($Profile/DateOfBirth = empty or $Profile/DateOfBirth <= [%CurrentDateTime%]) and ($Profile/State = 'Setup' or $Profile/State = 'Active') and $Profile/Revision >= 0"
+        },
+        {
+          "if": "$Profile/State = 'Active'",
+          "then": [
+            {
+              "$Type": "Microflows$RetrieveAction",
+              "byAssociation": {
+                "startVariableName": "Profile",
+                "association": "MyFirstModule.MemberProfile_Account"
+              },
+              "outputVariableName": "Account"
+            },
+            {
+              "$Type": "Microflows$RetrieveAction",
+              "byAssociation": {
+                "startVariableName": "Profile",
+                "association": "MyFirstModule.MemberProfile_MainGuardian"
+              },
+              "outputVariableName": "MainLink"
+            },
+            {
+              "$Type": "Microflows$RetrieveAction",
+              "byDatabaseQuery": {
+                "entity": "MyFirstModule.GuardianLink",
+                "xPathConstraint": "[MyFirstModule.GuardianLink_Profile = $Profile][State = 'Active'][VerifiedAt != empty]",
+                "takeOnlyFirst": false
+              },
+              "outputVariableName": "ActiveLinks"
+            },
+            {
+              "if": "$MainLink != empty",
+              "then": [
+                {
+                  "$Type": "Microflows$RetrieveAction",
+                  "byAssociation": {
+                    "startVariableName": "MainLink",
+                    "association": "MyFirstModule.GuardianLink_Profile"
+                  },
+                  "outputVariableName": "MainProfile"
+                },
+                {
+                  "$Type": "Microflows$ChangeVariableAction",
+                  "changeVariableName": "Valid",
+                  "value": "$Valid and $MainProfile = $Profile and $MainLink/State = 'Active' and $MainLink/VerifiedAt != empty and $MainLink/CanRegister and $MainLink/CanPay and $MainLink/CanViewMemberships"
+                }
+              ],
+              "else": [
+                {
+                  "$Type": "Microflows$ChangeVariableAction",
+                  "changeVariableName": "Valid",
+                  "value": "$Valid and $Account != empty and length($ActiveLinks) = 0"
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "end": "$Valid"
+        }
+      ]
+    }
+  ]
+}

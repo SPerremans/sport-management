@@ -1,0 +1,101 @@
+{
+  "status": "Revised requirements prepared; not applied to Mendix",
+  "federation": {
+    "methods": [
+      {
+        "key": "ACTIVE_AT_CENSUS",
+        "label": "Active at a chosen date and time",
+        "formula": "Distinct beneficiary profiles active at the selected instant; charge the highest applicable annual federation rate once per person per club.",
+        "finalization": "The census instant must be in the billing year and in the past."
+      },
+      {
+        "key": "UNIQUE_DURING_YEAR",
+        "label": "Any membership during the year",
+        "formula": "Distinct profiles with any activated membership interval in the year; highest applicable annual rate once per person per club.",
+        "finalization": "Only after year end; during-year previews are estimates."
+      },
+      {
+        "key": "PRORATA_ACTIVE_DAYS",
+        "label": "Prorated by active days",
+        "formula": "For each profile and day, charge the highest applicable annual rate divided by the number of days in the year. Merge overlapping intervals. Round once per person's yearly line to currency precision.",
+        "finalization": "Only after year end; during-year previews use elapsed days and cannot be issued as a final invoice."
+      }
+    ],
+    "defaults": {
+      "method": "ACTIVE_AT_CENSUS",
+      "census": "configured by federation",
+      "currency": "federation currency"
+    },
+    "counting": "Bound activated membership intervals by membership season and club affiliation dates. Pending/rejected/unpaid requests that have not activated never count. Cancelled memberships retain the historical active interval.",
+    "snapshotFields": [
+      "BillingMethod",
+      "BillingYear",
+      "CensusDate",
+      "MemberCount",
+      "BillableUnits",
+      "CalculationVersion",
+      "PeriodStart",
+      "PeriodEnd"
+    ],
+    "idempotency": "One federation-club-year charge key across all methods. Changing the method cannot generate a second annual invoice. Draft regeneration and issued corrections require explicit audited cancellation/replacement.",
+    "configuration": "Year-specific billing method/rate overrides should be recorded so a future setting change does not alter previous calculations."
+  },
+  "club": {
+    "default": "Full seasonal fee, one invoice.",
+    "instalments": "Only on an explicit member or authorized guardian request, approved by a club user with the billing/registration permission. Never enabled automatically merely because a club allows instalments.",
+    "requestFields": {
+      "RequestedInstallments": "Integer default 1; member input only while draft",
+      "ApprovedInstallments": "Integer default 1; server writes through guarded approval",
+      "InstalmentStatus": "NotRequested/Pending/Approved/Rejected"
+    },
+    "policyFields": {
+      "AllowRequestedInstallments": "Boolean default false",
+      "MaximumInstallments": "Integer 1..12",
+      "FirstDueDate": "Date",
+      "IsEnabled": "Renewal/billing settings enabled"
+    },
+    "approvalChecks": [
+      "same club and beneficiary",
+      "no paid invoice or pre-existing plan",
+      "approved count does not exceed request or policy",
+      "last due date stays within season",
+      "actual due schedule disclosed before confirmation",
+      "unique plan and transaction protect concurrent approval"
+    ],
+    "renewal": "Annual next-season invoice initially shows the whole fee. Confirm registration or decline. Apply an approved instalment request before payment. Keep the current season active.",
+    "activationPayment": "Separate payment eligibility from invoice creation: a fee can be invoiced even when the club allows membership activation before payment. If payment is required to join, the configured first-payment condition must be confirmed before activation."
+  },
+  "modelChanges": {
+    "Federation": {
+      "BillingMethod": "String validated against three methods"
+    },
+    "FederationBillingForm": {
+      "BillingMethod": "String"
+    },
+    "Invoice": {
+      "BillingMethod": "String",
+      "BillableUnits": "Decimal",
+      "CalculationVersion": "String",
+      "PeriodStart": "DateTime",
+      "PeriodEnd": "DateTime"
+    },
+    "InvoiceLine": {
+      "Quantity": "Change Integer to Decimal",
+      "ActiveDays": "Integer",
+      "AnnualDays": "Integer"
+    },
+    "ClubBillingPolicy": {
+      "AllowRequestedInstallments": "Boolean",
+      "Installments": "Maximum allowed count, not automatic count"
+    },
+    "RegistrationRequest": {
+      "RequestedInstallments": "Integer default 1",
+      "ApprovedInstallments": "Integer default 1",
+      "InstalmentStatus": "String"
+    },
+    "RenewalOffer": {
+      "RequestedInstallments": "Integer default 1"
+    }
+  },
+  "integration": "phase3-billing-calculations.js is a tested standalone reference; translate these rules into Mendix flows once the document API is restored. It is not currently called by the running app."
+}

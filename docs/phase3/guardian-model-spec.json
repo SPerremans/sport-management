@@ -1,0 +1,343 @@
+{
+  "status": "Prepared specification; not applied while the saving fault is being recovered.",
+  "entities": [
+    {
+      "name": "MemberProfile",
+      "isPersistable": true,
+      "attrs": {
+        "FullName": "String",
+        "DateOfBirth": "DateTime",
+        "State": "String",
+        "MainGuardianName": "String",
+        "Revision": "Integer",
+        "CreatedAt": "DateTime",
+        "ProfileKey": "String"
+      },
+      "unique": [
+        "ProfileKey"
+      ]
+    },
+    {
+      "name": "GuardianLink",
+      "isPersistable": true,
+      "attrs": {
+        "State": "String",
+        "GuardianName": "String",
+        "GuardianEmail": "String",
+        "Relationship": "String",
+        "VerifiedAt": "DateTime",
+        "RevokedAt": "DateTime",
+        "CanRegister": "Boolean",
+        "CanPay": "Boolean",
+        "CanViewMemberships": "Boolean",
+        "LinkKey": "String"
+      },
+      "unique": [
+        "LinkKey"
+      ]
+    },
+    {
+      "name": "GuardianInvitation",
+      "isPersistable": true,
+      "attrs": {
+        "RecipientEmail": "String",
+        "TokenHash": "String",
+        "State": "String",
+        "ExpiresAt": "DateTime",
+        "UsedAt": "DateTime",
+        "DeliveryError": "String",
+        "CanRegister": "Boolean",
+        "CanPay": "Boolean",
+        "CanViewMemberships": "Boolean"
+      },
+      "unique": [
+        "TokenHash"
+      ]
+    },
+    {
+      "name": "GuardianMutationClaim",
+      "isPersistable": true,
+      "attrs": {
+        "Key": "String",
+        "CreatedAt": "DateTime"
+      },
+      "unique": [
+        "Key"
+      ],
+      "serverOnly": true
+    },
+    {
+      "name": "GuardianAudit",
+      "isPersistable": true,
+      "attrs": {
+        "Action": "String",
+        "ActorName": "String",
+        "CreatedAt": "DateTime",
+        "Detail": "String"
+      },
+      "serverWritesOnly": true
+    },
+    {
+      "name": "DependentForm",
+      "isPersistable": false,
+      "attrs": {
+        "FullName": "String",
+        "DateOfBirth": "DateTime",
+        "Relationship": "String"
+      }
+    },
+    {
+      "name": "GuardianChangeForm",
+      "isPersistable": false,
+      "attrs": {
+        "Operation": "String",
+        "RecipientEmail": "String",
+        "Relationship": "String",
+        "CanRegister": "Boolean",
+        "CanPay": "Boolean",
+        "CanViewMemberships": "Boolean",
+        "ExpectedRevision": "Integer",
+        "Reason": "String"
+      }
+    },
+    {
+      "name": "GuardianAcceptForm",
+      "isPersistable": false,
+      "attrs": {
+        "Token": "String"
+      }
+    },
+    {
+      "name": "ProfileEditForm",
+      "isPersistable": false,
+      "attrs": {
+        "FullName": "String",
+        "DateOfBirth": "DateTime",
+        "ExpectedRevision": "Integer"
+      }
+    }
+  ],
+  "associations": [
+    [
+      "MemberProfile_MainGuardian",
+      "MemberProfile",
+      "GuardianLink"
+    ],
+    [
+      "GuardianLink_Profile",
+      "GuardianLink",
+      "MemberProfile"
+    ],
+    [
+      "GuardianInvitation_Profile",
+      "GuardianInvitation",
+      "MemberProfile"
+    ],
+    [
+      "GuardianInvitation_Link",
+      "GuardianInvitation",
+      "GuardianLink"
+    ],
+    [
+      "GuardianAudit_Profile",
+      "GuardianAudit",
+      "MemberProfile"
+    ],
+    [
+      "DependentForm_Profile",
+      "DependentForm",
+      "MemberProfile"
+    ],
+    [
+      "GuardianChangeForm_Profile",
+      "GuardianChangeForm",
+      "MemberProfile"
+    ],
+    [
+      "GuardianChangeForm_Target",
+      "GuardianChangeForm",
+      "GuardianLink"
+    ],
+    [
+      "ProfileEditForm_Profile",
+      "ProfileEditForm",
+      "MemberProfile"
+    ],
+    [
+      "Membership_Profile",
+      "Membership",
+      "MemberProfile"
+    ],
+    [
+      "RegistrationRequest_Profile",
+      "RegistrationRequest",
+      "MemberProfile"
+    ],
+    [
+      "RenewalOffer_Profile",
+      "RenewalOffer",
+      "MemberProfile"
+    ],
+    [
+      "Invoice_BeneficiaryProfile",
+      "Invoice",
+      "MemberProfile"
+    ],
+    [
+      "BillingPlan_Profile",
+      "BillingPlan",
+      "MemberProfile"
+    ],
+    [
+      "FederationRegistration_Profile",
+      "FederationRegistration",
+      "MemberProfile"
+    ],
+    [
+      "AccountInvitation_Profile",
+      "AccountInvitation",
+      "MemberProfile"
+    ]
+  ],
+  "crossAssociations": [
+    [
+      "MemberProfile_Account",
+      "MemberProfile",
+      "UserManagement.Person",
+      "one_to_one",
+      "Both"
+    ],
+    [
+      "GuardianLink_Account",
+      "GuardianLink",
+      "UserManagement.Person"
+    ],
+    [
+      "GuardianInvitation_Inviter",
+      "GuardianInvitation",
+      "UserManagement.Person"
+    ],
+    [
+      "GuardianAudit_Actor",
+      "GuardianAudit",
+      "UserManagement.Person"
+    ],
+    [
+      "Invoice_BillingContact",
+      "Invoice",
+      "UserManagement.Person"
+    ],
+    [
+      "PaymentVerification_Payer",
+      "PaymentVerification",
+      "UserManagement.Person"
+    ]
+  ],
+  "serverInvariants": [
+    "Account email remains case-insensitively unique across login accounts; a dependent profile may have no email or login.",
+    "MemberProfile_Account is a database-constrained one-to-one association. Only guarded account binding can set it.",
+    "An active profile with active guardian links references exactly one active, verified same-profile main link.",
+    "A dependent without an own account cannot lose its last active guardian.",
+    "Pending, expired, revoked or unverified links never grant delegated permissions.",
+    "Only the profile's own login or its main guardian may invite, change delegated permissions or transfer main status.",
+    "Every mutation reads the current profile revision and inserts a database-unique ProfileKey:Revision claim before writing. It increments Revision in the same transaction; a competing mutation rolls back and requests a refresh.",
+    "Every guardian mutation writes an immutable audit entry; audit and claim fields are not editable from the client.",
+    "Invitation acceptance requires a sent, unexpired single-use token, the intended signed-in recipient account, and a current authorized inviter. It never grants unrelated profile access.",
+    "Profile creation first uses an inaccessible Setup state, then creates the initial active link and main reference before changing State to Active.",
+    "Membership identity and duplicate checks use Profile+Club+Type+Season. Payer and creator accounts are separate audit/communication fields.",
+    "Legacy Invoice_Person remains the beneficiary's own login, never the guardian payer; otherwise revocation would fail to remove invoice access."
+  ],
+  "migration": {
+    "guardedAction": "Platform administrator only; idempotent backfill and validation before exposing guardian UI.",
+    "steps": [
+      "Create or reuse one own profile per existing UserManagement.Person account.",
+      "Backfill Membership_Profile and RegistrationRequest_Profile from existing beneficiary Person associations.",
+      "Backfill Invoice_BeneficiaryProfile, RenewalOffer_Profile, BillingPlan_Profile and federation projections from the associated registration/membership beneficiary.",
+      "Preserve legacy Person links as compatibility data; child profiles do not put the parent in beneficiary Person links.",
+      "Update all server authorization, duplicate detection, dashboard data sources, club content access, federation count keys and payment intent guards before enabling dependent registration.",
+      "Validate totals and ownership before/after migration. Do not rewrite paid invoice snapshots.",
+      "Do not auto-merge profiles by name/date of birth or claim an existing profile by matching an email."
+    ]
+  },
+  "publicFlows": [
+    {
+      "name": "ACT_Dependent_Create",
+      "roles": [
+        "MyFirstModule.User"
+      ],
+      "purpose": "Create a new dependent profile and initial main guardian; never claim an existing person."
+    },
+    {
+      "name": "ACT_Guardian_Manage",
+      "roles": [
+        "MyFirstModule.User",
+        "MyFirstModule.Administrator"
+      ],
+      "purpose": "One guarded mutation boundary for invite/permissions/transfer/revoke and audited administrator recovery."
+    },
+    {
+      "name": "ACT_Guardian_Accept",
+      "roles": [
+        "MyFirstModule.User"
+      ],
+      "purpose": "Accept a verified mailed invitation while logged into the intended account."
+    },
+    {
+      "name": "DS_ActingProfiles",
+      "roles": [
+        "MyFirstModule.User"
+      ],
+      "purpose": "Own profile plus active verified CanRegister profiles."
+    },
+    {
+      "name": "ACT_Profile_Save",
+      "roles": [
+        "MyFirstModule.User"
+      ],
+      "purpose": "Guarded own/main profile edits with revision check."
+    },
+    {
+      "name": "ACT_Dependent_EnableLogin",
+      "roles": [
+        "MyFirstModule.User",
+        "MyFirstModule.Administrator"
+      ],
+      "purpose": "Queue an ordinary account invitation for an authorized dependent without a login; bind its profile only on secure redemption."
+    }
+  ],
+  "access": {
+    "MemberProfile": {
+      "own": "Name and date of birth read-only",
+      "guardianCanRegister": "Name and date of birth read-only",
+      "guardianCanViewMemberships": "Name only; relevant memberships read-only",
+      "guardianCanPay": "Name only; issued beneficiary invoices read-only",
+      "clubAdmin": "Name only through this club's registrations/memberships; no family links",
+      "federationAdmin": "No profile access; projection fields only"
+    },
+    "GuardianLink": {
+      "ownLink": "Read-only",
+      "mainOrProfileOwner": "Same-profile links read-only",
+      "clubAndFederationAdmins": "None",
+      "changes": "Guarded server actions only"
+    },
+    "GuardianInvitation": {
+      "inviter": "Email/status/expiry read-only; hash and recipient account links None",
+      "acceptance": "Nonpersistable token input only",
+      "clubAndFederationAdmins": "None"
+    },
+    "GuardianMutationClaim": "No client access",
+    "guardianPayer": "Issued invoices only through a current active verified CanPay link. No permanent invoice read grant merely because an account paid earlier.",
+    "registrationAnswers": "Draft edits only for the beneficiary's own account or current active CanRegister guardian; submitted answers read-only. Club access remains club-scoped."
+  },
+  "tests": [
+    "Concurrent main transfer and revocation; one revision claim wins and the loser reloads.",
+    "Revoked guardian with a still-open browser cannot retrieve child invoices or registrations.",
+    "Two guardians submitting for one child produce one request/membership; two children with one payer remain two distinct members.",
+    "Forged profile/link parameters cannot select another family.",
+    "Own-account linkage cannot attach a second profile or steal an already linked child.",
+    "Wrong-account, expired, reused, revoked and unsent guardian tokens fail.",
+    "No mail setup means invitations remain Queued and access remains Pending.",
+    "Paid invoice beneficiary/issuer snapshots and totals do not change after main transfer.",
+    "Checkout is scoped to the acting payer and duplicate provider callbacks cannot double-mark or double-charge an invoice."
+  ]
+}

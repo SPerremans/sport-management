@@ -1,0 +1,64 @@
+Listing problems 1-32 (out of 32). Check ID: 18
+'MyFirstModule.ACT_Federation_Open' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.FederationAffiliation_Edit' (Pages$Page):
+- [error] At least one allowed role must be selected if the page is used from navigation, a button, or a URL. (at locations: -)
+'MyFirstModule.ACT_FederationAffiliation_Create' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Renewal_Generate' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_ClubBillingPolicy_Save' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.DS_PasswordResetForm' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_FederationType_Create' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_FederationBilling_Open' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_FederationBilling_Generate' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Invitation_Redeem' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.FederationType_Edit' (Pages$Page):
+- [error] At least one allowed role must be selected if the page is used from navigation, a button, or a URL. (at locations: -)
+'MyFirstModule.SUB_Registration_SelectedSeason' (Microflows$Microflow):
+- [error] Duplicate variable name 'RequestedSeason'. (at locations: Retrieve object(s) activity 'Retrieve Season by $Request/RegistrationRequest_Season')
+- [error] Duplicate variable name 'RequestedType'. (at locations: Retrieve object(s) activity 'Retrieve MembershipType by $Request/RegistrationRequest_MembershipType')
+'MyFirstModule.ACT_FederationInvoiceStyle_Open' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Federation_AssignmentOpen' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_FederationRate_Save' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_InvoiceStyle_Save' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Federation_AssignAdmin' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Renewal_Decline' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.DS_AdminAccountForm' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Federation_Create' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Federation_Save' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Renewal_Begin' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_FederationRate_Create' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Federation_Settings' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_AdminAccount_Create' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.SE_Billing_IssueDue' (Microflows$Microflow):
+- [error] Retrieve object(s) activity cannot be the last object of a flow, it should end with an end event. (at locations: Retrieve object(s) activity 'Retrieve list of Invoice from database')
+'MyFirstModule.ACT_FederationInvoice_Issue' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.FederationRate_Edit' (Pages$Page):
+- [error] At least one allowed role must be selected if the page is used from navigation, a button, or a URL. (at locations: -)
+'MyFirstModule.ACT_FederationType_Save' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_Invitation_Revoke' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)
+'MyFirstModule.ACT_FederationAffiliation_Save' (Microflows$Microflow):
+- [error] At least one allowed role must be selected if the microflow is used from navigation, a page, a nanoflow or a published service. (at locations: -)

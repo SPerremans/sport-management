@@ -1,0 +1,2079 @@
+{
+  "status": "DRAFT FOR EXPLICIT APPROVAL. No new entity access, application role mapping, page permission, or public microflow permission has been applied.",
+  "userRoleChanges": [
+    {
+      "create": "FederationAdmin",
+      "moduleRoles": [
+        "System.User",
+        "MyFirstModule.User",
+        "UserManagement.Member",
+        "MyFirstModule.FederationAdmin"
+      ],
+      "manageAllRoles": false
+    },
+    {
+      "existing": "Administrator",
+      "addModuleRole": "MyFirstModule.FederationAdmin"
+    },
+    {
+      "existing": "ClubAdmin",
+      "addManageableRole": "User",
+      "reason": "Create ordinary member accounts through an owner-checked server action; no client access to Person or System.User is added."
+    }
+  ],
+  "accessRules": [
+    {
+      "entity": "Federation",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.Federation.Name",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.Description",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.IsActive",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.CensusMonth",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.CensusDay",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.Currency",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.Federation_Admins",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationType",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationType.Name",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationType.Description",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationType.IsAvailable",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FederationType_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationRate",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationRate.Year",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRate.AnnualFee",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRate.Currency",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRate.RateKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.FederationRate_FederationType",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationAffiliation",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.StartsOn",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.EndsOn",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.IsActive",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.ClubName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FederationAffiliation_Club",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FederationAffiliation_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationRegistration",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationRegistration.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.TypeName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.SubmittedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.JoinedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.EndedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.SeasonStartsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.SeasonEndsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.RegistrationKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_Membership",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_RegistrationRequest",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_FederationType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceStyle",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.IssuerName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.Address",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.ContactEmail",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.TaxNumber",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.BankDetails",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.HeaderText",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.FooterText",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.PaymentInstructions",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.BrandTone",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.LayoutPreset",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.LogoUrl",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.InvoiceStyle_Federation",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.InvoiceStyle_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "ClubBillingPolicy",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.Installments",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.FirstDueDate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.RenewalIssueDate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.RenewalDueDate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.IsEnabled",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.ClubBillingPolicy_RenewalSeason",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.ClubBillingPolicy_Season",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.ClubBillingPolicy_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "BillingPlan",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.BillingPlan.TotalFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.BillingPlan.Currency",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.BillingPlan.Installments",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.BillingPlan.FirstDueDate",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.BillingPlan.PlanKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.BillingPlan_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.BillingPlan_Membership",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.BillingPlan_RegistrationRequest",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.BillingPlan_Person",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceLine",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Description",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MembershipType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Quantity",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.UnitPrice",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Amount",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.InvoiceLine_FederationRegistration",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.InvoiceLine_Invoice",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "RenewalOffer",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Fee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Currency",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.DeclinedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.DeclineReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.OfferKey",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.NextSeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_SeasonFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Membership",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_RegistrationRequest",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Person",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "AccountInvitation",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.AccountInvitation.FullName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.Email",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.CreatedBy",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.DeliveryState",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.TokenHash",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.ExpiresAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.UsedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.Revoked",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.DeliveryError",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.AccountInvitation_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.AccountInvitation_Creator",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.AccountInvitation_Person",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceMail",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceMail.RecipientEmail",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.Subject",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.DeliveryState",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.LastError",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.InvoiceMail_Invoice",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Federation",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.Federation_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.Federation.Name",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.Description",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.IsActive",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.CensusMonth",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.CensusDay",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.Federation.Currency",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.Federation_Admins",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationType",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.FederationType_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationType.Name",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationType.Description",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationType.IsAvailable",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FederationType_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationRate",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.FederationRate_FederationType/MyFirstModule.FederationType/MyFirstModule.FederationType_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationRate.Year",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRate.AnnualFee",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRate.Currency",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRate.RateKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.FederationRate_FederationType",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationAffiliation",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.FederationAffiliation_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.StartsOn",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.EndsOn",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.IsActive",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.ClubName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FederationAffiliation_Club",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FederationAffiliation_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationRegistration",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.FederationRegistration_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationRegistration.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.TypeName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.SubmittedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.JoinedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.EndedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.SeasonStartsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.SeasonEndsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.FederationRegistration.RegistrationKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_Membership",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_RegistrationRequest",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_FederationType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationRegistration_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationType",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.FederationType_Federation/MyFirstModule.Federation/MyFirstModule.FederationAffiliation_Federation/MyFirstModule.FederationAffiliation[IsActive = true]/MyFirstModule.FederationAffiliation_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationType.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationType.Description",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationType.IsAvailable",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationType_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationAffiliation",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.FederationAffiliation_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.StartsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.EndsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationAffiliation.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationAffiliation_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationAffiliation_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceStyle",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.InvoiceStyle_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.IssuerName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.Address",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.ContactEmail",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.TaxNumber",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.BankDetails",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.HeaderText",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.FooterText",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.PaymentInstructions",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.BrandTone",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.LayoutPreset",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.LogoUrl",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.InvoiceStyle_Federation",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.InvoiceStyle_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceStyle",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.InvoiceStyle_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.IssuerName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.Address",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.ContactEmail",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.TaxNumber",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.BankDetails",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.HeaderText",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.FooterText",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.PaymentInstructions",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.BrandTone",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.LayoutPreset",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceStyle.LogoUrl",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.InvoiceStyle_Federation",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.InvoiceStyle_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "ClubBillingPolicy",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.ClubBillingPolicy_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.Installments",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.FirstDueDate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.RenewalIssueDate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.RenewalDueDate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.ClubBillingPolicy.IsEnabled",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.ClubBillingPolicy_RenewalSeason",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.ClubBillingPolicy_Season",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.ClubBillingPolicy_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "BillingPlan",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.BillingPlan_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.BillingPlan.TotalFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.BillingPlan.Currency",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.BillingPlan.Installments",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.BillingPlan.FirstDueDate",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.BillingPlan.PlanKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.BillingPlan_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.BillingPlan_Membership",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.BillingPlan_RegistrationRequest",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.BillingPlan_Person",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "RenewalOffer",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.RenewalOffer_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Fee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Currency",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.DeclinedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.DeclineReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.OfferKey",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.NextSeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_SeasonFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Membership",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_RegistrationRequest",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Person",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "AccountInvitation",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.AccountInvitation_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.AccountInvitation.FullName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.Email",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.CreatedBy",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.DeliveryState",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.TokenHash",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.ExpiresAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.UsedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.Revoked",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.AccountInvitation.DeliveryError",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.AccountInvitation_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.AccountInvitation_Creator",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.AccountInvitation_Person",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "RenewalOffer",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.RenewalOffer_Person = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Fee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.Currency",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.DeclinedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.DeclineReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.OfferKey",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.RenewalOffer.NextSeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_SeasonFee",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Membership",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_RegistrationRequest",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.RenewalOffer_Person",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceLine",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.InvoiceLine_Invoice/MyFirstModule.Invoice[Status != 'Draft']/MyFirstModule.Invoice_Person = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Description",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MembershipType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Quantity",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.UnitPrice",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Amount",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.InvoiceLine_FederationRegistration",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.InvoiceLine_Invoice",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceLine",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.InvoiceLine_Invoice/MyFirstModule.Invoice/MyFirstModule.Invoice_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]' or MyFirstModule.InvoiceLine_Invoice/MyFirstModule.Invoice[Status != 'Draft']/MyFirstModule.Invoice_RecipientClub/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Description",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MembershipType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Quantity",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.UnitPrice",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Amount",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.InvoiceLine_FederationRegistration",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.InvoiceLine_Invoice",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceLine",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.InvoiceLine_Invoice/MyFirstModule.Invoice/MyFirstModule.Invoice_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Description",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MembershipType",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Quantity",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.UnitPrice",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.Amount",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceLine.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.InvoiceLine_FederationRegistration",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.InvoiceLine_Invoice",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceMail",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.InvoiceMail_Invoice/MyFirstModule.Invoice/MyFirstModule.Invoice_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceMail.RecipientEmail",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.Subject",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.DeliveryState",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.LastError",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.InvoiceMail_Invoice",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "InvoiceMail",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": false,
+        "allowDelete": false,
+        "xPathConstraint": "[MyFirstModule.InvoiceMail_Invoice/MyFirstModule.Invoice/MyFirstModule.Invoice_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]']",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.InvoiceMail.RecipientEmail",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.Subject",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.DeliveryState",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.InvoiceMail.LastError",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.InvoiceMail_Invoice",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "AdminAccountForm",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator",
+          "MyFirstModule.ClubAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": true,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.AdminAccountForm.FullName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.AdminAccountForm.Email",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.AdminAccountForm_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationAdminAssignment",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": true,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationAdminAssignment.Email",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FederationAdminAssignment_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "FederationBillingForm",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": true,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationBillingForm.Year",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.FederationBillingForm.CensusDate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.FederationBillingForm_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "PasswordResetForm",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Guest"
+        ],
+        "defaultMemberAccessRights": "None",
+        "allowCreate": true,
+        "allowDelete": false,
+        "xPathConstraint": "",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.PasswordResetForm.Token",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.PasswordResetForm.Password",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.PasswordResetForm.ConfirmPassword",
+            "accessRights": "ReadWrite"
+          }
+        ]
+      }
+    }
+  ],
+  "serverOnlyEntities": [
+    "InvitationClaim",
+    "InvitationDelivery",
+    "BillingClaim"
+  ],
+  "existingEntityChanges": [
+    {
+      "entity": "UserManagement.Person",
+      "members": {
+        "InvitationPending": "None",
+        "Federation_Admins": "None"
+      },
+      "note": "Already normalized to None; no new account data access."
+    },
+    {
+      "entity": "MyFirstModule.MembershipType",
+      "member": "MembershipType_FederationType",
+      "rights": "ReadWrite in the existing club-owner update scope; before-commit affiliation validation required"
+    },
+    {
+      "entity": "MyFirstModule.Club",
+      "member": "BillingEmail",
+      "rights": "ReadWrite in existing club-owner settings scope"
+    },
+    {
+      "entity": "MyFirstModule.Invoice",
+      "rights": "New branding/billing fields ReadOnly in existing owned invoice rules; add FederationAdmin issuer-federation scope; add ClubAdmin recipient-club scope for issued invoices only"
+    },
+    {
+      "entity": "MyFirstModule.Membership",
+      "members": {
+        "EndedAt": "ReadOnly",
+        "RenewalPreference": "ReadOnly"
+      },
+      "write": "server only"
+    },
+    {
+      "entity": "MyFirstModule.RegistrationRequest",
+      "members": {
+        "IsRenewal": "ReadOnly"
+      },
+      "write": "server only"
+    }
+  ],
+  "publicMicroflows": [
+    {
+      "name": "MyFirstModule.DS_AdminAccountForm",
+      "roles": [
+        "MyFirstModule.Administrator"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_ClubAccount_Open",
+      "roles": [
+        "MyFirstModule.ClubAdmin",
+        "MyFirstModule.Administrator"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_AdminAccount_Create",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.DS_PasswordResetForm",
+      "roles": [
+        "MyFirstModule.Guest"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Invitation_Redeem",
+      "roles": [
+        "MyFirstModule.Guest"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Invitation_Revoke",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Federation_Create",
+      "roles": [
+        "MyFirstModule.Administrator"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Federation_Save",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Federation_AssignmentOpen",
+      "roles": [
+        "MyFirstModule.Administrator"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Federation_AssignAdmin",
+      "roles": [
+        "MyFirstModule.Administrator"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationType_Create",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationType_Save",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationRate_Create",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationRate_Save",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationAffiliation_Create",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationAffiliation_Save",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationBilling_Open",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_ClubInvoiceStyle_Open",
+      "roles": [
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationInvoiceStyle_Open",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_InvoiceStyle_Save",
+      "roles": [
+        "MyFirstModule.ClubAdmin",
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_ClubBillingPolicy_Open",
+      "roles": [
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_ClubBillingPolicy_Save",
+      "roles": [
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationBilling_Generate",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_FederationInvoice_Issue",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Renewal_Generate",
+      "roles": [
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Renewal_Begin",
+      "roles": [
+        "MyFirstModule.User"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Renewal_Decline",
+      "roles": [
+        "MyFirstModule.User"
+      ]
+    },
+    {
+      "name": "MyFirstModule.DS_TypeFederationOptions",
+      "roles": [
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.DS_ClubRenewalSeasons",
+      "roles": [
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Invitation_Requeue",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Federation_Open",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.ACT_Federation_Settings",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "name": "MyFirstModule.DS_Invoice_Renewal",
+      "roles": [
+        "MyFirstModule.User"
+      ]
+    }
+  ],
+  "pagePermissions": [
+    {
+      "page": "MyFirstModule.AdminAccount_Create",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.Federation_Edit",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.FederationAdmin_Assign",
+      "roles": [
+        "MyFirstModule.Administrator"
+      ]
+    },
+    {
+      "page": "MyFirstModule.FederationType_Edit",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.FederationRate_Edit",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.FederationAffiliation_Edit",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.FederationBilling_Generate",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.InvoiceStyle_Edit",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.ClubAdmin",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.ClubBillingPolicy_Edit",
+      "roles": [
+        "MyFirstModule.ClubAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.PasswordReset",
+      "roles": [
+        "MyFirstModule.Guest"
+      ]
+    },
+    {
+      "page": "MyFirstModule.Platform_Accounts",
+      "roles": [
+        "MyFirstModule.Administrator"
+      ]
+    },
+    {
+      "page": "MyFirstModule.Federation_Overview",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.Federation_Workspace",
+      "roles": [
+        "MyFirstModule.Administrator",
+        "MyFirstModule.FederationAdmin"
+      ]
+    },
+    {
+      "page": "MyFirstModule.Renewals",
+      "roles": [
+        "MyFirstModule.User"
+      ]
+    }
+  ],
+  "secrets": "AccountInvitation.TokenHash has no client access. Only Guest PasswordResetForm token/password input gets write access. Reset requires a sent, unexpired invitation and unique redemption claim. No anonymous person, federation, club, registration or invoice access.",
+  "workflowRules": "Federation admins only assigned federations; club owners only own-club account invites; platform administrator alone assigns federation admins. Existing accounts cannot be reset by admin invitation. Federations receive registration projection only; club answers remain inaccessible.",
+  "guardianshipProposal": "See phase3-guardianship-design.md. No guardian access has been implemented or approved. Extend review after person-profile and guardianship model is finalized."
+}

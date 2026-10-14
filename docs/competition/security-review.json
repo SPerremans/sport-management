@@ -1,0 +1,1834 @@
+{
+  "summary": "Read-only competition records scoped to assigned clubs and federations; authenticated league/fixture metadata; editable nonpersistable input forms; all writes require private scope-checked flows. No guest access or client access to transaction claims.",
+  "rules": [
+    {
+      "e": "CompetitionLeague",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.SeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.StartsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.EndsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.RegistrationOpens",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.RegistrationCloses",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.ChangesOpen",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.ChangesClose",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.MaxTeamsPerPoule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.RequestedPoules",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.Format",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.DurationMinutes",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.Stage",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.Info",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionLeague_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionLeague",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.SeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.StartsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.EndsOn",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.RegistrationOpens",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.RegistrationCloses",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.ChangesOpen",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.ChangesClose",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.MaxTeamsPerPoule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.RequestedPoules",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.Format",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.DurationMinutes",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.Stage",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionLeague.Info",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionLeague_Federation",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionTeam",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.SeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionTeam_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionTeam",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.SeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionTeam_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.CompetitionTeam_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]' or MyFirstModule.CompetitionTeam_Club/MyFirstModule.Club/MyFirstModule.ClubRole_Club/MyFirstModule.ClubRole[IsActive = true][MyFirstModule.ClubPermission_ClubRole/MyFirstModule.ClubPermission[Resource = 'Competition' and CanRead = true]]/MyFirstModule.ClubStaff_ClubRole/MyFirstModule.ClubStaff[IsActive = true]/MyFirstModule.ClubStaff_Person = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "CompetitionTeam",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionTeam.SeasonName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionTeam_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.LeagueEntry_Team/MyFirstModule.LeagueEntry/MyFirstModule.LeagueEntry_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]' or MyFirstModule.LeagueEntry_Team/MyFirstModule.LeagueEntry/MyFirstModule.LeagueEntry_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.FederationCompetitionDelegate_Federation/MyFirstModule.FederationCompetitionDelegate[IsActive = true]/MyFirstModule.FederationCompetitionDelegate_User = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "CompetitionPlayer",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.PersonKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.CompetitionPlayer_Team",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionPlayer_Membership",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionPlayer",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.PersonKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.CompetitionPlayer_Team",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionPlayer_Membership",
+            "accessRights": "None"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.CompetitionPlayer_Team/MyFirstModule.CompetitionTeam/MyFirstModule.CompetitionTeam_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]' or MyFirstModule.CompetitionPlayer_Team/MyFirstModule.CompetitionTeam/MyFirstModule.CompetitionTeam_Club/MyFirstModule.Club/MyFirstModule.ClubRole_Club/MyFirstModule.ClubRole[IsActive = true][MyFirstModule.ClubPermission_ClubRole/MyFirstModule.ClubPermission[Resource = 'Competition' and CanRead = true]]/MyFirstModule.ClubStaff_ClubRole/MyFirstModule.ClubStaff[IsActive = true]/MyFirstModule.ClubStaff_Person = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "CompetitionPlayer",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.MemberName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.MemberKey",
+            "accessRights": "None"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPlayer.PersonKey",
+            "accessRights": "None"
+          },
+          {
+            "association": "MyFirstModule.CompetitionPlayer_Team",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionPlayer_Membership",
+            "accessRights": "None"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.CompetitionPlayer_Team/MyFirstModule.CompetitionTeam/MyFirstModule.LeagueEntry_Team/MyFirstModule.LeagueEntry/MyFirstModule.LeagueEntry_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]' or MyFirstModule.CompetitionPlayer_Team/MyFirstModule.CompetitionTeam/MyFirstModule.LeagueEntry_Team/MyFirstModule.LeagueEntry/MyFirstModule.LeagueEntry_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.FederationCompetitionDelegate_Federation/MyFirstModule.FederationCompetitionDelegate[IsActive = true]/MyFirstModule.FederationCompetitionDelegate_User = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "LeagueEntry",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.LeagueEntry.TeamName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.LeagueEntry.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.LeagueEntry.ClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.LeagueEntry.EntryKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.LeagueEntry.Order",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.LeagueEntry_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.LeagueEntry_Team",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.LeagueEntry_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.LeagueEntry_Poule",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "LeagueEntry",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.LeagueEntry.TeamName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.LeagueEntry.ClubName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.LeagueEntry.ClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.LeagueEntry.EntryKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.LeagueEntry.Order",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.LeagueEntry_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.LeagueEntry_Team",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.LeagueEntry_Club",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.LeagueEntry_Poule",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionPoule",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionPoule.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPoule.Number",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPoule.TeamCount",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionPoule_League",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionPoule",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionPoule.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPoule.Number",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionPoule.TeamCount",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionPoule_League",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionVenue",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionVenue.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionVenue.Address",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionVenue.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionVenue.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionVenue_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionVenue",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionVenue.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionVenue.Address",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionVenue.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionVenue.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionVenue_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[IsActive = true]"
+      }
+    },
+    {
+      "e": "VenueAvailability",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.VenueAvailability.StartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.EndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.Capacity",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.VenueName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.ClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.VenueAvailability_Venue",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.VenueAvailability_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "VenueAvailability",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.VenueAvailability.StartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.EndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.Capacity",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.VenueName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.ClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.VenueAvailability.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.VenueAvailability_Venue",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.VenueAvailability_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[IsActive = true]"
+      }
+    },
+    {
+      "e": "ClubCompetitionPolicy",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.ClubCompetitionPolicy.MaxHostedPerDay",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.ClubCompetitionPolicy.MaxConcurrent",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.ClubCompetitionPolicy.ClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.ClubCompetitionPolicy_Club",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "ClubCompetitionPolicy",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.ClubCompetitionPolicy.MaxHostedPerDay",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.ClubCompetitionPolicy.MaxConcurrent",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.ClubCompetitionPolicy.ClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.ClubCompetitionPolicy_Club",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.ClubCompetitionPolicy_Club/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]' or MyFirstModule.ClubCompetitionPolicy_Club/MyFirstModule.Club/MyFirstModule.ClubRole_Club/MyFirstModule.ClubRole[IsActive = true][MyFirstModule.ClubPermission_ClubRole/MyFirstModule.ClubPermission[Resource = 'Competition' and CanRead = true]]/MyFirstModule.ClubStaff_ClubRole/MyFirstModule.ClubStaff[IsActive = true]/MyFirstModule.ClubStaff_Person = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "CompetitionFixture",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.StartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.EndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Version",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.PairKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Leg",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Issue",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Poule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Home",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Away",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_HomeClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_AwayClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionFixture",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.StartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.EndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Version",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.PairKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Leg",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Issue",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Poule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Home",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Away",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_HomeClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_AwayClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[Status = 'Published']"
+      }
+    },
+    {
+      "e": "CompetitionFixture",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.StartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.EndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Version",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.PairKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Leg",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Issue",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Poule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Home",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Away",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_HomeClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_AwayClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.CompetitionFixture_HomeClub/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]' or MyFirstModule.CompetitionFixture_HomeClub/MyFirstModule.Club/MyFirstModule.ClubRole_Club/MyFirstModule.ClubRole[IsActive = true][MyFirstModule.ClubPermission_ClubRole/MyFirstModule.ClubPermission[Resource = 'Competition' and CanRead = true]]/MyFirstModule.ClubStaff_ClubRole/MyFirstModule.ClubStaff[IsActive = true]/MyFirstModule.ClubStaff_Person = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "CompetitionFixture",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.StartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.EndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Version",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.PairKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Leg",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Issue",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Poule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Home",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Away",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_HomeClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_AwayClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.CompetitionFixture_AwayClub/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]' or MyFirstModule.CompetitionFixture_AwayClub/MyFirstModule.Club/MyFirstModule.ClubRole_Club/MyFirstModule.ClubRole[IsActive = true][MyFirstModule.ClubPermission_ClubRole/MyFirstModule.ClubPermission[Resource = 'Competition' and CanRead = true]]/MyFirstModule.ClubStaff_ClubRole/MyFirstModule.ClubStaff[IsActive = true]/MyFirstModule.ClubStaff_Person = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "CompetitionFixture",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.HomeClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.AwayClubKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueName",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.VenueKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.StartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.EndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Version",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.PairKey",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Leg",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionFixture.Issue",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Poule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Home",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Away",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_HomeClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_AwayClub",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionFixture_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.CompetitionFixture_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]' or MyFirstModule.CompetitionFixture_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.FederationCompetitionDelegate_Federation/MyFirstModule.FederationCompetitionDelegate[IsActive = true]/MyFirstModule.FederationCompetitionDelegate_User = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "FixtureChange",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedStartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedEndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.HomeApproved",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.AwayApproved",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ExpectedVersion",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.Reason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedBy",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.OverrideReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FixtureChange_Fixture",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FixtureChange_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "FixtureChange",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedStartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedEndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.HomeApproved",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.AwayApproved",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ExpectedVersion",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.Reason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedBy",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.OverrideReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FixtureChange_Fixture",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FixtureChange_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.FixtureChange_Fixture/MyFirstModule.CompetitionFixture/MyFirstModule.CompetitionFixture_HomeClub/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]' or MyFirstModule.FixtureChange_Fixture/MyFirstModule.CompetitionFixture/MyFirstModule.CompetitionFixture_HomeClub/MyFirstModule.Club/MyFirstModule.ClubRole_Club/MyFirstModule.ClubRole[IsActive = true][MyFirstModule.ClubPermission_ClubRole/MyFirstModule.ClubPermission[Resource = 'Competition' and CanRead = true]]/MyFirstModule.ClubStaff_ClubRole/MyFirstModule.ClubStaff[IsActive = true]/MyFirstModule.ClubStaff_Person = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "FixtureChange",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedStartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedEndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.HomeApproved",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.AwayApproved",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ExpectedVersion",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.Reason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedBy",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.OverrideReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FixtureChange_Fixture",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FixtureChange_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.FixtureChange_Fixture/MyFirstModule.CompetitionFixture/MyFirstModule.CompetitionFixture_AwayClub/MyFirstModule.Club/MyFirstModule.Club_Admins = '[%CurrentUser%]' or MyFirstModule.FixtureChange_Fixture/MyFirstModule.CompetitionFixture/MyFirstModule.CompetitionFixture_AwayClub/MyFirstModule.Club/MyFirstModule.ClubRole_Club/MyFirstModule.ClubRole[IsActive = true][MyFirstModule.ClubPermission_ClubRole/MyFirstModule.ClubPermission[Resource = 'Competition' and CanRead = true]]/MyFirstModule.ClubStaff_ClubRole/MyFirstModule.ClubStaff[IsActive = true]/MyFirstModule.ClubStaff_Person = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "FixtureChange",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedStartsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedEndsAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.HomeApproved",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.AwayApproved",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ExpectedVersion",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.Status",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.Reason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.ProposedBy",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.OverrideReason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FixtureChange.CreatedAt",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FixtureChange_Fixture",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FixtureChange_Slot",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.FixtureChange_Fixture/MyFirstModule.CompetitionFixture/MyFirstModule.CompetitionFixture_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]' or MyFirstModule.FixtureChange_Fixture/MyFirstModule.CompetitionFixture/MyFirstModule.CompetitionFixture_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.FederationCompetitionDelegate_Federation/MyFirstModule.FederationCompetitionDelegate[IsActive = true]/MyFirstModule.FederationCompetitionDelegate_User = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "FederationCompetitionDelegate",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.Email",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.CanManageLeagues",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.CanAllocate",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.CanSchedule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.CanOverride",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationCompetitionDelegate_Federation",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationCompetitionDelegate_User",
+            "accessRights": "None"
+          }
+        ]
+      }
+    },
+    {
+      "e": "FederationCompetitionDelegate",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.Email",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.Name",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.IsActive",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.CanManageLeagues",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.CanAllocate",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.CanSchedule",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.FederationCompetitionDelegate.CanOverride",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationCompetitionDelegate_Federation",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.FederationCompetitionDelegate_User",
+            "accessRights": "None"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.FederationCompetitionDelegate_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "CompetitionAudit",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionAudit.Action",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionAudit.Reason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionAudit.Actor",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionAudit.At",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionAudit_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionAudit_Fixture",
+            "accessRights": "ReadOnly"
+          }
+        ]
+      }
+    },
+    {
+      "e": "CompetitionAudit",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin"
+        ],
+        "defaultMemberAccessRights": "ReadOnly",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionAudit.Action",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionAudit.Reason",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionAudit.Actor",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionAudit.At",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionAudit_League",
+            "accessRights": "ReadOnly"
+          },
+          {
+            "association": "MyFirstModule.CompetitionAudit_Fixture",
+            "accessRights": "ReadOnly"
+          }
+        ],
+        "xPathConstraint": "[MyFirstModule.CompetitionAudit_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.Federation_Admins = '[%CurrentUser%]' or MyFirstModule.CompetitionAudit_League/MyFirstModule.CompetitionLeague/MyFirstModule.CompetitionLeague_Federation/MyFirstModule.Federation/MyFirstModule.FederationCompetitionDelegate_Federation/MyFirstModule.FederationCompetitionDelegate[IsActive = true]/MyFirstModule.FederationCompetitionDelegate_User = '[%CurrentUser%]']"
+      }
+    },
+    {
+      "e": "CompetitionForm",
+      "rule": {
+        "$Type": "DomainModels$AccessRule",
+        "moduleRoles": [
+          "MyFirstModule.User",
+          "MyFirstModule.ClubAdmin",
+          "MyFirstModule.FederationAdmin",
+          "MyFirstModule.Administrator"
+        ],
+        "defaultMemberAccessRights": "ReadWrite",
+        "memberAccesses": [
+          {
+            "attribute": "MyFirstModule.CompetitionForm.Name",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.Description",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.SeasonName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.StartsAt",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.EndsAt",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.RegistrationOpens",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.RegistrationCloses",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.ChangesOpen",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.ChangesClose",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.MaxTeamsPerPoule",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.RequestedPoules",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.DurationMinutes",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.Format",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.Capacity",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.MaxHostedPerDay",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.MaxConcurrent",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.IsActive",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.AllowSameClub",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.Reason",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.Email",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.CanManageLeagues",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.CanAllocate",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.CanSchedule",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.CanOverride",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "attribute": "MyFirstModule.CompetitionForm.SelectedName",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_Club",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_Federation",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_CompetitionLeague",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_CompetitionTeam",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_Membership",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_LeagueEntry",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_CompetitionPoule",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_CompetitionVenue",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_VenueAvailability",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_CompetitionFixture",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_FixtureChange",
+            "accessRights": "ReadWrite"
+          },
+          {
+            "association": "MyFirstModule.CompetitionForm_FederationCompetitionDelegate",
+            "accessRights": "ReadWrite"
+          }
+        ]
+      }
+    }
+  ]
+}

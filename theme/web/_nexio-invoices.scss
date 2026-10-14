@@ -1,0 +1,76 @@
+/* Branded invoice snapshots: colours and layouts are selected from validated presets. */
+.nexio-invoice-card {
+  --invoice-accent: #1565c0;
+  --invoice-tint: #e0f2fe;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px;
+  border: 1px solid #dde8f0;
+  border-top: 6px solid var(--invoice-accent);
+  border-radius: 18px;
+  background: #fff;
+  color: #0a1e38;
+  box-shadow: 0 12px 36px rgba(10, 30, 56, .08);
+
+  .mx-dataview-content > p { white-space: pre-line; }
+  .nexio-invoice-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #dde8f0;
+  }
+  .nexio-invoice-header h1 { color: var(--invoice-accent); }
+  .nexio-invoice-lines .mx-listview-item {
+    margin: 0;
+    padding: 14px 12px;
+    border: 0;
+    border-bottom: 1px solid #dde8f0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  .nexio-invoice-lines { margin: 20px 0; }
+  .nexio-invoice-renewal {
+    margin-top: 28px;
+    padding: 22px;
+    border-radius: 14px;
+    background: var(--invoice-tint);
+  }
+}
+.nexio-invoice-tone-teal { --invoice-accent: #0d9373; --invoice-tint: #d1fae5; }
+.nexio-invoice-tone-purple { --invoice-accent: #7c3aed; --invoice-tint: #ede9fe; }
+.nexio-invoice-layout-classic {
+  border-radius: 0;
+  box-shadow: none;
+  .nexio-invoice-header { border-bottom: 2px solid var(--invoice-accent); }
+}
+.nexio-invoice-layout-compact {
+  padding: 20px;
+  .nexio-invoice-header { margin-bottom: 16px; padding-bottom: 12px; }
+  .nexio-invoice-lines .mx-listview-item { padding: 8px 10px; }
+}
+@media (max-width: 767px) {
+  .nexio-invoice-card { padding: 18px; }
+  .nexio-invoice-card .nexio-invoice-header { margin-bottom: 16px; }
+}
+@media print {
+  body:has(.nexio-invoice-card) {
+    background: white;
+    .region-topbar, .region-sidebar, .nexio-no-print, .mx-button { display: none !important; }
+    .region-content, .mx-placeholder {
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: white !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      overflow: visible !important;
+    }
+    .nexio-invoice-card {
+      max-width: none;
+      padding: 12mm;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+}

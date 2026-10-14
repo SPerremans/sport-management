@@ -453,3 +453,55 @@ section > .btn, section > .mx-button {
   white-space: normal;
   line-height: 1.5;
 }
+
+/* A compact, accessible permissions matrix with matching header and row widths. */
+.nexio-permission-matrix {
+  overflow-x: auto;
+  border: 1px solid #dce7ef;
+  border-radius: 14px;
+  margin: 16px 0 24px;
+}
+.nexio-permission-header,
+.nexio-permission-row {
+  min-width: 640px;
+  padding: 12px 18px;
+  margin: 0;
+}
+.nexio-permission-header {
+  background: #edf4f8;
+  font-weight: 700;
+  color: #102c50;
+}
+.nexio-permission-matrix p,
+.nexio-permission-matrix .form-group {
+  margin: 0;
+}
+.nexio-permission-list > ul > li.mx-listview-item {
+  border: 0;
+  border-top: 1px solid #e5edf3;
+  border-radius: 0;
+  box-shadow: none;
+  background: #fff;
+  padding: 0;
+  margin: 0;
+}
+.nexio-permission-list > ul > li.mx-listview-item:hover {
+  background: #f7fbfd;
+}
+.layout-atlas .nexio-permission-row .form-group {
+  min-height: 28px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.layout-atlas .nexio-permission-row .form-group > .control-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.nexio-permission-row input[type="checkbox"] {
+  accent-color: #1264c4;
+}
