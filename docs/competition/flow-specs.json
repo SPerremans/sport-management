@@ -8511,7 +8511,7 @@
     "documentation": "Stable competition keys obtained with CommunityCommons.getGUID."
   },
   {
-    "name": "SUB_Competition_PlacementReport",
+    "name": "TEST_Competition_Placement",
     "params": [],
     "steps": [
       {
@@ -9828,17 +9828,17 @@
     ],
     "returnType": "String",
     "folder": "CRM/Competition/Tests",
-    "documentation": "Twelve server-side placement cases. Creates only uncommitted synthetic objects; no database writes, accounts or mail. Invoke via SUB_Competition_TestOnce during local testing."
+    "documentation": "Twelve server-side placement cases. Creates only uncommitted synthetic objects; no database writes, accounts or mail. Invoke via TEST_Competition_Startup during local testing."
   },
   {
-    "name": "SUB_Competition_TestOnce",
+    "name": "TEST_Competition_Startup",
     "params": [],
     "steps": [
       {
         "$Type": "Microflows$MicroflowCallAction",
         "microflowCall": {
           "$Type": "Microflows$MicroflowCall",
-          "microflow": "MyFirstModule.SUB_Competition_PlacementReport",
+          "microflow": "MyFirstModule.TEST_Competition_Placement",
           "parameterMappings": []
         },
         "outputVariableName": "Report"
