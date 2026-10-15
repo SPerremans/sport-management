@@ -1,5 +1,11 @@
 # Development sample data
 
+Administrator user-view examples: [View as user](view-as-user.md). The next sample upgrade appends memberships to the sample club administrators so their own member dashboards contain examples. Existing accounts and user edits are preserved; disabled sample people remain disabled. This extension has not yet been executed in an administrator browser session.
+
+15 October update: [club discovery, test administrator logins and shared tables](club-discovery-and-tables.md). The next Generate/upgrade adds fictional Belgian club examples and dedicated active administrators per sample organization with password `TestAccount123!`. The existing 12-character/mixed-case/digit policy is preserved. Other sample accounts remain disabled. Generation and login scenarios for this extension have not yet been executed; the earlier counts and disabled-account statements below describe the original sample set.
+
+Match-registration extension (15 October 2026): the next generation/upgrade includes five separate sports' format, fixture, lineup, draft-score and eligibility examples. Its version marker and ownership cleanup are implemented, but the extension has not yet been executed in an administrator session. Match-registration screens are wired and model-checked; see [implementation status](../competition/match-registration-status.md).
+
 Open **Checks → Sample data** as a platform administrator in the local Studio Pro runtime.
 
 - **Generate sample data** creates one disposable batch. Repeating it also adds newly introduced feature examples to an older batch, once per feature version, while preserving existing sample work.
@@ -33,7 +39,13 @@ When adding another application feature, extend the generator and its upgrade pa
 
 The first local generation completed the original generate / duplicate / cleanup / unrelated-record preservation / regenerate checks, and the four clubs and two leagues were observed in the live app. The extra linked-record preflight check was added after that run and executes on the next newly generated batch. It is not claimed as executed in this session.
 
-Normal startup remains **UnitTesting.Startup**. No sample generation is attached to app startup. The unused verification startup draft is excluded.
+Normal startup calls **ASU_MatchRegistration_Initialize**, which preserves **UnitTesting.Startup** and registers the private result-acceptance sweep. No sample generation is attached to startup. The private verification startup draft is excluded.
 
-The source Java actions were created through Studio Pro because the MCP treats Java actions as read-only. Public entrypoints are named `ACT_DevelopmentSamples_Generate` and `ACT_DevelopmentSamples_Remove`, under CRM/Development/SampleData; they call the private Java service.
+The source Java actions were created through Studio Pro because the MCP treats Java actions as read-only. Public entrypoints are named `ACT_DevelopmentSamples_Generate` and `ACT_DevelopmentSamples_Remove`, under Development/SampleData; they call the private Java service.
 
+
+## Match registration examples
+
+`features:match-registration-v1` appends five sport formats and divisions (badminton, tennis, padel, table tennis and football), inherited subdivisions, fixture slots, hidden lineups, draft set scores, eligibility facts and audit history. `features:match-review-v2` appends six separate retirement, forfeit, exclusion, dispute, late-submission and unstarted-substitution fixtures. Appointments reference fictional disabled sample accounts; the generator never enables them. Existing sample business records are preserved. Both extensions run once and contribute every new business ID to the existing private ownership manifest.
+
+From federation **Match formats and eligibility**, a local platform administrator can use **Verify development examples** to exercise fresh generation, repeated generation, existing-batch upgrades (when present), ownership coverage, disabled accounts and cleanup. It runs in a transaction that always rolls back. This new verification action was not executed with an administrator session during implementation: the startup probe was denied by the role guard. Seeded scenarios are example data, not passing workflow tests.

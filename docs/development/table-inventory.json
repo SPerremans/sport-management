@@ -1,0 +1,779 @@
+{
+  "date": "2026-10-15",
+  "pages": 34,
+  "component": "Mendix Data Grid 2",
+  "tables": [
+    {
+      "page": "LeagueEntry_Register",
+      "table": "competitionWidget34",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "LeagueEntry_Move",
+      "table": "competitionWidget64",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "LeagueEntry_Poule",
+      "table": "competitionWidget73",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchAssignments",
+      "table": "competitionWidget6",
+      "columns": [
+        "Assignment",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchContest",
+      "table": "competitionWidget137",
+      "columns": [
+        "Result",
+        "Details"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchContest",
+      "table": "competitionWidget143",
+      "columns": [
+        "Result",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchDivision",
+      "table": "competitionWidget95",
+      "columns": [
+        "Division",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchDivision",
+      "table": "competitionWidget99",
+      "columns": [
+        "Division",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchEligibility",
+      "table": "competitionWidget202",
+      "columns": [
+        "Player",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchEligibility",
+      "table": "competitionWidget205",
+      "columns": [
+        "Player",
+        "Details"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchFixture",
+      "table": "competitionWidget114",
+      "columns": [
+        "Contest",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchFixture",
+      "table": "competitionWidget129",
+      "columns": [
+        "Contest",
+        "Details"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchFormats",
+      "table": "competitionWidget6",
+      "columns": [
+        "Format",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchRoster",
+      "table": "competitionWidget176",
+      "columns": [
+        "Player",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "MatchSlot_Edit",
+      "table": "competitionWidget83",
+      "columns": [
+        "Scoring format",
+        "Details",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionPlayer_Add",
+      "table": "competitionWidget26",
+      "columns": [
+        "Member",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "FixtureChange_Propose",
+      "table": "competitionWidget87",
+      "columns": [
+        "Venue",
+        "Available from",
+        "Until",
+        "Capacity",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "FixturePlacement_Edit",
+      "table": "competitionWidget101",
+      "columns": [
+        "Venue",
+        "Available from",
+        "Until",
+        "Capacity",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionTeam_Workspace",
+      "table": "competitionWidget131",
+      "columns": [
+        "Member",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionVenue_Workspace",
+      "table": "competitionWidget140",
+      "columns": [
+        "Start",
+        "End",
+        "Capacity"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionLeague_Workspace",
+      "table": "competitionWidget157",
+      "columns": [
+        "Club",
+        "Team",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionLeague_Workspace",
+      "table": "competitionWidget160",
+      "columns": [
+        "Name",
+        "Teams"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionLeague_Workspace",
+      "table": "competitionWidget169",
+      "columns": [
+        "Home team",
+        "Away team",
+        "Start",
+        "Venue",
+        "Status",
+        "Issue",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionLeague_Workspace",
+      "table": "competitionWidget178",
+      "columns": [
+        "Proposed start",
+        "Status",
+        "Reason",
+        "Home approved",
+        "Away approved",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionFederation_Workspace",
+      "table": "competitionWidget192",
+      "columns": [
+        "Name",
+        "Season",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "CompetitionFederation_Workspace",
+      "table": "competitionWidget195",
+      "columns": [
+        "Email",
+        "Enabled"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget204",
+      "columns": [
+        "Name",
+        "Season",
+        "Registration Opens",
+        "Registration Closes",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget209",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget214",
+      "columns": [
+        "Name",
+        "Club",
+        "Season",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget217",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget220",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget229",
+      "columns": [
+        "Home team",
+        "Away team",
+        "Start",
+        "Venue",
+        "Status",
+        "Issue",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Platform_Accounts",
+      "table": "invitationList",
+      "columns": [
+        "Name",
+        "Email",
+        "Delivery",
+        "Created",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Administration",
+      "table": "adminClubList",
+      "columns": [
+        "Name",
+        "City",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Detail",
+      "table": "clubCurrentOffers",
+      "columns": [
+        "Membership",
+        "Season",
+        "Amount",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "MembershipTypeList",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "FormFieldList",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "ClubEventList",
+      "columns": [
+        "Title",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "NewsItemList",
+      "columns": [
+        "Title",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "requestList",
+      "columns": [
+        "Member",
+        "Email",
+        "Status",
+        "Approval",
+        "Payment",
+        "Next action",
+        "Season",
+        "Fee adjustment reason",
+        "Actions",
+        "Details"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "answers",
+      "columns": [
+        "Name",
+        "Answer"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "memberList",
+      "columns": [
+        "Member",
+        "Email",
+        "Status",
+        "Joined",
+        "Season",
+        "Actions"
+      ],
+      "searchFields": [
+        "MyFirstModule.Membership.MemberName",
+        "MyFirstModule.Membership.MemberEmail"
+      ]
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "invoiceList",
+      "columns": [
+        "Invoice",
+        "Description",
+        "Amount",
+        "Currency",
+        "Status",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "clubSeasonList",
+      "columns": [
+        "Name",
+        "Starts on",
+        "Ends on",
+        "Published",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "historyClubSeasonList",
+      "columns": [
+        "Name",
+        "Starts on",
+        "Ends on",
+        "Published",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Club_Workspace",
+      "table": "clubRolesList",
+      "columns": [
+        "Name",
+        "Description",
+        "Enabled",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Platform_Clubs",
+      "table": "clubList",
+      "columns": [
+        "Name",
+        "City",
+        "Actions"
+      ],
+      "searchFields": [
+        "MyFirstModule.Club.Name"
+      ]
+    },
+    {
+      "page": "Club_Directory",
+      "table": "clubList",
+      "columns": [
+        "Name",
+        "Description",
+        "Address",
+        "Postcode",
+        "Actions",
+        "Details"
+      ],
+      "searchFields": [
+        "MyFirstModule.Club.Name",
+        "MyFirstModule.Club.City",
+        "MyFirstModule.Club.PostalCode",
+        "MyFirstModule.Club.Address",
+        "MyFirstModule.Club.Description"
+      ]
+    },
+    {
+      "page": "Club_Directory",
+      "table": "clubRegistrationOptions",
+      "columns": [
+        "Membership",
+        "Season",
+        "Amount",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Player_Directory",
+      "table": "playerDirectoryResults",
+      "columns": [
+        "Player",
+        "Club"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Federation_Overview",
+      "table": "federationList",
+      "columns": [
+        "Name",
+        "Description",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Federation_Workspace",
+      "table": "federationTypeList",
+      "columns": [
+        "Name",
+        "Description",
+        "Actions",
+        "Details"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Federation_Workspace",
+      "table": "federationRateList",
+      "columns": [
+        "Year",
+        "Annual fee",
+        "Currency",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Federation_Workspace",
+      "table": "affiliationList",
+      "columns": [
+        "Club",
+        "From",
+        "Until",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Federation_Workspace",
+      "table": "federationRegistrationList",
+      "columns": [
+        "Member",
+        "Club",
+        "Type",
+        "Status",
+        "Submitted"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Federation_Workspace",
+      "table": "federationInvoiceList",
+      "columns": [
+        "Invoice",
+        "To",
+        "Amount",
+        "Currency",
+        "Status",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Member_Dashboard",
+      "table": "memberships",
+      "columns": [
+        "Club",
+        "Membership",
+        "Joined",
+        "Season"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Member_Dashboard",
+      "table": "events",
+      "columns": [
+        "Club",
+        "Title",
+        "Start",
+        "Location",
+        "Description"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Member_Dashboard",
+      "table": "news",
+      "columns": [
+        "Club",
+        "Title",
+        "Published At",
+        "Body"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Member_Dashboard",
+      "table": "invoices",
+      "columns": [
+        "Club",
+        "Invoice",
+        "Amount",
+        "Currency",
+        "Due",
+        "Status",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Member_Dashboard",
+      "table": "dashboardFindClubList",
+      "columns": [
+        "Name",
+        "Description",
+        "Address",
+        "Postcode",
+        "Actions",
+        "Details"
+      ],
+      "searchFields": [
+        "MyFirstModule.Club.Name",
+        "MyFirstModule.Club.City",
+        "MyFirstModule.Club.PostalCode",
+        "MyFirstModule.Club.Address",
+        "MyFirstModule.Club.Description"
+      ]
+    },
+    {
+      "page": "Member_Dashboard",
+      "table": "dashboardFindClubRegistrationOptions",
+      "columns": [
+        "Membership",
+        "Season",
+        "Amount",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Member_Dashboard",
+      "table": "dashboardRequestsRequestList",
+      "columns": [
+        "Member",
+        "Registration",
+        "Approval",
+        "Payment",
+        "Next action",
+        "Club",
+        "Season",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Renewals",
+      "table": "renewalList",
+      "columns": [
+        "Next season",
+        "Seasonal fee",
+        "Currency",
+        "Status",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Registration_Edit",
+      "table": "responseList",
+      "columns": [
+        "Name",
+        "Help Text",
+        "Answer type",
+        "Required",
+        "Your answer"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Registrations",
+      "table": "requestList",
+      "columns": [
+        "Member",
+        "Registration",
+        "Approval",
+        "Payment",
+        "Next action",
+        "Club",
+        "Season",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Season_Edit",
+      "table": "seasonFees",
+      "columns": [
+        "Membership",
+        "Fee",
+        "Currency",
+        "Available",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "Season_Edit",
+      "table": "seasonTypes",
+      "columns": [
+        "Name",
+        "Actions"
+      ],
+      "searchFields": []
+    },
+    {
+      "page": "ClubRole_Edit",
+      "table": "roleStaff",
+      "columns": [
+        "Member",
+        "Email",
+        "Assignment enabled",
+        "Actions"
+      ],
+      "searchFields": []
+    }
+  ],
+  "preservedPermissionMatrix": {
+    "page": "ClubRole_Edit",
+    "list": "rolePermissions",
+    "headerCount": 1
+  }
+}

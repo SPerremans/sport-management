@@ -1,0 +1,241 @@
+{
+  "date": "2026-10-15",
+  "strategy": "Mendix Data Grid 2 with single column headers, preserved row content, action settings and data-source scoping; UI-only conversion.",
+  "pages": [
+    {
+      "page": "LeagueEntry_Register",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/1"
+      ]
+    },
+    {
+      "page": "LeagueEntry_Move",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/2"
+      ]
+    },
+    {
+      "page": "LeagueEntry_Poule",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/3"
+      ]
+    },
+    {
+      "page": "MatchAssignments",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/2"
+      ]
+    },
+    {
+      "page": "MatchContest",
+      "paths": [
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/3",
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/6"
+      ]
+    },
+    {
+      "page": "MatchDivision",
+      "paths": [
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/3",
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/4"
+      ]
+    },
+    {
+      "page": "MatchEligibility",
+      "paths": [
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/2",
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/3"
+      ]
+    },
+    {
+      "page": "MatchFixture",
+      "paths": [
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/8",
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/21"
+      ]
+    },
+    {
+      "page": "MatchFormats",
+      "paths": [
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/5"
+      ]
+    },
+    {
+      "page": "MatchRoster",
+      "paths": [
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/7"
+      ]
+    },
+    {
+      "page": "MatchSlot_Edit",
+      "paths": [
+        "/widgets/0/widgets/0/rows/0/columns/0/widgets/1/widgets/9"
+      ]
+    },
+    {
+      "page": "CompetitionPlayer_Add",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/1"
+      ]
+    },
+    {
+      "page": "FixtureChange_Propose",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/4"
+      ]
+    },
+    {
+      "page": "FixturePlacement_Edit",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/4"
+      ]
+    },
+    {
+      "page": "CompetitionTeam_Workspace",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/4"
+      ]
+    },
+    {
+      "page": "CompetitionVenue_Workspace",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/3"
+      ]
+    },
+    {
+      "page": "CompetitionLeague_Workspace",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/11/tabPages/0/widgets/0",
+        "/widgets/0/widgets/1/widgets/11/tabPages/1/widgets/0",
+        "/widgets/0/widgets/1/widgets/11/tabPages/2/widgets/0",
+        "/widgets/0/widgets/1/widgets/11/tabPages/3/widgets/0"
+      ]
+    },
+    {
+      "page": "CompetitionFederation_Workspace",
+      "paths": [
+        "/widgets/0/widgets/1/widgets/4",
+        "/widgets/0/widgets/1/widgets/5"
+      ]
+    },
+    {
+      "page": "Competition_Overview",
+      "paths": [
+        "/widgets/0/widgets/2/tabPages/0/widgets/0",
+        "/widgets/0/widgets/2/tabPages/1/widgets/0",
+        "/widgets/0/widgets/2/tabPages/1/widgets/1",
+        "/widgets/0/widgets/2/tabPages/1/widgets/2",
+        "/widgets/0/widgets/2/tabPages/2/widgets/0",
+        "/widgets/0/widgets/2/tabPages/3/widgets/0"
+      ]
+    },
+    {
+      "page": "Platform_Accounts",
+      "paths": [
+        "/widgets/0/widgets/4"
+      ]
+    },
+    {
+      "page": "Club_Administration",
+      "paths": [
+        "/widgets/0/widgets/2"
+      ]
+    },
+    {
+      "page": "Club_Detail",
+      "paths": [
+        "/widgets/0/widgets/2/widgets/8"
+      ]
+    },
+    {
+      "page": "Club_Workspace",
+      "paths": [
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/1/widgets/0/widgets/1",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/2/widgets/0/widgets/1",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/3/widgets/0/widgets/1",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/4/widgets/0/widgets/1",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/5/widgets/0/widgets/0",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/6/widgets/0/widgets/0",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/7/widgets/0/widgets/0",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/8/widgets/0/widgets/3/tabPages/0/widgets/1",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/8/widgets/0/widgets/3/tabPages/1/widgets/1",
+        "/widgets/0/widgets/2/widgets/1/widgets/0/tabPages/9/widgets/0/widgets/4"
+      ]
+    },
+    {
+      "page": "Platform_Clubs",
+      "paths": [
+        "/widgets/0/widgets/3"
+      ]
+    },
+    {
+      "page": "Club_Directory",
+      "paths": [
+        "/widgets/0/widgets/2"
+      ]
+    },
+    {
+      "page": "Player_Directory",
+      "paths": [
+        "/widgets/0/widgets/2/widgets/2"
+      ]
+    },
+    {
+      "page": "Federation_Overview",
+      "paths": [
+        "/widgets/0/widgets/3"
+      ]
+    },
+    {
+      "page": "Federation_Workspace",
+      "paths": [
+        "/widgets/0/widgets/0/widgets/5/tabPages/0/widgets/1",
+        "/widgets/0/widgets/0/widgets/5/tabPages/1/widgets/1",
+        "/widgets/0/widgets/0/widgets/5/tabPages/2/widgets/1",
+        "/widgets/0/widgets/0/widgets/5/tabPages/3/widgets/1"
+      ]
+    },
+    {
+      "page": "Member_Dashboard",
+      "paths": [
+        "/widgets/0/widgets/0/widgets/2/tabPages/0/widgets/0",
+        "/widgets/0/widgets/0/widgets/2/tabPages/1/widgets/0",
+        "/widgets/0/widgets/0/widgets/2/tabPages/2/widgets/0",
+        "/widgets/0/widgets/0/widgets/2/tabPages/3/widgets/0",
+        "/widgets/0/widgets/0/widgets/2/tabPages/4/widgets/1",
+        "/widgets/0/widgets/0/widgets/2/tabPages/5/widgets/2"
+      ]
+    },
+    {
+      "page": "Renewals",
+      "paths": [
+        "/widgets/0/widgets/2"
+      ]
+    },
+    {
+      "page": "Registration_Edit",
+      "paths": [
+        "/widgets/0/widgets/2/widgets/4"
+      ]
+    },
+    {
+      "page": "Registrations",
+      "paths": [
+        "/widgets/0/widgets/3"
+      ]
+    },
+    {
+      "page": "Season_Edit",
+      "paths": [
+        "/widgets/0/widgets/2/widgets/0/widgets/0/widgets/5",
+        "/widgets/0/widgets/2/widgets/0/widgets/0/widgets/7"
+      ]
+    },
+    {
+      "page": "ClubRole_Edit",
+      "paths": [
+        "/widgets/0/widgets/2/widgets/8"
+      ]
+    }
+  ]
+}

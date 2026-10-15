@@ -1,0 +1,289 @@
+{
+  "module": "MyFirstModule",
+  "additionalModules": [{"module":"UserManagement","pages":[{"qualifiedName":"UserManagement.Login","folderPath":"Accounts"},{"qualifiedName":"UserManagement.Signup","folderPath":"Accounts"}]}],
+  "verifiedOn": "2026-10-15",
+  "pages": [
+    {
+      "qualifiedName": "MyFirstModule.LeagueEntry_Register",
+      "folderPath": "Competition/Registrations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.LeagueEntry_Move",
+      "folderPath": "Competition/Registrations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.LeagueEntry_Poule",
+      "folderPath": "Competition/Registrations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.VenueAvailability_Edit",
+      "folderPath": "Competition/Venues"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionChecks_Overview",
+      "folderPath": "Competition/Tests"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchAssignments",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchContest",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchDivision",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchEligibility",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchEligibility_Edit",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchFixture",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchFormat_Edit",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchFormats",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchLineup",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchRoster",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchSet_Edit",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MatchSlot_Edit",
+      "folderPath": "Competition/Results"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionLeague_Edit",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionTeam_Edit",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionPlayer_Add",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionVenue_Edit",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionAllocation_Edit",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.FixtureChange_Propose",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.FixturePlacement_Edit",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.ClubCompetitionPolicy_Edit",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionDelegate_Edit",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionTeam_Workspace",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionVenue_Workspace",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionLeague_Workspace",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.CompetitionFederation_Workspace",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Competition_Overview",
+      "folderPath": "Competition"
+    },
+    {
+      "qualifiedName": "MyFirstModule.AdminAccount_Create",
+      "folderPath": "Accounts"
+    },
+    {
+      "qualifiedName": "MyFirstModule.FederationAdmin_Assign",
+      "folderPath": "Accounts"
+    },
+    {
+      "qualifiedName": "MyFirstModule.PasswordReset",
+      "folderPath": "Accounts"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Platform_Accounts",
+      "folderPath": "Accounts"
+    },
+    {
+      "qualifiedName": "MyFirstModule.InstalmentDecision_Edit",
+      "folderPath": "Billing/Instalments"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Invoice_AdminEdit",
+      "folderPath": "Billing/Invoices"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Invoice_Detail_Styled",
+      "folderPath": "Billing/Invoices",
+      "excluded": true,
+      "verification": "Studio Pro App Explorer; connector omits excluded document containment"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Invoice_Detail",
+      "folderPath": "Billing/Invoices"
+    },
+    {
+      "qualifiedName": "MyFirstModule.ClubBillingPolicy_Edit",
+      "folderPath": "Billing"
+    },
+    {
+      "qualifiedName": "MyFirstModule.FederationBilling_Generate",
+      "folderPath": "Billing"
+    },
+    {
+      "qualifiedName": "MyFirstModule.InvoiceStyle_Edit",
+      "folderPath": "Billing"
+    },
+    {
+      "qualifiedName": "MyFirstModule.ClubAdmin_Assign",
+      "folderPath": "Clubs/Administration"
+    },
+    {
+      "qualifiedName": "MyFirstModule.ClubRole_Edit",
+      "folderPath": "Clubs/Administration"
+    },
+    {
+      "qualifiedName": "MyFirstModule.ClubStaff_Assign",
+      "folderPath": "Clubs/Administration"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Club_Administration",
+      "folderPath": "Clubs"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Club_Detail",
+      "folderPath": "Clubs"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Club_Edit",
+      "folderPath": "Clubs"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Club_Workspace",
+      "folderPath": "Clubs"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Platform_Clubs",
+      "folderPath": "Clubs"
+    },
+    {
+      "qualifiedName": "MyFirstModule.ClubEvent_Edit",
+      "folderPath": "Content"
+    },
+    {
+      "qualifiedName": "MyFirstModule.NewsItem_Edit",
+      "folderPath": "Content"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Club_Directory",
+      "folderPath": "Discovery"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Player_Directory",
+      "folderPath": "Discovery"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Federation_Edit",
+      "folderPath": "Federations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Federation_Overview",
+      "folderPath": "Federations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Federation_Workspace",
+      "folderPath": "Federations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.FederationAffiliation_Edit",
+      "folderPath": "Federations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.FederationRate_Edit",
+      "folderPath": "Federations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.FederationType_Edit",
+      "folderPath": "Federations"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Member_Dashboard",
+      "folderPath": "Members"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Membership_Edit",
+      "folderPath": "Members"
+    },
+    {
+      "qualifiedName": "MyFirstModule.MembershipType_Edit",
+      "folderPath": "Members"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Renewals",
+      "folderPath": "Members"
+    },
+    {
+      "qualifiedName": "MyFirstModule.FormField_Edit",
+      "folderPath": "Registration"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Registration_Approval",
+      "folderPath": "Registration"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Registration_Edit",
+      "folderPath": "Registration"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Registrations",
+      "folderPath": "Registration"
+    },
+    {
+      "qualifiedName": "MyFirstModule.Season_Edit",
+      "folderPath": "Seasons"
+    },
+    {
+      "qualifiedName": "MyFirstModule.SeasonFee_Edit",
+      "folderPath": "Seasons"
+    }
+  ]
+}

@@ -1,0 +1,4334 @@
+[
+  {
+    "name": "ACT_Match_NewFormat",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'NewFormat:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormat_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormat_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_OpenFormat",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenFormat:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormat_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormat_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_SaveFormat",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'SaveFormat:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormat_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormat_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_NewVersion",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'NewVersion:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormat_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormat_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Availability",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'SaveAvailability:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormat_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormat_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Formats",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Formats:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormats",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormats.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_NewSlot",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'NewSlot:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchSlot_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchSlot_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_OpenSlot",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenSlot:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchSlot_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchSlot_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_SaveSlot",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'SaveSlot:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormat_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormat_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_RemoveSlot",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'RemoveSlot:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormat_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormat_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_SlotScoring",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'PickSlotScoring:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_AssignFormat",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'AssignFormat:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchDivision",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchDivision.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Division",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Division:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchDivision",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchDivision.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_OpenFixture",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.FixtureKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenFixture:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Fixture",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenFixture:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_ClaimHome",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'ClaimHome:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_ClaimAway",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'ClaimAway:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Appoint",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'AppointLeader:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Start",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Start:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Contest",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenContest:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchContest",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchContest.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_RefreshContest",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Form/ContestKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenContest:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchContest",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchContest.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_HomeLineup",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenHomeLineup:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchLineup",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchLineup.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_AwayLineup",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenAwayLineup:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchLineup",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchLineup.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_SaveLineup",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'SaveLineup:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchLineup",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchLineup.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Roster",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenRoster:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchRoster",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchRoster.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Pick1",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'PickPlayer1:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchRoster",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchRoster.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Pick2",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'PickPlayer2:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchRoster",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchRoster.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_NewSet",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'NewSet:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchSet_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchSet_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_OpenSet",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenSet:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchSet_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchSet_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_SaveSet",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'SaveSet:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchContest",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchContest.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Outcome",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'SaveContest:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchContest",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchContest.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Scores",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'SaveScores:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchContest",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchContest.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Submit",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Submit:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_AcceptHome",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'AcceptHome:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_AcceptAway",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'AcceptAway:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_DisputeHome",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'DisputeHome:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_DisputeAway",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'DisputeAway:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Finalize",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'FederationFinalize:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Eligibility",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Eligibility:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchEligibility",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchEligibility.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_EligibilityPlayer",
+    "params": [
+      [
+        "Row",
+        "MyFirstModule.MatchRow"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Row",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Form"
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.SelectedKey",
+            "value": "$Row/RecordKey"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenEligibility:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchEligibility_Edit",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchEligibility_Edit.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_SaveEligibility",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'SaveEligibility:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchEligibility",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchEligibility.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_FormatsEntry",
+    "params": [
+      [
+        "Subject",
+        "MyFirstModule.Federation"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Subject"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "ContextId"
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.MatchForm",
+        "outputVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.FederationKey",
+            "value": "toString($ContextId)"
+          }
+        ],
+        "refreshInClient": false
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Formats:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormats",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormats.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_DivisionEntry",
+    "params": [
+      [
+        "Subject",
+        "MyFirstModule.CompetitionLeague"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Subject"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "ContextId"
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.MatchForm",
+        "outputVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.LeagueKey",
+            "value": "toString($ContextId)"
+          }
+        ],
+        "refreshInClient": false
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Division:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchDivision",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchDivision.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_FixtureEntry",
+    "params": [
+      [
+        "Subject",
+        "MyFirstModule.CompetitionFixture"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Subject"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "ContextId"
+      },
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.MatchForm",
+        "outputVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.FixtureKey",
+            "value": "toString($ContextId)"
+          }
+        ],
+        "refreshInClient": false
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'OpenFixture:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFixture",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFixture.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Format",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Format'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Slot",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Slot'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_AffectedDivision",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'AffectedDivision'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_FormatChoice",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'FormatChoice'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Fixture",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Fixture'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Contest",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Contest'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Audit",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Audit'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Set",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Set'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Lineup",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Lineup'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Player",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Player'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_SlotScoring",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'SlotScoring'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_Eligibility",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'Eligibility'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "DS_Match_EligibilityPlayer",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "returnType": "List",
+    "returnEntity": "MatchRow",
+    "steps": [
+      {
+        "$Type": "Microflows$RetrieveAction",
+        "byAssociation": {
+          "startVariableName": "Form",
+          "association": "MyFirstModule.MatchRow_Form"
+        },
+        "outputVariableName": "Rows"
+      },
+      {
+        "$Type": "Microflows$ListOperationAction",
+        "operation": {
+          "$Type": "Microflows$FilterByExpression",
+          "listVariableName": "Rows",
+          "expression": "$currentObject/Kind = 'EligibilityPlayer'"
+        },
+        "outputVariableName": "Filtered"
+      },
+      {
+        "end": "$Filtered"
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Clear1",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.Player1Key",
+            "value": "''"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.Player1Name",
+            "value": "''"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchRoster",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchRoster.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Clear2",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.Player2Key",
+            "value": "''"
+          },
+          {
+            "$Type": "Microflows$MemberChange",
+            "attribute": "MyFirstModule.MatchForm.Player2Name",
+            "value": "''"
+          }
+        ],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchRoster",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchRoster.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_VerifySamples",
+    "params": [
+      [
+        "Form",
+        "MyFirstModule.MatchForm"
+      ]
+    ],
+    "roles": [
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'VerifySamples:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchFormats",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchFormats.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "ACT_Match_Assignments",
+    "params": [],
+    "roles": [
+      "User",
+      "ClubAdmin",
+      "FederationAdmin",
+      "Administrator"
+    ],
+    "steps": [
+      {
+        "$Type": "Microflows$CreateObjectAction",
+        "entity": "MyFirstModule.MatchForm",
+        "outputVariableName": "Form",
+        "items": [],
+        "refreshInClient": false
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "CommunityCommons.getGUID",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "CommunityCommons.getGUID.item",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "$Form"
+            }
+          }
+        ],
+        "useReturnVariable": true,
+        "outputVariableName": "FormId"
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'MyFixtures:' + toString($FormId)"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$ChangeObjectAction",
+        "changeVariableName": "Form",
+        "items": [],
+        "refreshInClient": true
+      },
+      {
+        "$Type": "Microflows$ShowPageAction",
+        "pageSettings": {
+          "$Type": "Pages$PageSettings",
+          "page": "MyFirstModule.MatchAssignments",
+          "parameterMappings": [
+            {
+              "$Type": "Pages$PageParameterMapping",
+              "parameter": "MyFirstModule.MatchAssignments.Form",
+              "argument": "$Form"
+            }
+          ]
+        }
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results"
+  },
+  {
+    "name": "SE_Match_AcceptanceExpiry",
+    "steps": [
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Expire'"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "end": ""
+      }
+    ],
+    "folderPath": "Competition/Results/System"
+  },
+  {
+    "name": "ASU_MatchRegistration_Initialize",
+    "steps": [
+      {
+        "$Type": "Microflows$MicroflowCallAction",
+        "microflowCall": {
+          "$Type": "Microflows$MicroflowCall",
+          "microflow": "UnitTesting.Startup",
+          "parameterMappings": []
+        },
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "$Type": "Microflows$JavaActionCallAction",
+        "javaAction": "MyFirstModule.JA_MatchRegistration",
+        "parameterMappings": [
+          {
+            "$Type": "Microflows$JavaActionParameterMapping",
+            "parameter": "MyFirstModule.JA_MatchRegistration.Form",
+            "parameterValue": {
+              "$Type": "Microflows$BasicCodeActionParameterValue",
+              "argument": "'Initialize'"
+            }
+          }
+        ],
+        "useReturnVariable": false,
+        "outputVariableName": ""
+      },
+      {
+        "end": "true"
+      }
+    ],
+    "returnType": "Boolean",
+    "folderPath": "Competition/Results/System"
+  }
+]

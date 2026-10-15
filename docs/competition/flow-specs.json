@@ -106,7 +106,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Configuration"
+    "folder": "Competition/Configuration"
   },
   {
     "name": "SUB_Competition_FederationPermission",
@@ -150,7 +150,7 @@
       }
     ],
     "returnType": "Boolean",
-    "folder": "CRM/Competition/Configuration"
+    "folder": "Competition/Configuration"
   },
   {
     "name": "SUB_Competition_ClubPermission",
@@ -198,7 +198,7 @@
       }
     ],
     "returnType": "Boolean",
-    "folder": "CRM/Competition/Configuration"
+    "folder": "Competition/Configuration"
   },
   {
     "name": "SUB_Competition_Audit",
@@ -269,7 +269,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Configuration"
+    "folder": "Competition/Configuration"
   },
   {
     "name": "ACT_CompetitionLeague_New",
@@ -352,7 +352,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Leagues",
+    "folder": "Competition/Leagues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -499,7 +499,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Leagues",
+    "folder": "Competition/Leagues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -753,7 +753,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Leagues",
+    "folder": "Competition/Leagues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -826,7 +826,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Teams",
+    "folder": "Competition/Teams",
     "roles": [
       "User",
       "ClubAdmin",
@@ -944,7 +944,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Teams",
+    "folder": "Competition/Teams",
     "roles": [
       "User",
       "ClubAdmin",
@@ -1030,7 +1030,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Teams",
+    "folder": "Competition/Teams",
     "roles": [
       "User",
       "ClubAdmin",
@@ -1077,7 +1077,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Teams",
+    "folder": "Competition/Teams",
     "roles": [
       "User",
       "ClubAdmin",
@@ -1287,7 +1287,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Teams",
+    "folder": "Competition/Teams",
     "roles": [
       "User",
       "ClubAdmin",
@@ -1386,7 +1386,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Teams",
+    "folder": "Competition/Teams",
     "roles": [
       "User",
       "ClubAdmin",
@@ -1474,7 +1474,7 @@
     ],
     "returnType": "Boolean",
     "returnEntity": null,
-    "folder": "CRM/Competition/Registrations"
+    "folder": "Competition/Registrations"
   },
   {
     "name": "ACT_LeagueEntry_Open",
@@ -1555,7 +1555,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Registrations",
+    "folder": "Competition/Registrations",
     "roles": [
       "User",
       "ClubAdmin",
@@ -1599,7 +1599,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Registrations",
+    "folder": "Competition/Registrations",
     "roles": [
       "User",
       "ClubAdmin",
@@ -1891,7 +1891,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Registrations",
+    "folder": "Competition/Registrations",
     "roles": [
       "User",
       "ClubAdmin",
@@ -1965,7 +1965,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Venues",
+    "folder": "Competition/Venues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -2111,7 +2111,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Venues",
+    "folder": "Competition/Venues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -2203,7 +2203,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Venues",
+    "folder": "Competition/Venues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -2387,7 +2387,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Venues",
+    "folder": "Competition/Venues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -2473,7 +2473,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Poules",
+    "folder": "Competition/Poules",
     "roles": [
       "User",
       "ClubAdmin",
@@ -2915,7 +2915,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Poules",
+    "folder": "Competition/Poules",
     "roles": [
       "User",
       "ClubAdmin",
@@ -3014,7 +3014,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Poules",
+    "folder": "Competition/Poules",
     "roles": [
       "User",
       "ClubAdmin",
@@ -3282,7 +3282,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Poules",
+    "folder": "Competition/Poules",
     "roles": [
       "User",
       "ClubAdmin",
@@ -3325,7 +3325,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Poules",
+    "folder": "Competition/Poules",
     "roles": [
       "User",
       "ClubAdmin",
@@ -3419,7 +3419,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Poules",
+    "folder": "Competition/Poules",
     "roles": [
       "User",
       "ClubAdmin",
@@ -3664,7 +3664,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Poules",
+    "folder": "Competition/Poules",
     "roles": [
       "User",
       "ClubAdmin",
@@ -3831,7 +3831,7 @@
     ],
     "returnType": "Object",
     "returnEntity": "CompetitionFixture",
-    "folder": "CRM/Competition/Fixtures"
+    "folder": "Competition/Fixtures"
   },
   {
     "name": "ACT_CompetitionFixture_Generate",
@@ -4125,7 +4125,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Fixtures",
+    "folder": "Competition/Fixtures",
     "roles": [
       "User",
       "ClubAdmin",
@@ -4391,7 +4391,7 @@
     ],
     "returnType": "Boolean",
     "returnEntity": null,
-    "folder": "CRM/Competition/Planning"
+    "folder": "Competition/Planning"
   },
   {
     "name": "ACT_CompetitionFixture_Plan",
@@ -4805,7 +4805,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Planning",
+    "folder": "Competition/Planning",
     "roles": [
       "User",
       "ClubAdmin",
@@ -5096,7 +5096,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Planning",
+    "folder": "Competition/Planning",
     "roles": [
       "User",
       "ClubAdmin",
@@ -5230,7 +5230,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/FixtureChanges",
+    "folder": "Competition/FixtureChanges",
     "roles": [
       "User",
       "ClubAdmin",
@@ -5279,7 +5279,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/FixtureChanges",
+    "folder": "Competition/FixtureChanges",
     "roles": [
       "User",
       "ClubAdmin",
@@ -5633,7 +5633,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/FixtureChanges",
+    "folder": "Competition/FixtureChanges",
     "roles": [
       "User",
       "ClubAdmin",
@@ -5996,7 +5996,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/FixtureChanges",
+    "folder": "Competition/FixtureChanges",
     "roles": [
       "User",
       "ClubAdmin",
@@ -6359,7 +6359,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/FixtureChanges",
+    "folder": "Competition/FixtureChanges",
     "roles": [
       "User",
       "ClubAdmin",
@@ -6556,7 +6556,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/FixtureChanges",
+    "folder": "Competition/FixtureChanges",
     "roles": [
       "User",
       "ClubAdmin",
@@ -6664,7 +6664,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Planning",
+    "folder": "Competition/Planning",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7019,7 +7019,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Planning",
+    "folder": "Competition/Planning",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7112,7 +7112,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Venues",
+    "folder": "Competition/Venues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7334,7 +7334,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Venues",
+    "folder": "Competition/Venues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7408,7 +7408,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Permissions",
+    "folder": "Competition/Permissions",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7604,7 +7604,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Permissions",
+    "folder": "Competition/Permissions",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7673,7 +7673,7 @@
     ],
     "returnType": "List",
     "returnEntity": "Membership",
-    "folder": "CRM/Competition/Teams",
+    "folder": "Competition/Teams",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7722,7 +7722,7 @@
     ],
     "returnType": "List",
     "returnEntity": "CompetitionLeague",
-    "folder": "CRM/Competition/Leagues",
+    "folder": "Competition/Leagues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7762,7 +7762,7 @@
     ],
     "returnType": "List",
     "returnEntity": "CompetitionPoule",
-    "folder": "CRM/Competition/Poules",
+    "folder": "Competition/Poules",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7822,7 +7822,7 @@
     ],
     "returnType": "List",
     "returnEntity": "VenueAvailability",
-    "folder": "CRM/Competition/Venues",
+    "folder": "Competition/Venues",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7849,7 +7849,7 @@
     ],
     "returnType": "List",
     "returnEntity": "Club",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7916,7 +7916,7 @@
     ],
     "returnType": "List",
     "returnEntity": "Federation",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "roles": [
       "User",
       "ClubAdmin",
@@ -7952,7 +7952,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "roles": [
       "User",
       "ClubAdmin",
@@ -8020,7 +8020,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "roles": [
       "User",
       "ClubAdmin",
@@ -8088,7 +8088,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "roles": [
       "User",
       "ClubAdmin",
@@ -8148,7 +8148,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "roles": [
       "User",
       "ClubAdmin",
@@ -8266,7 +8266,7 @@
     ],
     "returnType": "Void",
     "returnEntity": null,
-    "folder": "CRM/Competition/Permissions",
+    "folder": "Competition/Permissions",
     "roles": [
       "User",
       "ClubAdmin",
@@ -8303,7 +8303,7 @@
       }
     ],
     "returnType": "String",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "documentation": "Stable competition keys obtained with CommunityCommons.getGUID."
   },
   {
@@ -8335,7 +8335,7 @@
       }
     ],
     "returnType": "String",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "documentation": "Stable competition keys obtained with CommunityCommons.getGUID."
   },
   {
@@ -8390,7 +8390,7 @@
       }
     ],
     "returnType": "String",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "documentation": "Stable competition keys obtained with CommunityCommons.getGUID."
   },
   {
@@ -8452,7 +8452,7 @@
       }
     ],
     "returnType": "String",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "documentation": "Stable competition keys obtained with CommunityCommons.getGUID."
   },
   {
@@ -8507,7 +8507,7 @@
       }
     ],
     "returnType": "String",
-    "folder": "CRM/Competition/Configuration",
+    "folder": "Competition/Configuration",
     "documentation": "Stable competition keys obtained with CommunityCommons.getGUID."
   },
   {
@@ -9827,7 +9827,7 @@
       }
     ],
     "returnType": "String",
-    "folder": "CRM/Competition/Tests",
+    "folder": "Competition/Tests",
     "documentation": "Twelve server-side placement cases. Creates only uncommitted synthetic objects; no database writes, accounts or mail. Invoke via TEST_Competition_Startup during local testing."
   },
   {
@@ -9858,7 +9858,7 @@
       }
     ],
     "returnType": "Boolean",
-    "folder": "CRM/Competition/Tests",
+    "folder": "Competition/Tests",
     "documentation": "Local test runner. No client roles. Temporarily wired to startup only for one validation run, then removed from startup."
   },
   {
@@ -10310,7 +10310,7 @@
       }
     ],
     "returnType": "Boolean",
-    "folder": "CRM/Competition/Tests/Fixtures",
+    "folder": "Competition/Tests/Fixtures",
     "documentation": "Synthetic uncommitted placement fixtures shared by the framework tests. No database writes or user accounts."
   },
   {
@@ -10368,7 +10368,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10426,7 +10426,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10484,7 +10484,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10542,7 +10542,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10600,7 +10600,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10658,7 +10658,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10716,7 +10716,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10774,7 +10774,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10832,7 +10832,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10890,7 +10890,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -10948,7 +10948,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -11006,7 +11006,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Tests/Planning",
+    "folder": "Competition/Tests/Planning",
     "documentation": "Framework test using UnitTesting.AssertUsingExpression. Synthetic objects are not committed."
   },
   {
@@ -11062,7 +11062,7 @@
       }
     ],
     "returnType": "Boolean",
-    "folder": "CRM/Competition/Tests",
+    "folder": "Competition/Tests",
     "documentation": "Private local runner for one validation pass. Temporarily installed as startup only after framework initialization, then restored to UnitTesting.Startup. Remote API remains disabled."
   },
   {
@@ -11145,7 +11145,7 @@
       }
     ],
     "returnType": "Void",
-    "folder": "CRM/Competition/Teams",
+    "folder": "Competition/Teams",
     "documentation": "Checks scope and retrieves the selected membership from the database before returning any personal data to the form."
   }
 ]

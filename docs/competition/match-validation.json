@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-15",
+  "modelConsistency": {
+    "status": "passed",
+    "tool": "mnd.ped_check_errors",
+    "result": "No errors found."
+  },
+  "compilation": {
+    "source": "passed: Java 21 against Mendix 11.15 public API",
+    "studioProBuild": "passed; final application startup checked separately"
+  },
+  "standaloneRules": {
+    "status": "passed",
+    "assertions": 11066,
+    "source": "docs/competition/tests/MatchRulesTest.java"
+  },
+  "runtime": {
+    "bridge": "passed: NP GUID lookup, copy and row transfer",
+    "persistenceOutcomes": {
+      "status": "passed",
+      "assertions": 31,
+      "rollback": true,
+      "source": "javasource/myfirstmodule/MatchRegistrationRuntimeChecks.java"
+    },
+    "signedInRoleAndUIScenarios": "not executed",
+    "sampleFreshUpgradeIdempotenceCleanup": "not verified: startup probe denied by platform-administrator guard",
+    "pagesAndPublicMicroflows": "wired and model-checked",
+    "startup": "passed: final full Studio Pro build succeeded and mnd reported running=true with normal initializer"
+  },
+  "pendingVerification": [
+    "Signed-in captain, independent official and federation role workflows",
+    "Forged-ID/privacy/stale/concurrent-save scenarios",
+    "Substitutions, approvals/disputes and atomic federation corrections",
+    "Administrator sample lifecycle action"
+  ],
+  "access": "Applied after explicit user approval; persistent match entities remain private"
+}

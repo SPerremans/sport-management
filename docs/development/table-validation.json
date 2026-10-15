@@ -1,0 +1,375 @@
+{
+  "date": "2026-10-15",
+  "modelConsistency": "passed: global mnd.ped_check_errors returned No errors found",
+  "compilation": {
+    "pagesAndTheme": "passed: current generated pages and compiled CSS; Rspack bundle finished 2026-10-15T20:32:37Z",
+    "java": "unchanged by table work; prior full Studio Pro Java/package build successful; standalone Java checks recompiled with JDK 21"
+  },
+  "structuralVerification": {
+    "pages": 34,
+    "grids": 69,
+    "buttons": 159,
+    "attributeReferences": 339,
+    "inputWidgets": 52,
+    "allPreserved": true,
+    "results": [
+      {
+        "page": "LeagueEntry_Register",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "LeagueEntry_Move",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "LeagueEntry_Poule",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "MatchAssignments",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "MatchContest",
+        "grids": 2,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "MatchDivision",
+        "grids": 2,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "MatchEligibility",
+        "grids": 2,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "MatchFixture",
+        "grids": 2,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "MatchFormats",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "MatchRoster",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "MatchSlot_Edit",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "CompetitionPlayer_Add",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "FixtureChange_Propose",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "FixturePlacement_Edit",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "CompetitionTeam_Workspace",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "CompetitionVenue_Workspace",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "CompetitionLeague_Workspace",
+        "grids": 4,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "CompetitionFederation_Workspace",
+        "grids": 2,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Competition_Overview",
+        "grids": 6,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Platform_Accounts",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Club_Administration",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Club_Detail",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Club_Workspace",
+        "grids": 11,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Platform_Clubs",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Club_Directory",
+        "grids": 2,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Player_Directory",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Federation_Overview",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Federation_Workspace",
+        "grids": 5,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Member_Dashboard",
+        "grids": 7,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Renewals",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Registration_Edit",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Registrations",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "Season_Edit",
+        "grids": 2,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      },
+      {
+        "page": "ClubRole_Edit",
+        "grids": 1,
+        "singleHeaderDefinitions": true,
+        "actionsPreserved": true,
+        "inputsPreserved": true,
+        "attributesPreserved": true,
+        "sourcesPreserved": true
+      }
+    ]
+  },
+  "buttonContrast": [
+    {
+      "style": "Primary",
+      "normal": 5.13,
+      "hover": 4.73,
+      "active": 4.6,
+      "borderOnWhite": 3.52
+    },
+    {
+      "style": "Danger",
+      "normal": 5.66,
+      "hover": 5.14,
+      "active": 4.97,
+      "borderOnWhite": 4.24
+    },
+    {
+      "style": "Success",
+      "normal": 6.78,
+      "hover": 6.2,
+      "active": 6.01,
+      "borderOnWhite": 4.23
+    },
+    {
+      "style": "Warning",
+      "normal": 6.37,
+      "hover": 5.83,
+      "active": 5.66,
+      "borderOnWhite": 4.05
+    },
+    {
+      "style": "Info",
+      "normal": 6.59,
+      "hover": 6.03,
+      "active": 5.85,
+      "borderOnWhite": 4.2
+    }
+  ],
+  "standaloneChecks": {
+    "userViewPolicy": 51,
+    "matchRules": 11066
+  },
+  "runtime": {
+    "startup": "passed: mnd running=true",
+    "browserScenarios": "not executed; earlier browser access declined",
+    "sampleLifecycle": "not executed in this change; existing generator samples retained"
+  },
+  "notes": [
+    "UI-only conversion; no new business entities, pages or workflows, so no new generated records or cleanup types were added.",
+    "This report verifies model structure and generated compilation artifacts, not user interaction."
+  ],
+  "knownBuildWarning": "Installed DataGridDateFilter package emits react-dom findDOMNode export warning; no compilation errors."
+}

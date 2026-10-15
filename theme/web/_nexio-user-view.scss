@@ -1,0 +1,19 @@
+/* Administrator user-view picker and fixed return toolbar. */
+.nexio-user-view { background: var(--nexio-light); color: var(--nexio-navy); }
+.nexio-user-view-picker { max-width: 1500px; margin: 24px auto; padding: 24px; background: var(--nexio-surface); border: 1px solid var(--nexio-line); border-radius: 6px; }
+.nexio-user-view-picker h1 { font-size: 28px; }
+.nexio-user-view-picker form { margin: 16px 0; }
+.nexio-user-view-picker label { display: block; font-weight: 600; margin: 8px 0 4px; }
+.nexio-user-view-picker input { padding: 7px 10px; border: 1px solid #6b8299; border-radius: 4px; max-width: 100%; width: min(100%, 640px); margin-right: 8px; }
+.nexio-user-view-picker button { min-height: 34px; padding: 6px 12px; border-radius: 4px; font-size: 14px; box-shadow: none; }
+.nexio-user-view-table { overflow-x: auto; border: 1px solid var(--nexio-line); margin: 16px 0; }
+.nexio-user-view-table table { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 14px; }
+.nexio-user-view-table th, .nexio-user-view-table td { padding: 9px 12px; border-bottom: 1px solid var(--nexio-line); text-align: left; overflow-wrap: anywhere; }
+.nexio-user-view-table th { background: var(--brand-default); color: var(--nexio-navy); font-size: 13px; }
+.nexio-user-view-table tbody tr:nth-child(even) { background: var(--nexio-light); }
+.nexio-user-view-active > #root, .nexio-user-view-active .layout-atlas { height: calc(100vh - var(--nexio-user-view-height, 90px)); min-height: 0; }
+.nexio-user-view-bar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 16px; background: var(--nexio-warning-tint); color: var(--nexio-warning-ink); border-bottom: 2px solid var(--nexio-warning-ink); }
+.nexio-user-view-bar p { font-size: 13px; margin: 2px 0 0; }
+.nexio-user-view-bar button { white-space: nowrap; min-height: 36px; padding: 7px 12px; border-radius: 4px; }
+.nexio-user-view-active > .nexio-user-view-bar { position: sticky; top: 0; z-index: 10001; }
+@media (max-width: 767px) { .nexio-user-view-picker { margin: 10px; padding: 16px; } .nexio-user-view-bar { align-items: flex-start; flex-direction: column; gap: 8px; } }

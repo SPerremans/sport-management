@@ -1,0 +1,448 @@
+{
+  "enums": {
+    "MatchScoring": [
+      [
+        "Rally",
+        "Points per set"
+      ],
+      [
+        "Games",
+        "Games per set (tennis / padel)"
+      ],
+      [
+        "Total",
+        "Team total"
+      ]
+    ],
+    "MatchOutcome": [
+      [
+        "Pending",
+        "Not yet recorded"
+      ],
+      [
+        "Played",
+        "Played"
+      ],
+      [
+        "HomeRetired",
+        "Home retired"
+      ],
+      [
+        "AwayRetired",
+        "Away retired"
+      ],
+      [
+        "HomeForfeit",
+        "Home forfeited \u2014 away awarded win"
+      ],
+      [
+        "AwayForfeit",
+        "Away forfeited \u2014 home awarded win"
+      ],
+      [
+        "NotPlayed",
+        "Not played \u2014 fixture decided"
+      ],
+      [
+        "Excluded",
+        "Excluded by federation"
+      ]
+    ],
+    "MatchTiePolicy": [
+      [
+        "Draw",
+        "Allow draw"
+      ],
+      [
+        "SetsPoints",
+        "Sets won, then score points"
+      ],
+      [
+        "Decider",
+        "Additional deciding contest"
+      ]
+    ],
+    "MatchApprovalAnchor": [
+      [
+        "Scheduled",
+        "Scheduled fixture start"
+      ],
+      [
+        "Actual",
+        "Recorded actual start"
+      ],
+      [
+        "Submitted",
+        "Completed result submission"
+      ]
+    ],
+    "MatchLockMode": [
+      [
+        "Start",
+        "Official starts fixture"
+      ],
+      [
+        "Scheduled",
+        "Scheduled start"
+      ],
+      [
+        "Offset",
+        "Minutes before scheduled start"
+      ]
+    ],
+    "MatchDiscipline": [
+      [
+        "Open",
+        "Open"
+      ],
+      [
+        "Men",
+        "Men"
+      ],
+      [
+        "Women",
+        "Women"
+      ],
+      [
+        "Mixed",
+        "Mixed"
+      ]
+    ],
+    "MatchGameMode": [
+      [
+        "Advantage",
+        "Advantage"
+      ],
+      [
+        "Golden",
+        "Golden / deciding point"
+      ],
+      [
+        "Star",
+        "Star point"
+      ]
+    ]
+  },
+  "entities": {
+    "MatchFormat": {
+      "Name": "String",
+      "Sport": "String",
+      "Version": "Integer",
+      "Scoring": "@MatchScoring",
+      "SetsToWin": "Integer",
+      "Target": "Integer",
+      "Margin": "Integer",
+      "Cap": "Integer",
+      "GamesToWin": "Integer",
+      "GamesMargin": "Integer",
+      "TieAt": "Integer",
+      "TieTarget": "Integer",
+      "DecidingTarget": "Integer",
+      "GameMode": "@MatchGameMode",
+      "WinPoints": "Decimal",
+      "DrawPoints": "Decimal",
+      "LossPoints": "Decimal",
+      "TiePolicy": "@MatchTiePolicy",
+      "StopWhenDecided": "Boolean",
+      "HomeHours": "Integer",
+      "AwayHours": "Integer",
+      "MinimumReviewHours": "Integer",
+      "ApprovalAnchor": "@MatchApprovalAnchor",
+      "LineupLock": "@MatchLockMode",
+      "LockMinutes": "Integer",
+      "MaxAppearances": "Integer",
+      "MaxSingles": "Integer",
+      "MaxDoubles": "Integer",
+      "MinIndex": "Decimal",
+      "MaxIndex": "Decimal",
+      "MaxTeamIndex": "Decimal",
+      "CheckMembership": "Boolean",
+      "CheckRegistration": "Boolean",
+      "CheckSuspension": "Boolean",
+      "CheckDiscipline": "Boolean",
+      "CheckAppearances": "Boolean",
+      "CheckIndex": "Boolean",
+      "AvailableFrom": "DateTime",
+      "AvailableUntil": "DateTime",
+      "IsAvailable": "Boolean"
+    },
+    "MatchSlot": {
+      "Name": "String",
+      "Sequence": "Integer",
+      "PlayersPerSide": "Integer",
+      "Discipline": "@MatchDiscipline",
+      "IsDecider": "Boolean"
+    },
+    "MatchRegistration": {
+      "State": "String",
+      "Revision": "Integer",
+      "HomeCaptainKey": "String",
+      "AwayCaptainKey": "String",
+      "LeaderKey": "String",
+      "LeaderName": "String",
+      "StartedAt": "DateTime",
+      "SubmittedAt": "DateTime",
+      "HomeDeadline": "DateTime",
+      "AwayDeadline": "DateTime",
+      "HomeAccepted": "Boolean",
+      "AwayAccepted": "Boolean",
+      "HomeAcceptedAt": "DateTime",
+      "AwayAcceptedAt": "DateTime",
+      "HomeAcceptance": "String",
+      "AwayAcceptance": "String",
+      "Disputed": "Boolean",
+      "DisputeReason": "String",
+      "WarningsAcknowledged": "Boolean",
+      "WarningAcknowledgment": "String",
+      "HomeScore": "Integer",
+      "AwayScore": "Integer",
+      "Winner": "String",
+      "HomePoints": "Decimal",
+      "AwayPoints": "Decimal",
+      "HomeAdjustment": "Decimal",
+      "AwayAdjustment": "Decimal",
+      "FederationFinal": "Boolean",
+      "Reason": "String",
+      "WinnerOverride": "String"
+    },
+    "MatchContest": {
+      "Name": "String",
+      "Sequence": "Integer",
+      "PlayersPerSide": "Integer",
+      "Discipline": "@MatchDiscipline",
+      "IsDecider": "Boolean",
+      "Outcome": "@MatchOutcome",
+      "RecordedWinner": "String",
+      "OfficialWinner": "String",
+      "HomeSets": "Integer",
+      "AwaySets": "Integer",
+      "HomeTotal": "Integer",
+      "AwayTotal": "Integer",
+      "Excluded": "Boolean",
+      "RankingEligible": "Boolean",
+      "Reason": "String",
+      "Revision": "Integer",
+      "RankingExcluded": "Boolean"
+    },
+    "MatchSet": {
+      "Sequence": "Integer",
+      "Home": "Integer",
+      "Away": "Integer",
+      "HomeTie": "Integer",
+      "AwayTie": "Integer",
+      "HasTie": "Boolean",
+      "IsMatchTie": "Boolean"
+    },
+    "MatchLineup": {
+      "Side": "String",
+      "Player1Name": "String",
+      "Player2Name": "String",
+      "Warnings": "String",
+      "Revision": "Integer"
+    },
+    "MatchAudit": {
+      "Action": "String",
+      "Actor": "String",
+      "At": "DateTime",
+      "Reason": "String",
+      "BeforeValue": "String",
+      "AfterValue": "String",
+      "PrivateSide": "String"
+    },
+    "MatchEligibility": {
+      "PlayerKey": "String",
+      "Discipline": "@MatchDiscipline",
+      "Suspended": "Boolean",
+      "Index": "Decimal",
+      "StartsOn": "DateTime",
+      "EndsOn": "DateTime",
+      "Reason": "String"
+    },
+    "MatchForm": {
+      "Name": "String",
+      "Sport": "String",
+      "Version": "Integer",
+      "Scoring": "@MatchScoring",
+      "SetsToWin": "Integer",
+      "Target": "Integer",
+      "Margin": "Integer",
+      "Cap": "Integer",
+      "GamesToWin": "Integer",
+      "GamesMargin": "Integer",
+      "TieAt": "Integer",
+      "TieTarget": "Integer",
+      "DecidingTarget": "Integer",
+      "GameMode": "@MatchGameMode",
+      "WinPoints": "Decimal",
+      "DrawPoints": "Decimal",
+      "LossPoints": "Decimal",
+      "TiePolicy": "@MatchTiePolicy",
+      "StopWhenDecided": "Boolean",
+      "HomeHours": "Integer",
+      "AwayHours": "Integer",
+      "MinimumReviewHours": "Integer",
+      "ApprovalAnchor": "@MatchApprovalAnchor",
+      "LineupLock": "@MatchLockMode",
+      "LockMinutes": "Integer",
+      "MaxAppearances": "Integer",
+      "MaxSingles": "Integer",
+      "MaxDoubles": "Integer",
+      "MinIndex": "Decimal",
+      "MaxIndex": "Decimal",
+      "MaxTeamIndex": "Decimal",
+      "CheckMembership": "Boolean",
+      "CheckRegistration": "Boolean",
+      "CheckSuspension": "Boolean",
+      "CheckDiscipline": "Boolean",
+      "CheckAppearances": "Boolean",
+      "CheckIndex": "Boolean",
+      "AvailableFrom": "DateTime",
+      "AvailableUntil": "DateTime",
+      "IsAvailable": "Boolean",
+      "RecordKey": "String",
+      "FederationKey": "String",
+      "LeagueKey": "String",
+      "FixtureKey": "String",
+      "ContestKey": "String",
+      "LineupKey": "String",
+      "SelectedKey": "String",
+      "Side": "String",
+      "Reason": "String",
+      "Info": "String",
+      "Title": "String",
+      "Revision": "Integer",
+      "Player1Name": "String",
+      "Player2Name": "String",
+      "Player1Key": "String",
+      "Player2Key": "String",
+      "LeaderName": "String",
+      "Sequence": "Integer",
+      "PlayersPerSide": "Integer",
+      "Discipline": "@MatchDiscipline",
+      "IsDecider": "Boolean",
+      "Outcome": "@MatchOutcome",
+      "Home": "Integer",
+      "Away": "Integer",
+      "HomeTie": "Integer",
+      "AwayTie": "Integer",
+      "HasTie": "Boolean",
+      "IsMatchTie": "Boolean",
+      "WarningsAcknowledged": "Boolean",
+      "NotStartedConfirmed": "Boolean",
+      "Suspended": "Boolean",
+      "Index": "Decimal",
+      "StartsOn": "DateTime",
+      "EndsOn": "DateTime",
+      "HomeAdjustment": "Decimal",
+      "AwayAdjustment": "Decimal",
+      "CanManage": "Boolean",
+      "CanLead": "Boolean",
+      "CanHome": "Boolean",
+      "CanAway": "Boolean",
+      "CanOverride": "Boolean",
+      "CanEditLineup": "Boolean",
+      "WinnerOverride": "String",
+      "ScoresText": "String",
+      "RankingExcluded": "Boolean"
+    },
+    "MatchRow": {
+      "Label": "String",
+      "Detail": "String",
+      "RecordKey": "String",
+      "Kind": "String",
+      "Revision": "Integer"
+    }
+  },
+  "associations": [
+    [
+      "MatchFormat_Federation",
+      "MatchFormat",
+      "Federation"
+    ],
+    [
+      "MatchSlot_Format",
+      "MatchSlot",
+      "MatchFormat"
+    ],
+    [
+      "MatchSlot_ScoringOverride",
+      "MatchSlot",
+      "MatchFormat"
+    ],
+    [
+      "CompetitionLeague_MatchFormat",
+      "CompetitionLeague",
+      "MatchFormat"
+    ],
+    [
+      "MatchRegistration_Fixture",
+      "MatchRegistration",
+      "CompetitionFixture"
+    ],
+    [
+      "MatchRegistration_Format",
+      "MatchRegistration",
+      "MatchFormat"
+    ],
+    [
+      "MatchContest_Registration",
+      "MatchContest",
+      "MatchRegistration"
+    ],
+    [
+      "MatchContest_Format",
+      "MatchContest",
+      "MatchFormat"
+    ],
+    [
+      "MatchLineup_Contest",
+      "MatchLineup",
+      "MatchContest"
+    ],
+    [
+      "MatchLineup_Player1",
+      "MatchLineup",
+      "CompetitionPlayer"
+    ],
+    [
+      "MatchLineup_Player2",
+      "MatchLineup",
+      "CompetitionPlayer"
+    ],
+    [
+      "MatchSet_Contest",
+      "MatchSet",
+      "MatchContest"
+    ],
+    [
+      "MatchAudit_Registration",
+      "MatchAudit",
+      "MatchRegistration"
+    ],
+    [
+      "MatchAudit_Federation",
+      "MatchAudit",
+      "Federation"
+    ],
+    [
+      "MatchAudit_League",
+      "MatchAudit",
+      "CompetitionLeague"
+    ],
+    [
+      "MatchEligibility_Federation",
+      "MatchEligibility",
+      "Federation"
+    ],
+    [
+      "MatchEligibility_Player",
+      "MatchEligibility",
+      "CompetitionPlayer"
+    ],
+    [
+      "MatchRow_Form",
+      "MatchRow",
+      "MatchForm"
+    ]
+  ]
+}

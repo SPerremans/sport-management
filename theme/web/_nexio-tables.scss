@@ -1,0 +1,157 @@
+/* Shared application tables. Data Grid 2 owns column headers, rows and paging. */
+.layout-atlas .region-content .mx-placeholder,
+.layout-atlas .region-content [class*="mx-name-placeholder"] {
+  width: calc(100% - 40px);
+  max-width: 1800px;
+  margin: 20px auto 32px;
+  padding: 24px;
+}
+.layout-atlas .region-content h1 { font-size: 28px; margin-bottom: 8px; }
+.layout-atlas .region-content h1::after { margin-top: 10px; height: 3px; }
+.layout-atlas .mx-name-nexioPageSubtitle { margin-bottom: 20px; font-size: 14px; }
+.mx-tabcontainer > .nav-tabs { gap: 2px; padding: 4px; margin-bottom: 16px; border-radius: 6px; }
+.mx-tabcontainer > .nav-tabs > li > a { padding: 8px 12px; border-radius: 4px; font-size: 14px; }
+.mx-listview > ul { display: block; margin: 0; padding: 0; }
+.mx-listview > ul > li,
+.mx-listview .mx-listview > ul > li {
+  padding: 10px 12px;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--nexio-line);
+  border-radius: 0;
+  background: var(--nexio-surface);
+  box-shadow: none;
+  color: var(--nexio-navy);
+}
+.mx-listview > ul > li:hover { background: var(--nexio-light); }
+.mx-listview > ul > li h2, .mx-listview > ul > li h3 {
+  font-size: 15px; line-height: 1.4; margin: 0; color: var(--nexio-navy);
+}
+.mx-listview > ul > li .btn {
+  min-height: 32px; padding: 5px 9px; margin: 0;
+  font-size: 13px; border-radius: 4px; box-shadow: none;
+}
+.nexio-table-list {
+  overflow-x: auto;
+  border: 1px solid var(--nexio-line);
+  border-radius: 6px;
+  margin: 8px 0 18px;
+  font-size: 14px;
+  color: var(--nexio-navy);
+  background: var(--nexio-surface);
+}
+.nexio-table-list > ul > li.mx-listview-item { padding: 0; background: var(--nexio-surface); }
+.nexio-table-list > ul > li.mx-listview-item:nth-child(even) { background: var(--nexio-light); }
+.nexio-table-list > ul > li.mx-listview-item:hover { background: var(--brand-default); }
+.nexio-table-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--nexio-column-count, 3), minmax(140px, 1fr));
+  min-width: max(100%, calc(var(--nexio-column-count, 3) * 150px));
+  align-items: center;
+  gap: 0;
+}
+.nexio-table-heading {
+  color: var(--nexio-navy);
+  background: var(--brand-default);
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--nexio-line);
+}
+.nexio-table-list > ul > li:not(:first-child) > .nexio-table-heading { display: none; }
+.nexio-table-grid > .nexio-table-cell { padding: 9px 12px; min-width: 0; overflow-wrap: anywhere; }
+.nexio-table-grid .mx-text, .nexio-table-grid p, .nexio-table-grid h2, .nexio-table-grid h3 {
+  margin: 0; color: inherit; font-size: 14px; line-height: 1.4; max-width: none;
+}
+.nexio-table-heading .mx-text { font-size: 13px; font-weight: 600; }
+.nexio-table-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.nexio-table-grid .form-group { margin: 0; gap: 0; }
+.nexio-table-grid .form-control { min-height: 32px; padding: 5px 8px; font-size: 14px; border-radius: 4px; }
+.nexio-table-grid .mx-dataview-content { padding: 0; }
+.nexio-table-details { padding: 4px 12px 10px; }
+.nexio-table-details .nexio-table-list { margin-bottom: 0; }
+.nexio-table-details > p { margin: 4px 0; }
+@for $columns from 1 through 14 {
+  .nexio-columns-#{$columns} { --nexio-column-count: #{$columns}; }
+}
+/* Native Mendix grids and Data Grid 2 use the same typography, surfaces and density. */
+.mx-datagrid, .widget-datagrid {
+  font-size: 14px; color: var(--nexio-navy); background: var(--nexio-surface);
+  border-radius: 6px;
+}
+.mx-datagrid table, .widget-datagrid .table { width: 100%; }
+.mx-datagrid .mx-datagrid-head-table th,
+.widget-datagrid .th {
+  background: var(--brand-default); color: var(--nexio-navy);
+  padding: 9px 12px; font-size: 13px; font-weight: 600;
+}
+.mx-datagrid .mx-datagrid-body-table td,
+.widget-datagrid .td { padding: 9px 12px; border-color: var(--nexio-line); }
+.widget-datagrid .tr:nth-child(even) > .td, .mx-datagrid tbody tr:nth-child(even) { background: var(--nexio-light); }
+.widget-datagrid .column-header { padding: 0; margin: 0; color: var(--nexio-navy); font-size: 13px; }
+.nexio-data-table {
+  width: 100%; max-width: 100%; overflow-x: auto;
+  margin: 8px 0 18px; border: 1px solid var(--nexio-line);
+  border-radius: 8px; box-shadow: none;
+}
+.nexio-data-table .table { margin: 0; }
+.nexio-data-table .td { vertical-align: middle; }
+.nexio-data-table .tr:hover > .td { background: var(--brand-default); }
+.nexio-data-table .td .mx-text,
+.nexio-data-table .td p,
+.nexio-data-table .td h2,
+.nexio-data-table .td h3 {
+  margin: 0; color: var(--nexio-navy); font-size: 14px; line-height: 1.4; max-width: none;
+}
+.nexio-data-table .nexio-table-cell { min-width: 0; overflow-wrap: anywhere; }
+.nexio-data-table .mx-dataview-content { padding: 0; }
+.nexio-data-table .form-group { margin: 0; }
+.nexio-data-table .form-control {
+  min-height: 32px; padding: 5px 8px; font-size: 14px; border-radius: 6px;
+}
+.nexio-data-table .widget-datagrid-header { padding: 10px 12px; }
+.nexio-table-search { width: min(100%, 480px); }
+.nexio-data-table .pagination-bar { margin: 8px 12px; font-size: 13px; }
+.nexio-data-table .nexio-table-details { padding: 0; }
+.nexio-data-table .nexio-data-table { margin: 6px 0; }
+/* Shared row actions: soft surfaces, semantic colours and an explicit keyboard focus. */
+.nexio-table-actions .mx-button,
+.widget-datagrid .td .mx-button,
+.mx-datagrid-body-table td .mx-button,
+.nexio-user-view-table td .btn {
+  --nexio-action-ink: var(--brand-primary);
+  --nexio-action-tint: color-mix(in srgb, var(--nexio-action-ink) 8%, var(--nexio-surface));
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 30px; padding: 5px 10px; margin: 0;
+  border: 1px solid color-mix(in srgb, var(--nexio-action-ink) 75%, var(--nexio-surface));
+  border-radius: 6px; background: var(--nexio-action-tint);
+  color: var(--nexio-action-ink); font-size: 13px; font-weight: 600; line-height: 1.35;
+  text-decoration: none; text-align: center; white-space: nowrap; box-shadow: none; transform: none;
+  transition: background-color .15s ease, border-color .15s ease;
+  &.btn-danger { --nexio-action-ink: #B91C1C; }
+  &.btn-success { --nexio-action-ink: var(--nexio-success-ink); --nexio-action-tint: var(--nexio-success-tint); }
+  &.btn-warning { --nexio-action-ink: var(--nexio-warning-ink); --nexio-action-tint: var(--nexio-warning-tint); }
+  &.btn-info { --nexio-action-ink: var(--nexio-info-ink); --nexio-action-tint: var(--nexio-info-tint); }
+  &:hover { background: color-mix(in srgb, var(--nexio-action-tint) 94%, var(--nexio-action-ink)); color: var(--nexio-action-ink); text-decoration: none; box-shadow: none; transform: none; }
+  &:active { background: color-mix(in srgb, var(--nexio-action-tint) 92%, var(--nexio-action-ink)); color: var(--nexio-action-ink); box-shadow: none; transform: none; }
+  &:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
+  &:disabled, &[aria-disabled="true"] { cursor: not-allowed; border-style: dashed; }
+}
+
+/* Permissions are already a column matrix; normalize their spacing and fix inherited pale text. */
+.nexio-permission-matrix { border-radius: 6px; margin: 8px 0 18px; }
+.nexio-permission-header, .nexio-permission-row { padding: 9px 12px; }
+.layout-atlas .nexio-permission-matrix p,
+.layout-atlas .nexio-permission-matrix .mx-text { color: var(--nexio-navy); font-size: 14px; margin: 0; }
+.nexio-permission-header { background: var(--brand-default); }
+.layout-atlas .nexio-permission-matrix .mx-layoutgrid > .row > [class*="col-"] > p,
+.layout-atlas .nexio-permission-matrix .mx-layoutgrid > .row > [class*="col-"] > .mx-text {
+  color: var(--nexio-navy); font-size: 14px; margin: 0; max-width: none;
+}
+.nexio-permission-list > ul > li.mx-listview-item { padding: 0; }
+@media (max-width: 767px) {
+  .layout-atlas .region-content .mx-placeholder,
+  .layout-atlas .region-content [class*="mx-name-placeholder"] {
+    width: calc(100% - 20px); margin: 12px auto 24px; padding: 16px;
+  }
+  .nexio-table-list { max-width: 100%; }
+}

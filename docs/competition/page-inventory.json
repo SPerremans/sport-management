@@ -1,78 +1,126 @@
 [
   {
+    "qualifiedName": "MyFirstModule.LeagueEntry_Register",
+    "folderPath": "Competition/Registrations"
+  },
+  {
     "qualifiedName": "MyFirstModule.LeagueEntry_Move",
-    "folderPath": "CRM/Competition/Registrations"
+    "folderPath": "Competition/Registrations"
   },
   {
     "qualifiedName": "MyFirstModule.LeagueEntry_Poule",
-    "folderPath": "CRM/Competition/Registrations"
-  },
-  {
-    "qualifiedName": "MyFirstModule.LeagueEntry_Register",
-    "folderPath": "CRM/Competition/Registrations"
+    "folderPath": "Competition/Registrations"
   },
   {
     "qualifiedName": "MyFirstModule.VenueAvailability_Edit",
-    "folderPath": "CRM/Competition/Venues"
-  },
-  {
-    "qualifiedName": "MyFirstModule.ClubCompetitionPolicy_Edit",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.Competition_Overview",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionAllocation_Edit",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionDelegate_Edit",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionFederation_Workspace",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionLeague_Edit",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionLeague_Workspace",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionPlayer_Add",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionTeam_Edit",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionTeam_Workspace",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionVenue_Edit",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.CompetitionVenue_Workspace",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.FixturePlacement_Edit",
-    "folderPath": "CRM/Competition"
-  },
-  {
-    "qualifiedName": "MyFirstModule.FixtureChange_Propose",
-    "folderPath": "CRM/Competition"
+    "folderPath": "Competition/Venues"
   },
   {
     "qualifiedName": "MyFirstModule.CompetitionChecks_Overview",
-    "folderPath": "CRM/Competition/Tests"
+    "folderPath": "Competition/Tests"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchAssignments",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchContest",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchDivision",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchEligibility",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchEligibility_Edit",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchFixture",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchFormat_Edit",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchFormats",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchLineup",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchRoster",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchSet_Edit",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.MatchSlot_Edit",
+    "folderPath": "Competition/Results"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionLeague_Edit",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionTeam_Edit",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionPlayer_Add",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionVenue_Edit",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionAllocation_Edit",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.FixtureChange_Propose",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.FixturePlacement_Edit",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.ClubCompetitionPolicy_Edit",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionDelegate_Edit",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionTeam_Workspace",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionVenue_Workspace",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionLeague_Workspace",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.CompetitionFederation_Workspace",
+    "folderPath": "Competition"
+  },
+  {
+    "qualifiedName": "MyFirstModule.Competition_Overview",
+    "folderPath": "Competition"
   }
 ]
