@@ -23,7 +23,8 @@ public final class DevelopmentSamples {
     private static final String DIRECTORY_PROFILE_FEATURE = "features:club-directory-profiles-v2";
     private static final String REGISTRATION_PROGRESS_FEATURE = "features:member-registration-progress-v1";
     private static final String MEMBERSHIP_AUDIENCE_FEATURE = "features:membership-audience-v1";
-    private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity"};
+    private static final String MULTI_AFFILIATION_FEATURE = "features:multi-affiliation-and-account-overview-v1";
+    private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim"};
     private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
     private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
     private static final Map<String, String[]> EDGES = new LinkedHashMap<>();
@@ -76,6 +77,7 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.CompetitionLeague", new String[]{"MyFirstModule.CompetitionLeague_Federation", "MyFirstModule.CompetitionLeague_MatchFormat"});
         EDGES.put("MyFirstModule.Club", new String[]{"MyFirstModule.Club_Admins", "MyFirstModule.Club_DirectoryCity"});
         EDGES.put("MyFirstModule.ClubDirectoryCity", new String[0]);
+        EDGES.put("MyFirstModule.AffiliationMutationClaim", new String[]{"MyFirstModule.AffiliationMutationClaim_Club"});
         EDGES.put("MyFirstModule.Federation", new String[]{"MyFirstModule.Federation_Admins"});
     }
     private DevelopmentSamples() {}
@@ -109,6 +111,7 @@ public final class DevelopmentSamples {
             IMendixObject registry=batch(ctx);Set<Long> owned=decode(registry.getValue(ctx,"OwnedIds"));
             Set<Long> added=new HashSet<>(fresh);added.removeAll(baseline);require(owned.containsAll(added),"A generated business record is absent from the ownership manifest.");
             verifyMembershipAudience(ctx, owned);
+            verifyMultiAffiliation(ctx, owned);
             verifySampleAccounts(ctx, owned);
             removeIn(ctx);require(baseline.equals(ids(all(ctx))),"Sample cleanup changed pre-existing business records.");
             return "PASS: fresh generation, repeated generation, manifest coverage, scoped test administrators, disabled ordinary sample accounts and scoped cleanup (rolled back). "+(existing==null?"Existing-batch upgrade simulated by repeated extension.":"Existing-batch upgrade and preservation of all pre-existing primitive values verified.");
@@ -138,6 +141,7 @@ public final class DevelopmentSamples {
             require(once.equals(ids(all(ctx))), "Repeated generation created duplicate records.");
             Set<Long> manifestOwned = decode(batch(ctx).getValue(ctx, "OwnedIds"));
             verifyMembershipAudience(ctx, manifestOwned);
+            verifyMultiAffiliation(ctx, manifestOwned);
             IMendixObject demoClub = query(ctx, "//MyFirstModule.Club").stream()
                 .filter(o -> manifestOwned.contains(o.getId().toLong())).findFirst().orElseThrow();
             IMendixObject extra = Core.instantiate(ctx, "MyFirstModule.ClubEvent");
@@ -542,7 +546,7 @@ public final class DevelopmentSamples {
         Set<Long> baseline = ids(all(ctx));
         Seed s = new Seed(ctx);
         IMendixObject fed = s.make("Federation","Name","[DEMO] Nexio Badminton Federation",
-            "Description","Fictional local-development federation","IsActive",true,"Currency","EUR",
+            "Description","Fictional local-development federation","Sport","Badminton","IsActive",true,"Currency","EUR",
             "CensusMonth",1L,"CensusDay",1L,"BillingMethod","ACTIVE_AT_CENSUS");
         IMendixObject fedType = s.make("FederationType","Name","[DEMO] Competition player","Description","Annual federation competition membership","IsAvailable",true);
         s.link(fedType,"FederationType_Federation",fed);
@@ -668,6 +672,7 @@ public final class DevelopmentSamples {
             "Test administrators are restricted to local development.");
         extendDirectoryProfileSamples(ctx);
         extendMembershipAudienceSamples(ctx);
+        extendMultiAffiliationSamples(ctx);
         IMendixObject manifest = batch(ctx);
         require(manifest != null, "Sample ownership manifest is missing.");
         String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
@@ -691,6 +696,7 @@ public final class DevelopmentSamples {
                         "Fee", s.fee(option == 1 ? 60 : 95), "Currency", "EUR", "IsAvailable", option != 2);
                     if (option == 3) { type.setValue(ctx, "AvailableFrom", s.date(14)); Core.commitWithoutEvents(ctx, type); }
                     s.link(type, "MembershipType_Club", club);
+                    federateSampleMembership(ctx, s, club, type, "Badminton");
                     IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(option == 1 ? 60 : 95), "Currency", "EUR", "IsAvailable", i != 1);
                     s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
                 }
@@ -743,15 +749,15 @@ public final class DevelopmentSamples {
         for (IMendixObject city : query(ctx, "//MyFirstModule.ClubDirectoryCity"))
             cities.putIfAbsent(Objects.toString(city.getValue(ctx, "NormalizedName"), ""), city);
         String[][] profiles = {
-            {"Kade Rackets", "Antwerpen", "Kadeplein 24", "2000", "Badminton", "YouthAndAdults", "Both"},
-            {"Park Tennis", "Leuven", "Parklaan 42", "3000", "Tennis", "Adults", "Recreational"},
-            {"Polder Padel", "Gent", "Polderstraat 18", "9000", "Padel", "YouthAndAdults", "Competitive"},
-            {"Jeugd Tafeltennis", "Mechelen", "Jeugdlaan 16", "2800", "Table tennis", "Youth", "Recreational"}
+            {"Kade Rackets", "Antwerpen", "Kadeplein 24", "2000", "Badminton"},
+            {"Park Tennis", "Leuven", "Parklaan 42", "3000", "Tennis"},
+            {"Polder Padel", "Gent", "Polderstraat 18", "9000", "Padel"},
+            {"Jeugd Tafeltennis", "Mechelen", "Jeugdlaan 16", "2800", "Table tennis"}
         };
         for (int i = 0; i < profiles.length; i++) {
             String[] p = profiles[i];
             IMendixObject club = s.make("Club", "Name", "[DEMO] " + p[0], "City", p[1], "Address", p[2],
-                "PostalCode", p[3], "Sports", p[4],
+                "PostalCode", p[3],
                 "Description", "Fictional directory and registration example. This is not a real Belgian club or contact address.",
                 "IsPublished", i != 3, "LocationVerified", false, "RequiresApproval", true, "RequiresPayment", true);
             String key = p[1].trim().toLowerCase(Locale.ROOT);
@@ -771,6 +777,7 @@ public final class DevelopmentSamples {
                     "Description", "[DEMO] " + p[4] + " registration", "Fee", s.fee(75), "Currency", "EUR", "IsAvailable", true,
                     "IsCompetitionPlayer", competition, "MinimumAge", minimumAge, "MaximumAge", maximumAge);
                 s.link(type, "MembershipType_Club", club);
+                federateSampleMembership(ctx, s, club, type, p[4]);
                 IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(75), "Currency", "EUR", "IsAvailable", true);
                 s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
             }
@@ -789,7 +796,7 @@ public final class DevelopmentSamples {
         Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds"));
         Seed s = new Seed(ctx);
         IMendixObject club = s.make("Club", "Name", "[DEMO] Schelde Rackets", "City", "Gent",
-            "Address", "Voorbeeldkaai 28", "PostalCode", "9000", "Sports", "Badminton",
+            "Address", "Voorbeeldkaai 28", "PostalCode", "9000",
             "Description", "Fictional Belgian club for membership-derived playing categories and age ranges. Not a real contact address.",
             "IsPublished", true, "LocationVerified", false, "RequiresApproval", true, "RequiresPayment", true);
         IMendixObject city = first(ctx, "//MyFirstModule.ClubDirectoryCity[NormalizedName='gent']");
@@ -807,11 +814,96 @@ public final class DevelopmentSamples {
                 "IsAvailable", i != 4, "Fee", s.fee(i == 2 ? 65 : 90), "Currency", "EUR");
             if (i == 5) { type.setValue(ctx, "AvailableFrom", s.date(14)); Core.commitWithoutEvents(ctx, type); }
             s.link(type, "MembershipType_Club", club);
+            federateSampleMembership(ctx, s, club, type, "Badminton");
             IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(i == 2 ? 65 : 90), "Currency", "EUR", "IsAvailable", true);
             s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
         }
         owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
         manifest.setValue(ctx, "Summary", summary + " Fictional Gent club: repeated competition category/age range, recreational members, disjoint inclusive ages, closed and future options. " + MEMBERSHIP_AUDIENCE_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** Link only a newly generated membership to an owned federation, never infer or rewrite an older federation's sport. */
+    private static IMendixObject federateSampleMembership(IContext ctx, Seed s, IMendixObject club, IMendixObject type, String sport) throws Exception {
+        Set<Long> owned = decode(batch(ctx).getValue(ctx, "OwnedIds")); owned.addAll(ids(s.owned));
+        IMendixObject federation = null;
+        for (IMendixObject candidate : query(ctx, "//MyFirstModule.Federation"))
+            if (owned.contains(candidate.getId().toLong()) && sport.equalsIgnoreCase(Objects.toString(candidate.getValue(ctx, "Sport"), ""))
+                && Boolean.TRUE.equals(candidate.getValue(ctx, "IsActive"))) { federation = candidate; break; }
+        if (federation == null) federation = s.make("Federation", "Name", "[DEMO] " + sport + " Federation", "Sport", sport,
+            "Description", "Fictional unisport federation for local development", "IsActive", true,
+            "CensusMonth", 1, "CensusDay", 1, "Currency", "EUR", "BillingMethod", "ACTIVE_AT_CENSUS");
+        String name = Boolean.TRUE.equals(type.getValue(ctx, "IsCompetitionPlayer")) ? "Competition" : "Recreational";
+        owned.addAll(ids(s.owned));
+        IMendixObject federationType = null;
+        for (IMendixObject candidate : query(ctx, "//MyFirstModule.FederationType"))
+            if (owned.contains(candidate.getId().toLong()) && federation.getId().equals(candidate.getValue(ctx, "MyFirstModule.FederationType_Federation"))
+                && name.equals(candidate.getValue(ctx, "Name")) && Boolean.TRUE.equals(candidate.getValue(ctx, "IsAvailable"))) { federationType = candidate; break; }
+        if (federationType == null) {
+            federationType = s.make("FederationType", "Name", name, "Description", "[DEMO] " + sport + " " + name.toLowerCase(Locale.ROOT), "IsAvailable", true);
+            s.link(federationType, "FederationType_Federation", federation);
+            IMendixObject rate = s.make("FederationRate", "Year", s.today.getYear(), "AnnualFee", s.fee(name.equals("Competition") ? 15 : 5),
+                "Currency", "EUR", "RateKey", s.id(federationType) + ":" + s.today.getYear());
+            s.link(rate, "FederationRate_FederationType", federationType);
+        }
+        s.link(type, "MembershipType_FederationType", federationType);
+        IMendixObject affiliation = first(ctx, "//MyFirstModule.FederationAffiliation[MyFirstModule.FederationAffiliation_Club=" + s.id(club)
+            + "][MyFirstModule.FederationAffiliation_Federation=" + s.id(federation) + "]");
+        if (affiliation == null) {
+            affiliation = s.make("FederationAffiliation", "ClubName", club.getValue(ctx, "Name"), "Status", "Approved", "IsActive", true,
+                "StartsOn", s.date(-30), "EndsOn", s.date(130), "RequestedAt", s.date(-31), "DecidedAt", s.date(-30));
+            s.link(affiliation, "FederationAffiliation_Club", club); s.link(affiliation, "FederationAffiliation_Federation", federation);
+        }
+        return affiliation;
+    }
+
+    /** Isolated multi-affiliation and account examples; dates are relative to the generation date. */
+    private static void extendMultiAffiliationSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(MULTI_AFFILIATION_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds")); Seed s = new Seed(ctx);
+        IMendixObject club = s.make("Club", "Name", "[DEMO] Gent Multi Rackets", "City", "Gent", "Address", "Voorbeeldsportplein 40", "PostalCode", "9000",
+            "Description", "Fictional Belgian club with two approved federations, a pending request and an expired affiliation.",
+            "IsPublished", true, "LocationVerified", false, "RequiresApproval", true, "RequiresPayment", true);
+        IMendixObject city = first(ctx, "//MyFirstModule.ClubDirectoryCity[NormalizedName='gent']");
+        if (city == null) city = s.make("ClubDirectoryCity", "Name", "Gent", "NormalizedName", "gent");
+        s.link(club, "Club_DirectoryCity", city);
+        IMendixObject season = s.make("Season", "Name", s.season, "StartsOn", s.date(-30), "EndsOn", s.date(130), "IsPublished", true);
+        s.link(season, "Season_Club", club);
+        String[] sports = {"Badminton", "Tennis", "Padel", "Table tennis"};
+        for (int i = 0; i < sports.length; i++) {
+            IMendixObject type = s.make("MembershipType", "Name", sports[i] + (i == 0 ? " competition" : " recreational"),
+                "Description", "[DEMO] " + (i == 2 ? "Unavailable draft awaiting federation approval" : i == 3 ? "Ended affiliation: excluded from offers" : "Approved federation membership"),
+                "IsCompetitionPlayer", i == 0, "MinimumAge", i == 0 ? 12 : 18, "MaximumAge", 0, "IsAvailable", i != 2,
+                "Fee", s.fee(95 + i * 10), "Currency", "EUR");
+            s.link(type, "MembershipType_Club", club);
+            IMendixObject affiliation = federateSampleMembership(ctx, s, club, type, sports[i]);
+            if (i == 2) {
+                affiliation.setValue(ctx, "Status", "Pending"); affiliation.setValue(ctx, "IsActive", false);
+                affiliation.setValue(ctx, "RequestedAt", s.date(-2)); affiliation.setValue(ctx, "DecidedAt", null);
+                Core.commitWithoutEvents(ctx, affiliation);
+            } else if (i == 3) {
+                affiliation.setValue(ctx, "EndsOn", s.date(-1)); Core.commitWithoutEvents(ctx, affiliation);
+            }
+            IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(95 + i * 10), "Currency", "EUR", "IsAvailable", true);
+            s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
+        }
+        IMendixObject claim = s.make("AffiliationMutationClaim", "Key", "sample-cleanup:" + s.marker);
+        s.link(claim, "AffiliationMutationClaim_Club", club);
+        IMendixObject pending = first(ctx, "//MyFirstModule.FederationAffiliation[MyFirstModule.FederationAffiliation_Club=" + s.id(club) + "][Status='Pending']");
+        for (String status : new String[]{"Declined", "Withdrawn"}) {
+            IMendixObject history = s.make("FederationAffiliation", "ClubName", club.getValue(ctx, "Name"), "Status", status, "IsActive", false,
+                "StartsOn", s.date(-100), "EndsOn", s.date(-31), "RequestedAt", s.date(-100), "DecidedAt", s.date(-90));
+            s.link(history, "FederationAffiliation_Club", club);
+            history.setValue(ctx, "MyFirstModule.FederationAffiliation_Federation", pending.getValue(ctx, "MyFirstModule.FederationAffiliation_Federation"));
+            Core.commitWithoutEvents(ctx, history);
+        }
+        s.person("[DEMO] Account overview member", 701);
+        IMendixObject blocked = s.person("[DEMO] Account overview blocked member", 702);
+        blocked.setValue(ctx, "Blocked", true); Core.commitWithoutEvents(ctx, blocked); // Remains disabled.
+        owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Multi-affiliated fictional Gent club, pending/expired affiliations and disabled account-directory examples. " + MULTI_AFFILIATION_FEATURE);
         Core.commitWithoutEvents(ctx, manifest);
     }
 
@@ -844,6 +936,43 @@ public final class DevelopmentSamples {
         require(before.equals(ids(all(ctx))), "Reading audience summaries persisted business records.");
     }
 
+    /** Native read scenarios on newly generated records only; never assert over or rewrite an edited older batch. */
+    private static void verifyMultiAffiliation(IContext ctx, Set<Long> owned) throws Exception {
+        IMendixObject club = query(ctx, "//MyFirstModule.Club[Name='[DEMO] Gent Multi Rackets']").stream()
+            .filter(o -> owned.contains(o.getId().toLong())).findFirst().orElseThrow();
+        Set<Long> before = ids(all(ctx));
+        IMendixObject profile = Core.microflowCall("MyFirstModule.DS_ClubDirectory_Profile").withParam("Club", club).execute(ctx);
+        Set<String> sports = new HashSet<>(Arrays.asList(((String) profile.getValue(ctx, "Sports")).split(", ")));
+        require(sports.equals(new HashSet<>(Arrays.asList("Badminton", "Tennis"))), "Club sports included pending/expired affiliations or missed an approved sport.");
+        List<IMendixObject> offers = Core.microflowCall("MyFirstModule.DS_Club_Offers").withParam("Club", club).execute(ctx);
+        require(offers.size() == 2, "Multi-affiliated club should offer only its two eligible memberships.");
+        Set<String> offeredSports = new HashSet<>();
+        for (IMendixObject offer : offers) {
+            offeredSports.add(offer.getValue(ctx, "Sport"));
+            require(!Objects.toString(offer.getValue(ctx, "FederationName"), "").isBlank(), "Membership offer lost its federation identity.");
+        }
+        require(offeredSports.equals(sports), "Club summary and offer sports disagree.");
+        List<IMendixObject> affiliations = query(ctx, "//MyFirstModule.FederationAffiliation[MyFirstModule.FederationAffiliation_Club=" + club.getId().toLong() + "]");
+        require(affiliations.size() == 6 && affiliations.stream().anyMatch(a -> "Pending".equals(a.getValue(ctx, "Status")))
+            && affiliations.stream().anyMatch(a -> "Declined".equals(a.getValue(ctx, "Status")))
+            && affiliations.stream().anyMatch(a -> "Withdrawn".equals(a.getValue(ctx, "Status"))), "Affiliation review examples are incomplete.");
+        List<IMendixObject> current = new ArrayList<>();
+        Date today = Date.from(LocalDate.now(ZoneOffset.UTC).atStartOfDay().toInstant(ZoneOffset.UTC));
+        for (IMendixObject affiliation : affiliations) {
+            Date end = affiliation.getValue(ctx, "EndsOn");
+            if ("Approved".equals(affiliation.getValue(ctx, "Status")) && Boolean.TRUE.equals(affiliation.getValue(ctx, "IsActive")) && (end == null || !end.before(today))) current.add(affiliation);
+        }
+        IMendixObject pendingType = first(ctx, "//MyFirstModule.MembershipType[MyFirstModule.MembershipType_Club=" + club.getId().toLong() + "][Name='Padel recreational']");
+        // Even a stale/forged available flag must not bypass federation approval. This temporary change is never committed.
+        pendingType.setValue(ctx, "IsAvailable", true);
+        try {
+            IMendixObject eligible = Core.microflowCall("MyFirstModule.SUB_MembershipType_EligibleFederation")
+                .withParam("MembershipType", pendingType).withParam("Affiliations", current).execute(ctx);
+            require(eligible == null, "A pending federation affiliation enabled a membership offer.");
+        } finally { pendingType.setValue(ctx, "IsAvailable", false); }
+        require(before.equals(ids(all(ctx))), "Reading multi-affiliation summaries persisted business records.");
+    }
+
     /** Give a scoped sample administrator visible examples of each member registration stage. */
     private static void extendRegistrationProgressSamples(IContext ctx) throws Exception {
         IMendixObject manifest = batch(ctx);
@@ -871,6 +1000,7 @@ public final class DevelopmentSamples {
             String[] state = stages[i];
             IMendixObject type = s.make("MembershipType", "Name", "[DEMO] Progress " + (i + 1), "Description", "Isolated registration status example", "IsAvailable", true, "Fee", s.fee(i == 3 ? 75 : 0), "Currency", "EUR");
             s.link(type, "MembershipType_Club", club);
+            federateSampleMembership(ctx, s, club, type, "Badminton");
             IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(i == 3 ? 75 : 0), "Currency", "EUR", "IsAvailable", true);
             s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
             IMendixObject request = s.make("RegistrationRequest", "MemberName", person.getValue(ctx, "FullName"), "MemberEmail", person.getValue(ctx, "Email"),

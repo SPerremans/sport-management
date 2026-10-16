@@ -6,9 +6,10 @@ Pages and workflows belong to the business feature they implement. The module ro
 
 | Folder | Responsibility |
 | --- | --- |
-| Accounts | Platform accounts, administrator assignment, invitations, password reset, administrator View as user entry point, and their data sources |
+| Accounts | Platform account overview, administrator assignment, invitations, password reset, administrator View as user entry point, and their data sources |
 | Billing | Billing policies, federation billing, invoice generation and related jobs; Invoices, Instalments, Appearance and SeasonPolicies contain narrower concerns |
 | Clubs | Club details and workspaces; Administration contains club roles and staff assignments |
+| Clubs/Affiliations | Club-facing federation affiliation requests, statuses and withdrawal |
 | Competition | Competition, league, team, venue, registration, scheduling and fixture management |
 | Competition/Results | Dynamic match registration: formats, slots, division assignment, lineups, scores, eligibility, official assignment, approvals and rulings; includes the Match pages and JA_MatchRegistration |
 | Competition/Results/Configuration | Match configuration enumerations |
@@ -20,6 +21,7 @@ Pages and workflows belong to the business feature they implement. The module ro
 | Discovery/Configuration | Derived club age-group and playing-level filter choices |
 | Discovery/System | Derived city references: club save handler and idempotent startup backfill |
 | Federations | Federation details, affiliation, membership types and rates |
+| Federations/Affiliations | Affiliation request/approval/decline workflows and private concurrency claims |
 | Members | Member dashboard, membership editing, membership types, renewal pages and lifecycle workflows |
 | Members/Configuration | Membership age-range formatting and validation |
 | Registration | Registration forms, fields, overview, approval, waiting list, member withdrawal and season lookup |

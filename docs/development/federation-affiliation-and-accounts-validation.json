@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-17",
+  "modelConsistency": "passed: global MCP diagnostics returned No errors found",
+  "compilation": {
+    "javaAndPackage": "passed: BUILD SUCCESSFUL in 3s; updated DevelopmentSamples.class at 2026-10-16T22:10:46Z",
+    "pageExportAndBundle": "passed: final bundle 2026-10-16T22:10:48.770Z, 424 ms"
+  },
+  "modelAndExportChecks": {
+    "existingAffiliationsDefaultApproved": true,
+    "requestAndDecisionStatusesAreClientReadOnly": true,
+    "privateClaimKeyHasUniqueRule": true,
+    "clubRequestWithdrawalAndFederationReviewControlsExported": true,
+    "clubEditorsHaveNoManualSportsOrAudienceInputs": true,
+    "membershipFederationSelectorExported": true,
+    "accountOverviewExportsIdentityRolesStatusAndLastLogin": true,
+    "accountOverviewPageAndProjectionRestrictedToPlatformAdministrator": true,
+    "accountProjectionHasNoPasswordOrUnderlyingUserReference": true,
+    "newPagesAndWorkflowsInBusinessFolders": true,
+    "newPersistentClaimTypeAndOwningAssociationCoveredBySampleCleanup": true
+  },
+  "runtimeStartup": "passed: final rebuild reports running=true and launching=false",
+  "runtimeScenarios": {
+    "clubRequestApproveDeclineWithdrawAndReapply": "not executed",
+    "organizationPermissionDenialAndConcurrentClaims": "not executed",
+    "membershipSaveAndStaleOfferOrRenewalSubmission": "not executed",
+    "derivedMultiSportSummaryAndOfferAgreement": "not executed; native data-source assertions implemented in the sample verifier",
+    "accountOverviewFiltersAndNonAdminDenial": "not executed",
+    "sampleFreshUpgradeIdempotencePreservationAndCleanup": "not executed for this version; existing lifecycle checks include the extension",
+    "limitation": "Saved localhost browser policy blocks agent inspection. Seeded examples and compiled assertions are not passing runtime scenario tests."
+  }
+}
