@@ -6,7 +6,7 @@ Pages and workflows belong to the business feature they implement. The module ro
 
 | Folder | Responsibility |
 | --- | --- |
-| Accounts | Platform account overview, administrator assignment, invitations, password reset, administrator View as user entry point, and their data sources |
+| Accounts | Platform account overview and detail with audit history, administrator assignment, invitations, password reset, development View as user entry points, and their data sources |
 | Billing | Billing policies, federation billing, invoice generation and related jobs; Invoices, Instalments, Appearance and SeasonPolicies contain narrower concerns |
 | Clubs | Club details and workspaces; Administration contains club roles and staff assignments |
 | Clubs/Affiliations | Club-facing federation affiliation requests, statuses and withdrawal |

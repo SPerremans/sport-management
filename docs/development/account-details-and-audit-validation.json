@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-17",
+  "modelConsistency": "passed: global MCP diagnostics returned No errors found",
+  "compilation": {
+    "javaAndPackage": "passed: BUILD SUCCESSFUL in 4s",
+    "pageExportAndBundle": "passed: 2026-10-16T22:36:00.523Z; 443 ms"
+  },
+  "automatedPolicyChecks": {
+    "assertions": 62,
+    "result": "passed",
+    "scope": "Pure eligibility, identifier, CSRF/proof, binding, expiry, reason and escaping helpers; no HTTP session handoff"
+  },
+  "runtimeStartup": "passed: running=true, launching=false",
+  "reportedOriginFailure": {
+    "cause": "Controller sent no-referrer; HTML form POSTs can then send Origin: null, rejected by the existing strict origin check",
+    "fix": "Send Referrer-Policy: same-origin; retain CSRF, origin, local-runtime and eligibility checks",
+    "compilation": "passed: Java/package rebuild at 2026-10-16T22:39:00Z; AdminUserView.class at 2026-10-16T22:38:58Z",
+    "runtimeStartup": "passed: running=true, launching=false",
+    "browserRetest": "requested from the user; not independently executed"
+  },
+  "modelAndExportChecks": {
+    "newPageAndWorkflowsInAccountsFolder": true,
+    "accountDetailRowNavigation": true,
+    "nameUsernameEmailRoleAndStatusFilterAttributes": true,
+    "historySourceScopedToReadOnlyAccountReference": true,
+    "historyEntityReadOnlyForPlatformAdministrator": true,
+    "historySourceHasExplicitAdministratorCheck": true,
+    "userViewEntryUsesSelectedAccountUrl": true,
+    "userViewEntryHasDevelopmentAndEligibilityCondition": true,
+    "newPersistentAuditTypeAndOwningAssociationInSampleCleanup": true,
+    "nativeAccountWorkflowAuditCalls": 7
+  },
+  "runtimeScenarios": {
+    "browserLayoutAndFilters": "not executed",
+    "accountDetailHistoryScopeAndPermissionDenial": "not executed",
+    "nativeAccountAndInvitationAuditWrites": "not executed",
+    "selectedAccountConfirmationHandoffReturnAndPersistentAudit": "not executed",
+    "productionAndNonAdminHttpDenial": "not executed",
+    "sampleFreshUpgradeIdempotencePreservationAndCleanup": "not executed for this version; assertions added and compiled",
+    "limitation": "Saved localhost browser policy blocks agent inspection. No alternate browser or HTTP automation path was used. Seeded examples and compiled assertions are not passing runtime scenario tests."
+  }
+}

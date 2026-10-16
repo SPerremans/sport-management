@@ -183,3 +183,24 @@
 @media (max-width: 1200px) { .nexio-club-filters { grid-template-columns: repeat(3, minmax(170px, 1fr)); } }
 @media (max-width: 767px) { .nexio-club-filters { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
 @media (max-width: 480px) { .nexio-club-filters { grid-template-columns: 1fr; } }
+
+/* Account administration: readable filters, stable columns and a compact detail view. */
+.nexio-account-table .widget-datagrid-header { display: block; overflow: visible; }
+.nexio-account-filters { display: grid; grid-template-columns: repeat(4, minmax(160px, 1fr)); gap: 12px; width: 100%; }
+.nexio-account-table .nexio-account-column-0 { min-width: 220px; }
+.nexio-account-table .nexio-account-column-1 { min-width: 180px; }
+.nexio-account-table .nexio-account-column-2 { min-width: 240px; }
+.nexio-account-table .nexio-account-column-3 { min-width: 200px; }
+.nexio-account-table .nexio-account-column-4 { min-width: 140px; }
+.nexio-account-table .nexio-account-column-5 { min-width: 170px; }
+.nexio-account-table .nexio-account-actions { min-width: 140px; }
+.nexio-account-detail .nexio-table-actions { margin-bottom: 20px; }
+.nexio-account-summary { display: grid; grid-template-columns: repeat(3, minmax(180px, 1fr)); gap: 16px 24px; margin-bottom: 16px; }
+.nexio-account-field { min-width: 0; display: flex; flex-direction: column; gap: 4px; overflow-wrap: anywhere; }
+.nexio-account-field > .mx-text:first-child { font-size: 13px; font-weight: 600; color: var(--nexio-muted); }
+.nexio-account-field > .mx-text:last-child { font-size: 14px; color: var(--nexio-navy); }
+.nexio-account-detail h2 { font-size: 20px; margin: 24px 0 8px; }
+.nexio-account-detail p { font-size: 14px; margin-bottom: 12px; max-width: none; }
+.nexio-account-audit .td { overflow-wrap: anywhere; }
+@media (max-width: 1000px) { .nexio-account-filters, .nexio-account-summary { grid-template-columns: repeat(2, minmax(160px, 1fr)); } }
+@media (max-width: 480px) { .nexio-account-filters, .nexio-account-summary { grid-template-columns: 1fr; } }

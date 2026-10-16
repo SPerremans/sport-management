@@ -27,6 +27,12 @@ public final class UserViewPolicyChecks {
         check(UserViewPolicy.reason("  Check permissions  ").equals("Check permissions"),"Audit reason normalization failed");
         check(UserViewPolicy.html("<script a=\"x\">&'\"").equals("&lt;script a=&quot;x&quot;&gt;&amp;&#39;&quot;"),"Untrusted account text was not escaped");
         check(UserViewPolicy.html(null).isEmpty(),"Null display value failed");
+        check(UserViewPolicy.accountId("123456789") == 123456789L,"Selected account id failed");
+        check(UserViewPolicy.accountId(Long.toString(Long.MAX_VALUE)) == Long.MAX_VALUE,"Largest account id failed");
+        for(String invalid:new String[]{null,"","0","-1","1.0","1 OR 1=1","9223372036854775808","100000000000000000000","<script>"}) {
+            boolean denied=false;try{UserViewPolicy.accountId(invalid);}catch(IllegalArgumentException expected){denied=true;}
+            check(denied,"Invalid selected account id accepted: "+invalid);
+        }
         System.out.println("PASS: "+checks+" user-view policy checks. HTTP/session integration is not covered by these checks.");
     }
 }

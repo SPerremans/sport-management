@@ -16,6 +16,15 @@ public final class UserViewPolicy {
     public static boolean validBinding(String expectedSession, String currentSession, long expiresAt, long now) {
         return now < expiresAt && tokenMatches(expectedSession, currentSession);
     }
+    public static long accountId(String input) {
+        if (input == null || !input.matches("[0-9]{1,19}"))
+            throw new IllegalArgumentException("Select an account.");
+        try {
+            long id = Long.parseLong(input);
+            if (id > 0) return id;
+        } catch (NumberFormatException invalid) { /* Report the same validation error. */ }
+        throw new IllegalArgumentException("Select an account.");
+    }
     public static String reason(String input) {
         String value = input == null ? "" : input.trim();
         if (value.length() < 3 || value.length() > 300 || value.codePoints().anyMatch(c -> Character.isISOControl(c) || c == 0x2028 || c == 0x2029))

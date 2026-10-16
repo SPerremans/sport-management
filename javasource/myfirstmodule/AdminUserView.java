@@ -21,10 +21,11 @@ public final class AdminUserView extends RequestHandler {
     private static boolean initialized;
     private static final class View {
         final UUID administrator, target;
+        final IMendixIdentifier subjectId;
         final String actor, subject, reason;
         final long expires = System.currentTimeMillis() + DURATION;
         View(ISession admin, ISession user, String why) {
-            administrator=admin.getId(); target=user.getId(); actor=admin.getUserName(); subject=user.getUserName(); reason=why;
+            administrator=admin.getId(); target=user.getId(); subjectId=user.getUserId(); actor=admin.getUserName(); subject=user.getUserName(); reason=why;
         }
     }
     public static synchronized void initialize() throws Exception {
@@ -71,7 +72,9 @@ public final class AdminUserView extends RequestHandler {
     }
     @Override protected void processRequest(IMxRuntimeRequest req, IMxRuntimeResponse resp, String path) throws Exception {
         resp.addHeader("Cache-Control","no-store"); resp.addHeader("Pragma","no-cache");
-        resp.addHeader("X-Content-Type-Options","nosniff"); resp.addHeader("Referrer-Policy","no-referrer");
+        // no-referrer makes browsers serialize Origin as "null" on these HTML form POSTs.
+        // Keep the actual origin for our same-origin forms and disclose no referrer cross-origin.
+        resp.addHeader("X-Content-Type-Options","nosniff"); resp.addHeader("Referrer-Policy","same-origin");
         resp.addHeader("X-Frame-Options","DENY");
         resp.addHeader("Content-Security-Policy","default-src 'self'; script-src 'none'; style-src 'self'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'");
         if (!available()) { error(resp,404,"User viewing is available only in local development."); return; }
@@ -106,10 +109,9 @@ public final class AdminUserView extends RequestHandler {
         if (!administrator(admin)) throw new SecurityException("Only the platform Administrator can view as another user.");
         if (VIEWS.values().stream().anyMatch(v->v.administrator.equals(admin.getId())))
             throw new SecurityException("Return from the existing user view first.");
-        String id=req.getParameter("user");
-        if (id==null || !id.matches("[0-9]{1,19}")) throw new IllegalArgumentException("Select an account.");
+        long id=UserViewPolicy.accountId(req.getParameter("user"));
         IContext system=Core.createSystemContext();
-        IMendixObject selected=Core.retrieveId(system,Core.createMendixIdentifier(Long.parseLong(id)));
+        IMendixObject selected=Core.retrieveId(system,Core.createMendixIdentifier(id));
         if (selected==null || !("System.User".equals(selected.getType()) || selected.getMetaObject().isSubClassOf(Core.getMetaObject("System.User"))) || !eligible(selected,true))
             throw new SecurityException("Select an active, unblocked human account without the platform Administrator role.");
         String why=UserViewPolicy.reason(req.getParameter("reason"));
@@ -121,11 +123,13 @@ public final class AdminUserView extends RequestHandler {
         String token=token(); View v=new View(admin,child,why);
         VIEWS.put(token,v);
         try {
+            // Persist the actor, target and reason before handing off the browser session.
+            audit("START",v);
             admin.keepAlive(); Core.addMendixCookies(req,resp,child,false); cookie(req,resp,token,900);
             Core.schedule(new UserAction<Void>(Core.createSystemContext()) {
                 public Void executeAction() { end(token,v,"expired"); return null; }
             },DURATION,TimeUnit.MILLISECONDS);
-            audit("START",v); redirect(resp,base(req)+"index.html");
+            redirect(resp,base(req)+"index.html");
         } catch (Exception failed) { end(token,v,"start-failed"); throw failed; }
     }
     private void restore(IMxRuntimeRequest req, IMxRuntimeResponse resp, ISession current) throws Exception {
@@ -158,6 +162,7 @@ public final class AdminUserView extends RequestHandler {
     }
     private void accounts(IMxRuntimeRequest req, IMxRuntimeResponse resp, ISession admin) throws Exception {
         if (!administrator(admin)) throw new SecurityException("Sign in as the platform Administrator to open View as user.");
+        if (req.getParameter("user") != null) { confirm(req,resp,admin); return; }
         String b=base(req), query=Objects.toString(req.getParameter("q"),"").trim();
         if(query.length()>100)throw new IllegalArgumentException("Use a shorter search.");
         List<IMendixObject> users=Core.createXPathQuery("//System.User[Active=true and Blocked=false and WebServiceUser=false][contains(Name,$query)][not(System.UserRoles/System.UserRole/Name='Administrator')]")
@@ -186,6 +191,23 @@ public final class AdminUserView extends RequestHandler {
         body.append("</tbody></table></div></form><p>Up to 200 accounts. <a href='").append(b).append("index.html'>Back to administrator app</a></p></main>");
         html(resp,"View as user","nexio-user-view",body.toString(),b);
     }
+    /** GET only displays confirmation. The existing CSRF-protected POST performs the switch. */
+    private void confirm(IMxRuntimeRequest req, IMxRuntimeResponse resp, ISession admin) throws Exception {
+        long id=UserViewPolicy.accountId(req.getParameter("user"));
+        IContext ctx=Core.createSystemContext();
+        IMendixObject selected=Core.retrieveId(ctx,Core.createMendixIdentifier(id));
+        if(selected==null || !("System.User".equals(selected.getType()) || selected.getMetaObject().isSubClassOf(Core.getMetaObject("System.User"))) || !eligible(selected,true))
+            throw new SecurityException("Select an active, unblocked human account without the platform Administrator role.");
+        IUser user=Core.getUser(ctx,selected.getValue(ctx,"Name"));
+        String b=base(req);
+        String body="<main class='nexio-user-view-picker'><h1>View as user</h1><p>You will open the application as <strong>"+esc(user.getName())+
+            "</strong> with their actual permissions for up to 15 minutes. Return to your administrator session using the banner.</p>"+
+            "<p>Roles: "+esc(String.join(", ",new TreeSet<>(user.getUserRoleNames())))+"</p>"+
+            "<form method='post' action='"+b+PATH+"start'>"+csrf(admin)+"<input type='hidden' name='user' value='"+id+"'>"+
+            "<label for='reason'>Reason for viewing this user</label><input id='reason' name='reason' required minlength='3' maxlength='300' placeholder='For example: verify membership permissions'>"+
+            "<div class='nexio-user-view-confirm-actions'><button class='btn btn-default'>View as user</button><a class='btn btn-default' href='"+b+"index.html'>Cancel</a></div></form></main>";
+        html(resp,"View as user","nexio-user-view",body,b);
+    }
     private static void sweep() {
         for(Map.Entry<String,View> entry:VIEWS.entrySet())try {
             View v=entry.getValue(); ISession admin=Core.getSessionById(v.administrator), child=Core.getSessionById(v.target);
@@ -203,6 +225,24 @@ public final class AdminUserView extends RequestHandler {
     }
     private static void audit(String event, View v) {
         Core.getLogger("AdminUserView").info(event+" administrator="+v.actor.replaceAll("[\\r\\n]", " ")+" target="+v.subject.replaceAll("[\\r\\n]", " ")+" reason="+v.reason);
+        IContext ctx=Core.createSystemContext(); ctx.startTransaction();
+        try {
+            // Removal of a development sample account must not leave new orphan sample history.
+            if(Core.retrieveId(ctx,v.subjectId)!=null) {
+                IMendixObject record=Core.instantiate(ctx,"MyFirstModule.AccountAudit");
+                record.setValue(ctx,"At",new Date());
+                record.setValue(ctx,"Event","START".equals(event)?"View as user started":"View as user ended ("+event+")");
+                record.setValue(ctx,"Actor",v.actor); record.setValue(ctx,"Subject",v.subject);
+                record.setValue(ctx,"Details",v.reason); record.setValue(ctx,"MyFirstModule.AccountAudit_Account",v.subjectId);
+                Core.commitWithoutEvents(ctx,record);
+            }
+            ctx.endTransaction();
+        } catch(Exception failed) {
+            ctx.rollbackTransaction();
+            Core.getLogger("AdminUserView").error("Could not persist user-view audit event: "+event,failed);
+            // Fail closed before session handoff; ending a view must always destroy the child session.
+            if("START".equals(event))throw new IllegalStateException("The account audit could not be saved. No user view was opened.",failed);
+        }
     }
     private static String token() { byte[] bytes=new byte[32];RANDOM.nextBytes(bytes);return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes); }
     private static String base(IMxRuntimeRequest req) { String p=URI.create(req.getRootUrl()).getPath(); return p.endsWith("/")?p:p+"/"; }

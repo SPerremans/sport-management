@@ -24,7 +24,8 @@ public final class DevelopmentSamples {
     private static final String REGISTRATION_PROGRESS_FEATURE = "features:member-registration-progress-v1";
     private static final String MEMBERSHIP_AUDIENCE_FEATURE = "features:membership-audience-v1";
     private static final String MULTI_AFFILIATION_FEATURE = "features:multi-affiliation-and-account-overview-v1";
-    private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim"};
+    private static final String ACCOUNT_HISTORY_FEATURE = "features:account-details-and-audit-v1";
+    private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim", "MyFirstModule.AccountAudit"};
     private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
     private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
     private static final Map<String, String[]> EDGES = new LinkedHashMap<>();
@@ -78,6 +79,7 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.Club", new String[]{"MyFirstModule.Club_Admins", "MyFirstModule.Club_DirectoryCity"});
         EDGES.put("MyFirstModule.ClubDirectoryCity", new String[0]);
         EDGES.put("MyFirstModule.AffiliationMutationClaim", new String[]{"MyFirstModule.AffiliationMutationClaim_Club"});
+        EDGES.put("MyFirstModule.AccountAudit", new String[]{"MyFirstModule.AccountAudit_Account"});
         EDGES.put("MyFirstModule.Federation", new String[]{"MyFirstModule.Federation_Admins"});
     }
     private DevelopmentSamples() {}
@@ -113,6 +115,7 @@ public final class DevelopmentSamples {
             verifyMembershipAudience(ctx, owned);
             verifyMultiAffiliation(ctx, owned);
             verifySampleAccounts(ctx, owned);
+            verifyAccountHistory(ctx, owned);
             removeIn(ctx);require(baseline.equals(ids(all(ctx))),"Sample cleanup changed pre-existing business records.");
             return "PASS: fresh generation, repeated generation, manifest coverage, scoped test administrators, disabled ordinary sample accounts and scoped cleanup (rolled back). "+(existing==null?"Existing-batch upgrade simulated by repeated extension.":"Existing-batch upgrade and preservation of all pre-existing primitive values verified.");
         } finally {ctx.rollbackTransaction();}
@@ -142,6 +145,7 @@ public final class DevelopmentSamples {
             Set<Long> manifestOwned = decode(batch(ctx).getValue(ctx, "OwnedIds"));
             verifyMembershipAudience(ctx, manifestOwned);
             verifyMultiAffiliation(ctx, manifestOwned);
+            verifyAccountHistory(ctx, manifestOwned);
             IMendixObject demoClub = query(ctx, "//MyFirstModule.Club").stream()
                 .filter(o -> manifestOwned.contains(o.getId().toLong())).findFirst().orElseThrow();
             IMendixObject extra = Core.instantiate(ctx, "MyFirstModule.ClubEvent");
@@ -735,6 +739,38 @@ public final class DevelopmentSamples {
         Core.commitWithoutEvents(ctx, manifest);
         extendUserViewExamples(ctx);
         extendRegistrationProgressSamples(ctx);
+        extendAccountHistorySamples(ctx);
+    }
+
+    /** Append history examples once, including safe test targets and disabled-account detail views. */
+    private static void extendAccountHistorySamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);
+        String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");
+        if(summary.contains(ACCOUNT_HISTORY_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds")); Seed seed=new Seed(ctx);
+        for(IMendixObject person:query(ctx,"//UserManagement.Person")) {
+            if(!owned.contains(person.getId().toLong()))continue;
+            IMendixObject audit=seed.make("AccountAudit","At",new Date(),"Event","Development account example",
+                "Actor","Local development generator","Subject",person.getValue(ctx,"Name"),
+                "Details","Fictional account history example. No account session was opened. Existing account settings were preserved.");
+            seed.link(audit,"AccountAudit_Account",person);
+        }
+        owned.addAll(ids(seed.owned));manifest.setValue(ctx,"OwnedIds",encode(owned));
+        manifest.setValue(ctx,"Summary",summary+" Account details and fictional audit history for owned active test administrators and disabled sample members. "+ACCOUNT_HISTORY_FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
+    }
+
+    private static void verifyAccountHistory(IContext ctx,Set<Long> owned) throws Exception {
+        List<IMendixObject> audits=query(ctx,"//MyFirstModule.AccountAudit");
+        int examples=0;
+        for(IMendixObject audit:audits) {
+            if(!owned.contains(audit.getId().toLong()))continue;
+            IMendixIdentifier subject=audit.getValue(ctx,"MyFirstModule.AccountAudit_Account");
+            require(subject!=null && owned.contains(subject.toLong()),"Sample audit references an unrelated account.");
+            require(audit.getValue(ctx,"At")!=null,"Sample account audit has no timestamp.");
+            examples++;
+        }
+        require(examples>0,"Account history examples are missing.");
     }
 
     /** Add isolated fictional profiles without inferring or replacing existing club metadata. */

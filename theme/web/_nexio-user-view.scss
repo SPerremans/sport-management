@@ -6,6 +6,8 @@
 .nexio-user-view-picker label { display: block; font-weight: 600; margin: 8px 0 4px; }
 .nexio-user-view-picker input { padding: 7px 10px; border: 1px solid #6b8299; border-radius: 4px; max-width: 100%; width: min(100%, 640px); margin-right: 8px; }
 .nexio-user-view-picker button { min-height: 34px; padding: 6px 12px; border-radius: 4px; font-size: 14px; box-shadow: none; }
+.nexio-user-view-confirm-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.nexio-user-view-confirm-actions .btn { min-height: 34px; padding: 6px 12px; font-size: 14px; box-shadow: none; }
 .nexio-user-view-table { overflow-x: auto; border: 1px solid var(--nexio-line); margin: 16px 0; }
 .nexio-user-view-table table { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 14px; }
 .nexio-user-view-table th, .nexio-user-view-table td { padding: 9px 12px; border-bottom: 1px solid var(--nexio-line); text-align: left; overflow-wrap: anywhere; }
