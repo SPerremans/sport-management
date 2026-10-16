@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-16",
+  "modelConsistency": "passed: global MCP diagnostics returned No errors found",
+  "compilation": {
+    "javaAndPackage": "passed: BUILD SUCCESSFUL in 3s, including updated sample generator and native data-source assertions",
+    "pageExportAndBundle": "passed: final bundle 2026-10-16T21:12:39.471Z, 116 ms"
+  },
+  "generatedWiringChecks": {
+    "directoryAndDashboardUseMembershipProfiles": true,
+    "searchableCityMultiselectPreserved": true,
+    "detailUsesDerivedPlayingAndAgeSummary": true,
+    "offersShowMembershipAgeRange": true,
+    "membershipEditorHasBothAgeBounds": true,
+    "manualClubAudienceInputsRemoved": true,
+    "modifiedPagesRemainInBusinessFolders": true,
+    "projectionIsNonPersistentAndReadOnly": true
+  },
+  "runtimeStartup": "passed: MCP reports running=true after final model update",
+  "runtimeScenarios": {
+    "summaryDeduplicationAndAvailability": "not executed; assertions implemented in the administrator sample lifecycle verifier",
+    "directoryDetailAndOfferAgreement": "not executed; assertions implemented in the administrator sample lifecycle verifier",
+    "ageBoundValidationAndSave": "not executed",
+    "interactiveFiltersAndViewClub": "not executed",
+    "freshUpgradeIdempotencePreservationAndCleanup": "not executed for this feature; versioned extension is included in existing lifecycle checks",
+    "limitation": "Saved localhost browser policy blocks browser access. Compiled assertions and sample examples are not passing runtime tests."
+  }
+}

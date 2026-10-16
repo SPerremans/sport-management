@@ -22,6 +22,7 @@ public final class DevelopmentSamples {
     private static final String USER_VIEW_FEATURE = "features:administrator-user-view-v1";
     private static final String DIRECTORY_PROFILE_FEATURE = "features:club-directory-profiles-v2";
     private static final String REGISTRATION_PROGRESS_FEATURE = "features:member-registration-progress-v1";
+    private static final String MEMBERSHIP_AUDIENCE_FEATURE = "features:membership-audience-v1";
     private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity"};
     private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
     private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
@@ -107,6 +108,7 @@ public final class DevelopmentSamples {
             generateIn(ctx,caller);Set<Long> fresh=ids(all(ctx));extendMatchSamples(ctx);generateIn(ctx,caller);require(fresh.equals(ids(all(ctx))),"Fresh generation is not idempotent.");
             IMendixObject registry=batch(ctx);Set<Long> owned=decode(registry.getValue(ctx,"OwnedIds"));
             Set<Long> added=new HashSet<>(fresh);added.removeAll(baseline);require(owned.containsAll(added),"A generated business record is absent from the ownership manifest.");
+            verifyMembershipAudience(ctx, owned);
             verifySampleAccounts(ctx, owned);
             removeIn(ctx);require(baseline.equals(ids(all(ctx))),"Sample cleanup changed pre-existing business records.");
             return "PASS: fresh generation, repeated generation, manifest coverage, scoped test administrators, disabled ordinary sample accounts and scoped cleanup (rolled back). "+(existing==null?"Existing-batch upgrade simulated by repeated extension.":"Existing-batch upgrade and preservation of all pre-existing primitive values verified.");
@@ -135,6 +137,7 @@ public final class DevelopmentSamples {
             generateIn(ctx, caller);
             require(once.equals(ids(all(ctx))), "Repeated generation created duplicate records.");
             Set<Long> manifestOwned = decode(batch(ctx).getValue(ctx, "OwnedIds"));
+            verifyMembershipAudience(ctx, manifestOwned);
             IMendixObject demoClub = query(ctx, "//MyFirstModule.Club").stream()
                 .filter(o -> manifestOwned.contains(o.getId().toLong())).findFirst().orElseThrow();
             IMendixObject extra = Core.instantiate(ctx, "MyFirstModule.ClubEvent");
@@ -664,6 +667,7 @@ public final class DevelopmentSamples {
         require(Core.getConfiguration().isInDevelopment() && unittesting.ConfigurationManager.isLocalDevelopment(),
             "Test administrators are restricted to local development.");
         extendDirectoryProfileSamples(ctx);
+        extendMembershipAudienceSamples(ctx);
         IMendixObject manifest = batch(ctx);
         require(manifest != null, "Sample ownership manifest is missing.");
         String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
@@ -747,7 +751,7 @@ public final class DevelopmentSamples {
         for (int i = 0; i < profiles.length; i++) {
             String[] p = profiles[i];
             IMendixObject club = s.make("Club", "Name", "[DEMO] " + p[0], "City", p[1], "Address", p[2],
-                "PostalCode", p[3], "Sports", p[4], "AgeGroups", p[5], "PlayingLevel", p[6],
+                "PostalCode", p[3], "Sports", p[4],
                 "Description", "Fictional directory and registration example. This is not a real Belgian club or contact address.",
                 "IsPublished", i != 3, "LocationVerified", false, "RequiresApproval", true, "RequiresPayment", true);
             String key = p[1].trim().toLowerCase(Locale.ROOT);
@@ -759,15 +763,85 @@ public final class DevelopmentSamples {
             s.link(club, "Club_DirectoryCity", city);
             IMendixObject season = s.make("Season", "Name", s.season, "StartsOn", s.date(-30), "EndsOn", s.date(130), "IsPublished", true);
             s.link(season, "Season_Club", club);
-            IMendixObject type = s.make("MembershipType", "Name", i == 3 ? "Youth" : "Club membership",
-                "Description", "[DEMO] " + p[4] + " registration", "Fee", s.fee(75), "Currency", "EUR", "IsAvailable", true);
-            s.link(type, "MembershipType_Club", club);
-            IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(75), "Currency", "EUR", "IsAvailable", true);
-            s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
+            for (int option = 0; option < (i == 0 ? 2 : 1); option++) {
+                boolean competition = i == 2 || (i == 0 && option == 0);
+                int minimumAge = i == 1 || (i == 0 && option == 1) ? 18 : 6;
+                int maximumAge = i == 3 || (i == 0 && option == 0) ? 17 : 0;
+                IMendixObject type = s.make("MembershipType", "Name", competition ? "Competition" : "Recreational",
+                    "Description", "[DEMO] " + p[4] + " registration", "Fee", s.fee(75), "Currency", "EUR", "IsAvailable", true,
+                    "IsCompetitionPlayer", competition, "MinimumAge", minimumAge, "MaximumAge", maximumAge);
+                s.link(type, "MembershipType_Club", club);
+                IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(75), "Currency", "EUR", "IsAvailable", true);
+                s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
+            }
         }
         owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
         manifest.setValue(ctx, "Summary", summary + " Four fictional Belgian club profiles with city, sport, age and playing level; one unpublished. " + DIRECTORY_PROFILE_FEATURE);
         Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** Add isolated age/category examples once, including to existing batches, without rewriting edited records. */
+    private static void extendMembershipAudienceSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        require(manifest != null, "Sample ownership manifest is missing.");
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(MEMBERSHIP_AUDIENCE_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds"));
+        Seed s = new Seed(ctx);
+        IMendixObject club = s.make("Club", "Name", "[DEMO] Schelde Rackets", "City", "Gent",
+            "Address", "Voorbeeldkaai 28", "PostalCode", "9000", "Sports", "Badminton",
+            "Description", "Fictional Belgian club for membership-derived playing categories and age ranges. Not a real contact address.",
+            "IsPublished", true, "LocationVerified", false, "RequiresApproval", true, "RequiresPayment", true);
+        IMendixObject city = first(ctx, "//MyFirstModule.ClubDirectoryCity[NormalizedName='gent']");
+        if (city == null) city = s.make("ClubDirectoryCity", "Name", "Gent", "NormalizedName", "gent");
+        s.link(club, "Club_DirectoryCity", city);
+        IMendixObject season = s.make("Season", "Name", s.season, "StartsOn", s.date(-30), "EndsOn", s.date(130), "IsPublished", true);
+        s.link(season, "Season_Club", club);
+        String[] names = {"Junior competition", "Adult competition", "Adult competition - reduced fee", "Recreational adults", "Closed all-ages option", "Future all-ages option"};
+        int[] minimums = {6, 18, 18, 40, 0, 0};
+        int[] maximums = {17, 35, 35, 65, 0, 0};
+        for (int i = 0; i < names.length; i++) {
+            IMendixObject type = s.make("MembershipType", "Name", names[i],
+                "Description", "[DEMO] Inclusive age range in years; available categories are summarized once per club.",
+                "IsCompetitionPlayer", i < 3, "MinimumAge", minimums[i], "MaximumAge", maximums[i],
+                "IsAvailable", i != 4, "Fee", s.fee(i == 2 ? 65 : 90), "Currency", "EUR");
+            if (i == 5) { type.setValue(ctx, "AvailableFrom", s.date(14)); Core.commitWithoutEvents(ctx, type); }
+            s.link(type, "MembershipType_Club", club);
+            IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(i == 2 ? 65 : 90), "Currency", "EUR", "IsAvailable", true);
+            s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
+        }
+        owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Fictional Gent club: repeated competition category/age range, recreational members, disjoint inclusive ages, closed and future options. " + MEMBERSHIP_AUDIENCE_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** Exercise the actual native data sources on a fresh sample set; callers already own a rollback-safe transaction. */
+    private static void verifyMembershipAudience(IContext ctx, Set<Long> owned) throws Exception {
+        IMendixObject club = query(ctx, "//MyFirstModule.Club[Name='[DEMO] Schelde Rackets']").stream()
+            .filter(o -> owned.contains(o.getId().toLong())).findFirst().orElseThrow();
+        Set<Long> before = ids(all(ctx));
+        IMendixObject detail = Core.microflowCall("MyFirstModule.DS_ClubDirectory_Profile").withParam("Club", club).execute(ctx);
+        require("Competition, Recreational".equals(detail.getValue(ctx, "PlayingSummary")), "Playing categories were not deduplicated.");
+        String ages = detail.getValue(ctx, "AgeSummary");
+        List<String> ranges = Arrays.asList(ages.split(", "));
+        require(ranges.size() == 3 && new HashSet<>(ranges).equals(new HashSet<>(Arrays.asList("6–17", "18–35", "40–65"))),
+            "Age ranges were repeated, merged across gaps, or included closed/future options.");
+        require("Both".equals(detail.getValue(ctx, "PlayingLevel")) && "YouthAndAdults".equals(detail.getValue(ctx, "AgeGroups")),
+            "Directory filter classifications disagree with memberships.");
+        List<IMendixObject> offers = Core.microflowCall("MyFirstModule.DS_Club_Offers").withParam("Club", club).execute(ctx);
+        require(offers.size() == 4, "Current offers included closed/future memberships or lost a differently priced membership.");
+        Set<String> offerAges = new HashSet<>();
+        for (IMendixObject offer : offers) offerAges.add(offer.getValue(ctx, "AgeRange"));
+        require(offerAges.equals(new HashSet<>(ranges)), "Offer age labels disagree with the club summary.");
+        List<IMendixObject> directory = Core.microflowCall("MyFirstModule.DS_ClubDirectory_Profiles").execute(ctx);
+        List<IMendixObject> matching = new ArrayList<>();
+        for (IMendixObject row : directory)
+            if (club.getId().equals(row.getValue(ctx, "MyFirstModule.ClubDiscoveryProfile_Club"))) matching.add(row);
+        require(matching.size() == 1, "Directory should contain one row per published club.");
+        require(matching.get(0).getValue(ctx, "PlayingSummary").equals(detail.getValue(ctx, "PlayingSummary"))
+            && new HashSet<>(Arrays.asList(((String) matching.get(0).getValue(ctx, "AgeSummary")).split(", "))).equals(new HashSet<>(ranges)),
+            "Directory and detail audience summaries disagree.");
+        require(before.equals(ids(all(ctx))), "Reading audience summaries persisted business records.");
     }
 
     /** Give a scoped sample administrator visible examples of each member registration stage. */

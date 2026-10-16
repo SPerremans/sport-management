@@ -1,5 +1,7 @@
 # Development sample data
 
+Membership audience update: summaries now use available current-season membership types. The next Generate/upgrade adds [DEMO] Schelde Rackets (fictional Gent address) with distinct Competition/Recreational categories, repeated competition fees, inclusive minimum/maximum ages, and closed/future options excluded from the summary. The versioned upgrade preserves existing edited records and is covered by the generator's idempotence/ownership/cleanup checks; those runtime scenarios have not yet been executed for this extension.
+
 16 October update: [club directory and registration progress](club-directory-and-registration-progress.md). The next Generate/upgrade adds four fictional Belgian club profiles and six member registration stages (including waiting list and withdrawn history), once per version. Sample-created city references are tracked for cleanup; existing club metadata is preserved. This extension has compiled but has not been executed in an authenticated administrator session.
 
 Administrator user-view examples: [View as user](view-as-user.md). The next sample upgrade appends memberships to the sample club administrators so their own member dashboards contain examples. Existing accounts and user edits are preserved; disabled sample people remain disabled. This extension has not yet been executed in an administrator browser session.
