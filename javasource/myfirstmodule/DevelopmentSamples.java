@@ -20,6 +20,9 @@ public final class DevelopmentSamples {
     private static final String TEST_ADMIN_FEATURE = "features:organization-test-admins-v1";
     private static final String TEST_ADMIN_PASSWORD = "TestAccount123!";
     private static final String USER_VIEW_FEATURE = "features:administrator-user-view-v1";
+    private static final String DIRECTORY_PROFILE_FEATURE = "features:club-directory-profiles-v2";
+    private static final String REGISTRATION_PROGRESS_FEATURE = "features:member-registration-progress-v1";
+    private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity"};
     private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
     private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
     private static final Map<String, String[]> EDGES = new LinkedHashMap<>();
@@ -70,7 +73,8 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.CompetitionPlayer", new String[]{"MyFirstModule.CompetitionPlayer_Membership","MyFirstModule.CompetitionPlayer_Team"});
         EDGES.put("MyFirstModule.CompetitionTeam", new String[]{"MyFirstModule.CompetitionTeam_Club"});
         EDGES.put("MyFirstModule.CompetitionLeague", new String[]{"MyFirstModule.CompetitionLeague_Federation", "MyFirstModule.CompetitionLeague_MatchFormat"});
-        EDGES.put("MyFirstModule.Club", new String[]{"MyFirstModule.Club_Admins"});
+        EDGES.put("MyFirstModule.Club", new String[]{"MyFirstModule.Club_Admins", "MyFirstModule.Club_DirectoryCity"});
+        EDGES.put("MyFirstModule.ClubDirectoryCity", new String[0]);
         EDGES.put("MyFirstModule.Federation", new String[]{"MyFirstModule.Federation_Admins"});
     }
     private DevelopmentSamples() {}
@@ -188,6 +192,7 @@ public final class DevelopmentSamples {
     }
     private static List<IMendixObject> all(IContext ctx) throws Exception {
         List<IMendixObject> result = new ArrayList<>();
+        for (String type : DIRECTORY_TYPES) result.addAll(query(ctx, "//" + type));
         for (String type : TYPES) result.addAll(query(ctx, "//" + type));
         for (String type : MATCH_TYPES) result.addAll(query(ctx, "//" + type));
         return result;
@@ -658,6 +663,7 @@ public final class DevelopmentSamples {
     private static void extendDiscoveryAndAdminSamples(IContext ctx) throws Exception {
         require(Core.getConfiguration().isInDevelopment() && unittesting.ConfigurationManager.isLocalDevelopment(),
             "Test administrators are restricted to local development.");
+        extendDirectoryProfileSamples(ctx);
         IMendixObject manifest = batch(ctx);
         require(manifest != null, "Sample ownership manifest is missing.");
         String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
@@ -688,14 +694,18 @@ public final class DevelopmentSamples {
             summary += " Fictional Belgian discovery clubs: open, closed, future and unpublished registrations. " + DISCOVERY_FEATURE;
         }
         owned.addAll(ids(s.owned));
-        if (!summary.contains(TEST_ADMIN_FEATURE) && samplePasswordAllowed(ctx)) {
+        if (samplePasswordAllowed(ctx)) {
             for (String entity : new String[]{"Club", "Federation"}) {
                 IMendixObject appRole = first(ctx, "//System.UserRole[Name='" + (entity.equals("Club") ? "ClubAdmin" : "FederationAdmin") + "']");
                 require(appRole != null, "The organization administrator app role is missing.");
                 for (IMendixObject organization : query(ctx, "//MyFirstModule." + entity)) {
                     if (!owned.contains(organization.getId().toLong())) continue;
                     String username = "demo." + entity.toLowerCase(Locale.ROOT) + "." + s.id(organization) + "@example.invalid";
-                    require(first(ctx, "//System.User[Name='" + username + "']") == null, "A test username already exists; no existing account was changed.");
+                    IMendixObject existingAdmin = first(ctx, "//System.User[Name='" + username + "']");
+                    if (existingAdmin != null) {
+                        require(owned.contains(existingAdmin.getId().toLong()), "A test username is used by an unrelated account; it was not changed.");
+                        continue; // Preserve edited sample accounts, passwords, roles and assignments.
+                    }
                     IMendixObject administrator = s.make("UserManagement.Person", "Name", username, "Email", username,
                         "FullName", "[DEMO] Administrator - " + organization.getValue(ctx, "Name"), "Active", true,
                         "WebServiceUser", false, "Password", TEST_ADMIN_PASSWORD, "InvitationPending", false,
@@ -708,11 +718,105 @@ public final class DevelopmentSamples {
                     Core.getLogger("NexioSamples").info("Local test administrator: " + username + " for " + organization.getValue(ctx, "Name"));
                 }
             }
-            summary += " Dedicated login-enabled administrators for each sample organization. " + TEST_ADMIN_FEATURE;
+            if (!summary.contains(TEST_ADMIN_FEATURE))
+                summary += " Dedicated login-enabled administrators for each sample organization. " + TEST_ADMIN_FEATURE;
         }
         owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned)); manifest.setValue(ctx, "Summary", summary);
         Core.commitWithoutEvents(ctx, manifest);
         extendUserViewExamples(ctx);
+        extendRegistrationProgressSamples(ctx);
+    }
+
+    /** Add isolated fictional profiles without inferring or replacing existing club metadata. */
+    private static void extendDirectoryProfileSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        require(manifest != null, "Sample ownership manifest is missing.");
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(DIRECTORY_PROFILE_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds"));
+        Seed s = new Seed(ctx);
+        Map<String, IMendixObject> cities = new HashMap<>();
+        for (IMendixObject city : query(ctx, "//MyFirstModule.ClubDirectoryCity"))
+            cities.putIfAbsent(Objects.toString(city.getValue(ctx, "NormalizedName"), ""), city);
+        String[][] profiles = {
+            {"Kade Rackets", "Antwerpen", "Kadeplein 24", "2000", "Badminton", "YouthAndAdults", "Both"},
+            {"Park Tennis", "Leuven", "Parklaan 42", "3000", "Tennis", "Adults", "Recreational"},
+            {"Polder Padel", "Gent", "Polderstraat 18", "9000", "Padel", "YouthAndAdults", "Competitive"},
+            {"Jeugd Tafeltennis", "Mechelen", "Jeugdlaan 16", "2800", "Table tennis", "Youth", "Recreational"}
+        };
+        for (int i = 0; i < profiles.length; i++) {
+            String[] p = profiles[i];
+            IMendixObject club = s.make("Club", "Name", "[DEMO] " + p[0], "City", p[1], "Address", p[2],
+                "PostalCode", p[3], "Sports", p[4], "AgeGroups", p[5], "PlayingLevel", p[6],
+                "Description", "Fictional directory and registration example. This is not a real Belgian club or contact address.",
+                "IsPublished", i != 3, "LocationVerified", false, "RequiresApproval", true, "RequiresPayment", true);
+            String key = p[1].trim().toLowerCase(Locale.ROOT);
+            IMendixObject city = cities.get(key);
+            if (city == null) {
+                city = s.make("ClubDirectoryCity", "Name", p[1], "NormalizedName", key);
+                cities.put(key, city);
+            }
+            s.link(club, "Club_DirectoryCity", city);
+            IMendixObject season = s.make("Season", "Name", s.season, "StartsOn", s.date(-30), "EndsOn", s.date(130), "IsPublished", true);
+            s.link(season, "Season_Club", club);
+            IMendixObject type = s.make("MembershipType", "Name", i == 3 ? "Youth" : "Club membership",
+                "Description", "[DEMO] " + p[4] + " registration", "Fee", s.fee(75), "Currency", "EUR", "IsAvailable", true);
+            s.link(type, "MembershipType_Club", club);
+            IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(75), "Currency", "EUR", "IsAvailable", true);
+            s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
+        }
+        owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Four fictional Belgian club profiles with city, sport, age and playing level; one unpublished. " + DIRECTORY_PROFILE_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** Give a scoped sample administrator visible examples of each member registration stage. */
+    private static void extendRegistrationProgressSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(REGISTRATION_PROGRESS_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds")); Seed s = new Seed(ctx);
+        IMendixObject person = null, club = null;
+        for (IMendixObject candidate : query(ctx, "//MyFirstModule.Club")) {
+            if (!owned.contains(candidate.getId().toLong())) continue;
+            IMendixObject account = first(ctx, "//UserManagement.Person[Name='demo.club." + s.id(candidate) + "@example.invalid']");
+            if (account != null && owned.contains(account.getId().toLong())) { person = account; club = candidate; break; }
+        }
+        if (person == null) return; // Retry this feature after compliant test accounts can be created.
+        IMendixObject season = first(ctx, "//MyFirstModule.Season[MyFirstModule.Season_Club=" + s.id(club) + "][IsPublished=true][StartsOn <= '[%CurrentDateTime%]' and EndsOn >= '[%BeginOfCurrentDay%]']");
+        if (season == null) return;
+        String[][] stages = {
+            {"Draft", "Pending", "NotRequired", "Complete your registration form"},
+            {"Pending", "Pending", "AwaitingApproval", "Awaiting club approval"},
+            {"Pending", "OnHold", "AwaitingApproval", "On hold / waiting list - the club will contact you when a place is available"},
+            {"Pending", "Approved", "Required", "Payment required - view your invoice"},
+            {"Active", "Approved", "NotRequired", "Membership active"},
+            {"Withdrawn", "Pending", "NotRequired", "Withdrawn by you before approval"}
+        };
+        for (int i = 0; i < stages.length; i++) {
+            String[] state = stages[i];
+            IMendixObject type = s.make("MembershipType", "Name", "[DEMO] Progress " + (i + 1), "Description", "Isolated registration status example", "IsAvailable", true, "Fee", s.fee(i == 3 ? 75 : 0), "Currency", "EUR");
+            s.link(type, "MembershipType_Club", club);
+            IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(i == 3 ? 75 : 0), "Currency", "EUR", "IsAvailable", true);
+            s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
+            IMendixObject request = s.make("RegistrationRequest", "MemberName", person.getValue(ctx, "FullName"), "MemberEmail", person.getValue(ctx, "Email"),
+                "Status", state[0], "Approval", state[1], "Payment", state[2], "NextAction", state[3], "SeasonName", season.getValue(ctx, "Name"),
+                "Fee", s.fee(i == 3 ? 75 : 0), "OriginalFee", s.fee(i == 3 ? 75 : 0), "Currency", "EUR", "RequiresApproval", true, "RequiresPayment", i == 3,
+                "RegistrationKey", s.id(person) + ":" + s.id(club) + ":" + s.id(type) + ":" + s.id(season));
+            if (i != 0) { request.setValue(ctx, "SubmittedAt", s.hour(-i, 10)); Core.commitWithoutEvents(ctx, request); }
+            s.link(request, "RegistrationRequest_Person", person); s.link(request, "RegistrationRequest_Club", club);
+            s.link(request, "RegistrationRequest_MembershipType", type); s.link(request, "RegistrationRequest_Season", season); s.link(request, "RegistrationRequest_SeasonFee", fee);
+            if (i == 4) s.link(request, "RegistrationRequest_Membership", s.membership(person, club, type, season));
+            if (i == 3) {
+                IMendixObject invoice = s.make("Invoice", "Number", "DEMO-PROGRESS-" + s.marker, "BillingKey", "DEMO-PROGRESS:" + s.marker,
+                    "Description", "[DEMO] Registration payment example - do not pay", "Amount", s.fee(75), "Currency", "EUR", "Status", "Open",
+                    "DueDate", s.date(21), "Kind", "Registration", "RecipientName", person.getValue(ctx, "FullName"), "RecipientEmail", person.getValue(ctx, "Email"));
+                s.link(invoice, "Invoice_RegistrationRequest", request); s.link(invoice, "Invoice_Club", club); s.link(invoice, "Invoice_Person", person);
+            }
+        }
+        owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Member registration progress: draft, approval, waiting list, unpaid, active and withdrawn history. " + REGISTRATION_PROGRESS_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
     }
 
     /** Give the scoped sample administrators their own member view without enabling disabled sample people. */

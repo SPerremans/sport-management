@@ -1,5 +1,7 @@
 # Development sample data
 
+16 October update: [club directory and registration progress](club-directory-and-registration-progress.md). The next Generate/upgrade adds four fictional Belgian club profiles and six member registration stages (including waiting list and withdrawn history), once per version. Sample-created city references are tracked for cleanup; existing club metadata is preserved. This extension has compiled but has not been executed in an authenticated administrator session.
+
 Administrator user-view examples: [View as user](view-as-user.md). The next sample upgrade appends memberships to the sample club administrators so their own member dashboards contain examples. Existing accounts and user edits are preserved; disabled sample people remain disabled. This extension has not yet been executed in an administrator browser session.
 
 15 October update: [club discovery, test administrator logins and shared tables](club-discovery-and-tables.md). The next Generate/upgrade adds fictional Belgian club examples and dedicated active administrators per sample organization with password `TestAccount123!`. The existing 12-character/mixed-case/digit policy is preserved. Other sample accounts remain disabled. Generation and login scenarios for this extension have not yet been executed; the earlier counts and disabled-account statements below describe the original sample set.

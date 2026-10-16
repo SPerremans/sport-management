@@ -155,3 +155,31 @@
   }
   .nexio-table-list { max-width: 100%; }
 }
+
+/* Club directory: independent readable filters and compact comparison rows. */
+.nexio-club-directory .widget-datagrid-header { display: block; overflow: visible; }
+.nexio-club-filters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(170px, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+}
+.nexio-club-filter { min-width: 0; }
+.nexio-club-filter > .mx-text {
+  display: block; margin-bottom: 6px; font-weight: 600;
+  color: var(--nexio-navy); font-size: 13px;
+}
+.nexio-club-filter-control { width: 100%; min-width: 0; }
+.nexio-club-filter-control .form-control,
+.nexio-club-filter-control input { font-size: 14px; min-height: 36px; color: var(--nexio-navy); }
+.nexio-club-filter-control [role="option"],
+.nexio-club-filter-control [role="listbox"] { color: var(--nexio-navy); background: var(--nexio-surface); }
+.nexio-club-directory .nexio-club-column-name { min-width: 220px; }
+.nexio-club-directory .nexio-club-column-city { min-width: 130px; }
+.nexio-club-directory .nexio-club-column-sports { min-width: 150px; }
+.nexio-club-directory .nexio-club-column-players { min-width: 220px; }
+.nexio-club-profile { display: flex; flex-direction: column; gap: 3px; }
+@media (max-width: 1200px) { .nexio-club-filters { grid-template-columns: repeat(3, minmax(170px, 1fr)); } }
+@media (max-width: 767px) { .nexio-club-filters { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
+@media (max-width: 480px) { .nexio-club-filters { grid-template-columns: 1fr; } }

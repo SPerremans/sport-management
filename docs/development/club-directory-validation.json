@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-16",
+  "modelConsistency": "passed: global MCP diagnostics returned No errors found",
+  "compilation": {
+    "javaAndPackage": "passed: Studio Pro full build, BUILD SUCCESSFUL in 6s at 17:46:31 Europe/Paris",
+    "pageExportAndTheme": "passed: exported pages and Rspack bundling completed; final bundle at 15:55:35.988Z",
+    "existingWarnings": "CommunityCommons deprecation and React widget findDOMNode export warnings"
+  },
+  "exportedPageVerification": [
+    {
+      "page": "Club_Directory",
+      "clubDatasource": "p.4",
+      "nameSportAndCityShareClubDatasource": true,
+      "citySearchEnabled": true,
+      "cityMultiselectEnabled": true,
+      "selectedCitiesUseChips": true,
+      "inlineRegistrationActionRemoved": true
+    },
+    {
+      "page": "Member_Dashboard",
+      "clubDatasource": "p.5",
+      "nameSportAndCityShareClubDatasource": true,
+      "citySearchEnabled": true,
+      "cityMultiselectEnabled": true,
+      "selectedCitiesUseChips": true,
+      "inlineRegistrationActionRemoved": true
+    }
+  ],
+  "runtimeStartup": "passed: Mendix reports running=true after model update; initial startup included city backfill",
+  "runtimeScenarios": {
+    "interactiveDirectorySearch": "not executed",
+    "clubProfileSave": "not executed",
+    "waitingListAndApproval": "not executed",
+    "memberWithdrawalAndOwnershipDenial": "not executed",
+    "concurrentApprovalAndWithdrawal": "not executed",
+    "sampleFreshGenerationUpgradeIdempotenceAndCleanup": "not executed",
+    "limitation": "Saved localhost browser policy blocks agent browser access. Sample scenarios and checks are implemented but are not passing tests."
+  }
+}
