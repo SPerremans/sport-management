@@ -40,6 +40,17 @@
     "preservation": "Version marker adds the example once for fresh or existing batches; existing membership audience flags are not migrated or overwritten.",
     "verifier": "Native source assertions added to fresh-generation and rollback-only lifecycle verification. They are not reported as passed."
   },
+  "selectionRequestFollowUp": {
+    "date": "2026-10-17",
+    "reportedFailure": "Mechelen selected while Gent clubs remained in the result table.",
+    "finding": "The empty on-change refresh exported a:[] in microflows.json, omitting all four selection associations from that action's client request graph. This is a concrete stale-state risk; the full browser failure could not be reproduced under the saved policy.",
+    "change": "The existing change handler now receives, reads and retains Cities/Sports/Ages/Levels before refreshing its non-persistent Search. No persistent entity, page, workflow or sample version added.",
+    "modelConsistency": "Passed: global mnd diagnostics report No errors found.",
+    "compilation": "Passed: clean Java/package build in 4s; bundle completed 2026-10-17T14:22:06.452Z in 480 ms.",
+    "exportContract": "Passed: 12 maintained ClubDiscoveryRequestGraph.ps1 assertions cover the rebuilt handler and both dependent sources. A negative fixture restoring the original empty refresh graph fails as expected.",
+    "runtimeStartup": "Passed: running=true, launching=false after the build.",
+    "runtimeScenarios": "Not executed: entire-result-set city-transition assertions added to the existing native sample verifier and compiled. Browser request capture and reproduction blocked: user approved read-only inspection, but the browser tool rejected localhost under a saved origin permission policy. No alternate browser or HTTP route used."
+  },
   "multiselectFollowUp": {
     "date": "2026-10-17",
     "changes": "Selected options precede unselected options in their real list order. Chips remain above a dedicated search line. Decorative checkbox/label areas pass clicks to the owning listbox row. Reset filters replaces the apply/clear toolbar above both views, retaining the existing no-validation clear action.",

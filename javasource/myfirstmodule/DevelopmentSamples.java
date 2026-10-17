@@ -908,6 +908,7 @@ public final class DevelopmentSamples {
             .filter(o -> owned.contains(o.getId().toLong())).findFirst().orElseThrow();
         Set<Long> before = ids(all(ctx));
         IMendixObject search = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Search").execute(ctx);
+        verifyDiscoveryCityTransitions(ctx, search);
         search.setValue(ctx, "Name", club.getValue(ctx, "Name"));
         List<IMendixObject> groups = discoveryChoices(ctx, search, "Ages");
         List<String> labels = new ArrayList<>();
@@ -964,6 +965,27 @@ public final class DevelopmentSamples {
 
     private static List<IMendixObject> discoveryChoices(IContext ctx, IMendixObject search, String kind) {
         return Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Choices").withParam("Search", search).withParam("Kind", kind).execute(ctx);
+    }
+
+    /** Check the entire result set, including unrelated published rows; presence-only checks miss stale extra cities. */
+    private static void verifyDiscoveryCityTransitions(IContext ctx, IMendixObject search) {
+        List<IMendixObject> baseline = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+        for (String[] cities : new String[][]{{"Mechelen"}, {"Mechelen", "Gent"}, {"Mechelen"}, {}}) {
+            selectDiscovery(ctx, search, "Cities", cities);
+            Core.microflowCall("MyFirstModule.OCH_ClubDiscovery_Refresh").withParam("Search", search).execute(ctx);
+            Set<String> wanted = new HashSet<>();
+            for (String city : cities) wanted.add(city.toLowerCase(Locale.ROOT));
+            Set<Long> expected = new HashSet<>();
+            for (IMendixObject row : baseline) {
+                String city = Objects.toString(row.getValue(ctx, "City"), "").trim().toLowerCase(Locale.ROOT);
+                if (wanted.isEmpty() || wanted.contains(city)) expected.add(row.getId().toLong());
+            }
+            List<IMendixObject> actual = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+            require(expected.equals(ids(actual)) && actual.size() == expected.size(),
+                "City selection retained stale/extra rows after refresh: " + Arrays.toString(cities));
+            Collection<IMendixIdentifier> selected = search.getValue(ctx, "MyFirstModule.ClubDiscoverySearch_Cities");
+            require((selected == null ? 0 : selected.size()) == cities.length, "Refreshing altered the city selections.");
+        }
     }
 
     private static List<IMendixObject> discoveryRows(IContext ctx, IMendixObject search, IMendixObject club) {
