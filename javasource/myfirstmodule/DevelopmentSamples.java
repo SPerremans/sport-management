@@ -947,6 +947,18 @@ public final class DevelopmentSamples {
         require(discoveryRows(ctx, search, club).isEmpty(), "Age below every membership minimum was accepted.");
         search.setValue(ctx, "Age", "");
         require(discoveryRows(ctx, search, club).size() == 1, "Clearing filters failed to restore the club.");
+        selectDiscovery(ctx, search, "Cities", "Leuven");
+        selectDiscovery(ctx, search, "Sports", "Tennis");
+        selectDiscovery(ctx, search, "Ages", "Adults");
+        selectDiscovery(ctx, search, "Levels", "Recreational");
+        search.setValue(ctx, "Age", "invalid");
+        Core.microflowCall("MyFirstModule.ACT_ClubDiscovery_Clear").withParam("Search", search).execute(ctx);
+        require("".equals(search.getValue(ctx, "Name")) && "".equals(search.getValue(ctx, "Age")), "Reset did not clear name and malformed age.");
+        for (String kind : new String[]{"Cities", "Sports", "Ages", "Levels"}) {
+            Collection<IMendixIdentifier> selection = search.getValue(ctx, "MyFirstModule.ClubDiscoverySearch_" + kind);
+            require(selection == null || selection.isEmpty(), "Reset left selected values: " + kind);
+        }
+        require(discoveryRows(ctx, search, club).size() == 1, "Reset failed to restore the club.");
         require(before.equals(ids(all(ctx))), "Discovery sources persisted business records.");
     }
 
@@ -967,6 +979,12 @@ public final class DevelopmentSamples {
             if (wanted.contains(choice.getValue(ctx, "Label"))) selected.add(choice.getId());
         require(selected.size() == wanted.size(), "Requested sample filter choice is unavailable: " + kind);
         search.setValue(ctx, "MyFirstModule.ClubDiscoverySearch_" + kind, selected);
+        boolean reachedUnselected = false;
+        for (IMendixObject choice : discoveryChoices(ctx, search, kind)) {
+            boolean isSelected = selected.contains(choice.getId());
+            require(!isSelected || !reachedUnselected, "Selected filter value was not at the top: " + kind);
+            if (!isSelected) reachedUnselected = true;
+        }
     }
 
     /** Link only a newly generated membership to an owned federation, never infer or rewrite an older federation's sport. */

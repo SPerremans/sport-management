@@ -39,5 +39,15 @@
     "ownership": "Only existing persistent allowlisted types and owning associations; every newly created record enters Seed.owned and the private manifest. Reused cities are not claimed. No new persistent type was added.",
     "preservation": "Version marker adds the example once for fresh or existing batches; existing membership audience flags are not migrated or overwritten.",
     "verifier": "Native source assertions added to fresh-generation and rollback-only lifecycle verification. They are not reported as passed."
+  },
+  "multiselectFollowUp": {
+    "date": "2026-10-17",
+    "changes": "Selected options precede unselected options in their real list order. Chips remain above a dedicated search line. Decorative checkbox/label areas pass clicks to the owning listbox row. Reset filters replaces the apply/clear toolbar above both views, retaining the existing no-validation clear action.",
+    "modelConsistency": "Passed: global mnd diagnostics report No errors found.",
+    "compilation": "Passed: final clean Java/package build in 4s; page export and bundle completed 2026-10-17T12:40:17.727Z in 144 ms.",
+    "exportInspection": "12 generated-page/theme assertions passed for toolbar placement, four native multiselect associations and chip controls in each view, row pointer handling and search-line styling. These are wiring/style checks, not interactive tests.",
+    "runtimeStartup": "Passed: running=true, launching=false after the build.",
+    "runtimeScenarios": "Not executed: browser interaction, keyboard behavior, selected-first updates after each click and reset with malformed age remain pending under the saved localhost browser restriction.",
+    "sampleScenarios": "Existing owned fictional filter examples reused. Native assertions now verify selected-first choices and execute the real reset action with all selections and malformed age. Compiled, not executed; no new persistent business type, workflow or seed version was needed."
   }
 }
