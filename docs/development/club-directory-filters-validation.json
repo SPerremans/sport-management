@@ -40,6 +40,17 @@
     "preservation": "Version marker adds the example once for fresh or existing batches; existing membership audience flags are not migrated or overwritten.",
     "verifier": "Native source assertions added to fresh-generation and rollback-only lifecycle verification. They are not reported as passed."
   },
+  "finalSelectionFollowUp": {
+    "date": "2026-10-17",
+    "reportedFailure": "Two selections can be reduced to one, but the final selected option cannot be removed.",
+    "change": "All four existing non-persistent selection ReferenceSets now use Default ownership on ClubDiscoverySearch. Their read-only choice endpoint no longer exposes inverse selection members. Search-owned empty selection does not depend on choice-side link reconciliation. No persistent types or records changed.",
+    "modelConsistency": "Passed: global diagnostics report No errors found; four connector read-back assertions confirm ReferenceSet type and sole ownership on Search.",
+    "compilation": "Passed: clean Java/package build in 4s; bundle completed 2026-10-17T14:33:55.207Z in 459 ms.",
+    "exportContract": "Passed: all 12 selection request-graph assertions still pass after the ownership change.",
+    "runtimeStartup": "Passed: running=true, launching=false after the build.",
+    "runtimeScenarios": "Not executed: native assertions for every dropdown now cover two to one to zero, refresh, reading options after removal, and restoration of the complete baseline result set. They are compiled but do not verify live clicks. Browser access remains blocked by the saved localhost origin policy; no retry or alternate route attempted in this follow-up.",
+    "developmentSamples": "Existing versioned owned filter examples reused; no new business entity, page, workflow, sample batch version, persistent allowlist or cleanup dependency is required."
+  },
   "selectionRequestFollowUp": {
     "date": "2026-10-17",
     "reportedFailure": "Mechelen selected while Gent clubs remained in the result table.",

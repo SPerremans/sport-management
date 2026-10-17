@@ -909,6 +909,7 @@ public final class DevelopmentSamples {
         Set<Long> before = ids(all(ctx));
         IMendixObject search = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Search").execute(ctx);
         verifyDiscoveryCityTransitions(ctx, search);
+        verifyDiscoveryEmptySelections(ctx, search);
         search.setValue(ctx, "Name", club.getValue(ctx, "Name"));
         List<IMendixObject> groups = discoveryChoices(ctx, search, "Ages");
         List<String> labels = new ArrayList<>();
@@ -985,6 +986,32 @@ public final class DevelopmentSamples {
                 "City selection retained stale/extra rows after refresh: " + Arrays.toString(cities));
             Collection<IMendixIdentifier> selected = search.getValue(ctx, "MyFirstModule.ClubDiscoverySearch_Cities");
             require((selected == null ? 0 : selected.size()) == cities.length, "Refreshing altered the city selections.");
+        }
+    }
+
+    /** Exercise two selections, one selection, and no selection for every dropdown. */
+    private static void verifyDiscoveryEmptySelections(IContext ctx, IMendixObject search) {
+        List<IMendixObject> baseline = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+        for (String kind : new String[]{"Cities", "Sports", "Ages", "Levels"}) {
+            List<IMendixObject> choices = discoveryChoices(ctx, search, kind);
+            require(choices.size() >= 2, "Sample dropdown needs two choices: " + kind);
+            String first = choices.get(0).getValue(ctx, "Label");
+            String second = choices.get(1).getValue(ctx, "Label");
+            for (String[] values : new String[][]{{first, second}, {first}, {}}) {
+                selectDiscovery(ctx, search, kind, values);
+                Core.microflowCall("MyFirstModule.OCH_ClubDiscovery_Refresh").withParam("Search", search).execute(ctx);
+                Collection<IMendixIdentifier> selected = search.getValue(ctx, "MyFirstModule.ClubDiscoverySearch_" + kind);
+                require((selected == null ? 0 : selected.size()) == values.length,
+                    "Refresh restored a removed dropdown value: " + kind + " expected " + values.length);
+                // Reading the selected-first options must not restore the last removed reference either.
+                discoveryChoices(ctx, search, kind);
+                selected = search.getValue(ctx, "MyFirstModule.ClubDiscoverySearch_" + kind);
+                require((selected == null ? 0 : selected.size()) == values.length,
+                    "Reading options restored a removed dropdown value: " + kind);
+            }
+            List<IMendixObject> restored = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+            require(ids(restored).equals(ids(baseline)) && restored.size() == baseline.size(),
+                "Clearing the final dropdown value did not restore unfiltered results: " + kind);
         }
     }
 
