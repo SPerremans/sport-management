@@ -204,3 +204,32 @@
 .nexio-account-audit .td { overflow-wrap: anywhere; }
 @media (max-width: 1000px) { .nexio-account-filters, .nexio-account-summary { grid-template-columns: repeat(2, minmax(160px, 1fr)); } }
 @media (max-width: 480px) { .nexio-account-filters, .nexio-account-summary { grid-template-columns: 1fr; } }
+
+/* Shared discovery filters: one consistent searchable multiselect, compact removable chips. */
+.nexio-discovery-search { min-width: 0; }
+.nexio-discovery-filters {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.2fr) repeat(3, minmax(160px, 1fr)) minmax(100px, .6fr) minmax(160px, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+.nexio-discovery-filters > .form-group { min-width: 0; margin: 0; }
+.nexio-discovery-filters .control-label { display: block; text-align: left; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--nexio-navy); }
+.nexio-discovery-filters .form-control,
+.nexio-discovery-filters .widget-combobox-input-container { min-height: 38px; border-radius: 6px; font-size: 14px; box-shadow: none; }
+.nexio-discovery-filters .form-control { padding: 7px 10px; }
+.nexio-discovery-filters .widget-combobox { width: 100%; min-width: 0; }
+.nexio-discovery-filters .widget-combobox-input { min-height: 30px; font-size: 14px; padding: 4px 6px; }
+.nexio-discovery-filters .widget-combobox-selected-item { font-size: 12px; line-height: 1.4; padding: 3px 6px; border-radius: 4px; background: var(--brand-default); color: var(--nexio-navy); }
+.nexio-discovery-filters .widget-combobox-item { min-height: 34px; padding: 7px 10px; color: var(--nexio-navy); font-size: 14px; }
+.nexio-discovery-filters input[type="checkbox"],
+.nexio-membership-audience input[type="checkbox"] { flex: 0 0 16px; width: 16px; height: 16px; min-width: 16px; min-height: 16px; padding: 0; border-radius: 3px; margin: 0 8px 0 0; box-shadow: none; }
+.nexio-discovery-actions { margin-bottom: 12px; }
+.nexio-discovery-actions > .mx-text { color: var(--nexio-muted); font-size: 13px; }
+.nexio-membership-audience { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-bottom: 16px; }
+.nexio-membership-audience .form-group { margin: 0; }
+.nexio-membership-audience label { font-size: 14px; }
+@media (max-width: 1300px) { .nexio-discovery-filters { grid-template-columns: repeat(3, minmax(160px, 1fr)); } }
+@media (max-width: 767px) { .nexio-discovery-filters { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
+@media (max-width: 480px) { .nexio-discovery-filters { grid-template-columns: minmax(0, 1fr); } }

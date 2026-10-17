@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-17",
+  "feature": "Membership-derived club directory filters",
+  "modelConsistency": {
+    "status": "passed",
+    "evidence": "Global mnd diagnostics: No errors found after final access-rule changes.",
+    "folders": "Eight discovery workflows verified under Discovery/Filters; audience formatter under Members/Configuration. Existing pages retain their business folders."
+  },
+  "compilation": {
+    "status": "passed",
+    "java": "Studio Pro clean/compile/package: BUILD SUCCESSFUL in 6s, 3 tasks executed.",
+    "pageExportAndBundle": "Bundling finished 2026-10-17T12:28:13.636Z; Development Build took 460 ms.",
+    "existingWarnings": "CommunityCommons deprecation, generated proxy unchecked operations and widget React warnings."
+  },
+  "exportInspection": {
+    "status": "passed",
+    "checks": "19 generated-page wiring assertions: four selection associations, exact age and audience summary in both directories, ReferenceSet multiselect metadata, and five age/audience editor fields.",
+    "scope": "Generated wiring only; no browser interaction or visual verification."
+  },
+  "runtimeStartup": {
+    "status": "passed",
+    "evidence": "mendix_app status: running=true, launching=false after final build."
+  },
+  "runtimeScenarios": {
+    "status": "not_executed",
+    "reason": "Saved localhost browser access restriction remains in force; no browser or alternate HTTP route used.",
+    "pending": [
+      "Dropdown layout, keyboard search, retaining a first selection while finding a second, chip removal and clearing",
+      "Age-group editing by club owner, delegated authorized staff and platform administrator",
+      "Current membership choice deduplication and closed/future offer exclusion",
+      "OR within selections, AND across filters on the same membership, inclusive exact-age boundaries and malformed age",
+      "Fresh sample generation, existing-batch upgrade, repeat idempotence, preservation, private ownership coverage and scoped cleanup"
+    ]
+  },
+  "developmentSamples": {
+    "version": "features:membership-directory-filters-v1",
+    "status": "implemented_and_compiled_not_generated",
+    "example": "Fictional Leuven club with Youth/Adults/Seniors, duplicate Competition fees, recreational tennis and closed/future offers.",
+    "ownership": "Only existing persistent allowlisted types and owning associations; every newly created record enters Seed.owned and the private manifest. Reused cities are not claimed. No new persistent type was added.",
+    "preservation": "Version marker adds the example once for fresh or existing batches; existing membership audience flags are not migrated or overwritten.",
+    "verifier": "Native source assertions added to fresh-generation and rollback-only lifecycle verification. They are not reported as passed."
+  }
+}

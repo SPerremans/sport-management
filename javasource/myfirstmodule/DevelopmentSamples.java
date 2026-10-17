@@ -25,6 +25,7 @@ public final class DevelopmentSamples {
     private static final String MEMBERSHIP_AUDIENCE_FEATURE = "features:membership-audience-v1";
     private static final String MULTI_AFFILIATION_FEATURE = "features:multi-affiliation-and-account-overview-v1";
     private static final String ACCOUNT_HISTORY_FEATURE = "features:account-details-and-audit-v1";
+    private static final String DIRECTORY_FILTER_FEATURE = "features:membership-directory-filters-v1";
     private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim", "MyFirstModule.AccountAudit"};
     private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
     private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
@@ -116,6 +117,7 @@ public final class DevelopmentSamples {
             verifyMultiAffiliation(ctx, owned);
             verifySampleAccounts(ctx, owned);
             verifyAccountHistory(ctx, owned);
+            verifyDiscoveryFilters(ctx, owned);
             removeIn(ctx);require(baseline.equals(ids(all(ctx))),"Sample cleanup changed pre-existing business records.");
             return "PASS: fresh generation, repeated generation, manifest coverage, scoped test administrators, disabled ordinary sample accounts and scoped cleanup (rolled back). "+(existing==null?"Existing-batch upgrade simulated by repeated extension.":"Existing-batch upgrade and preservation of all pre-existing primitive values verified.");
         } finally {ctx.rollbackTransaction();}
@@ -146,6 +148,7 @@ public final class DevelopmentSamples {
             verifyMembershipAudience(ctx, manifestOwned);
             verifyMultiAffiliation(ctx, manifestOwned);
             verifyAccountHistory(ctx, manifestOwned);
+            verifyDiscoveryFilters(ctx, manifestOwned);
             IMendixObject demoClub = query(ctx, "//MyFirstModule.Club").stream()
                 .filter(o -> manifestOwned.contains(o.getId().toLong())).findFirst().orElseThrow();
             IMendixObject extra = Core.instantiate(ctx, "MyFirstModule.ClubEvent");
@@ -588,7 +591,7 @@ public final class DevelopmentSamples {
             IMendixObject period = s.make("Season","Name",s.season,"StartsOn",s.date(-30),"EndsOn",s.date(130),"IsPublished",true);
             s.link(period,"Season_Club",club);
             IMendixObject type = s.make("MembershipType","Name","Competition player","Description","[DEMO] Club competition membership",
-                "Fee",s.fee(fee),"Currency","EUR","IsAvailable",true,"IsCompetitionPlayer",true);
+                "Fee",s.fee(fee),"Currency","EUR","IsAvailable",true,"IsCompetitionPlayer",true,"AudienceAdults",true);
             s.link(type,"MembershipType_Club",club); s.link(type,"MembershipType_FederationType",fedType);
             IMendixObject seasonFee = s.make("SeasonFee","Amount",s.fee(fee),"Currency","EUR","IsAvailable",true);
             s.link(seasonFee,"SeasonFee_Club",club); s.link(seasonFee,"SeasonFee_Season",period); s.link(seasonFee,"SeasonFee_MembershipType",type);
@@ -677,6 +680,7 @@ public final class DevelopmentSamples {
         extendDirectoryProfileSamples(ctx);
         extendMembershipAudienceSamples(ctx);
         extendMultiAffiliationSamples(ctx);
+        extendDiscoveryFilterSamples(ctx);
         IMendixObject manifest = batch(ctx);
         require(manifest != null, "Sample ownership manifest is missing.");
         String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
@@ -697,7 +701,8 @@ public final class DevelopmentSamples {
                 for (int option = 0; option < (i == 0 ? 4 : 1); option++) {
                     String title = option == 1 ? "Junior" : option == 2 ? "Closed option" : option == 3 ? "Future option" : "Adult";
                     IMendixObject type = s.make("MembershipType", "Name", title, "Description", "[DEMO] " + title + " badminton membership",
-                        "Fee", s.fee(option == 1 ? 60 : 95), "Currency", "EUR", "IsAvailable", option != 2);
+                        "Fee", s.fee(option == 1 ? 60 : 95), "Currency", "EUR", "IsAvailable", option != 2,
+                        "AudienceYouth", option == 1, "AudienceAdults", option != 1);
                     if (option == 3) { type.setValue(ctx, "AvailableFrom", s.date(14)); Core.commitWithoutEvents(ctx, type); }
                     s.link(type, "MembershipType_Club", club);
                     federateSampleMembership(ctx, s, club, type, "Badminton");
@@ -811,7 +816,8 @@ public final class DevelopmentSamples {
                 int maximumAge = i == 3 || (i == 0 && option == 0) ? 17 : 0;
                 IMendixObject type = s.make("MembershipType", "Name", competition ? "Competition" : "Recreational",
                     "Description", "[DEMO] " + p[4] + " registration", "Fee", s.fee(75), "Currency", "EUR", "IsAvailable", true,
-                    "IsCompetitionPlayer", competition, "MinimumAge", minimumAge, "MaximumAge", maximumAge);
+                    "IsCompetitionPlayer", competition, "MinimumAge", minimumAge, "MaximumAge", maximumAge,
+                    "AudienceYouth", minimumAge < 18, "AudienceAdults", maximumAge == 0 || maximumAge >= 18);
                 s.link(type, "MembershipType_Club", club);
                 federateSampleMembership(ctx, s, club, type, p[4]);
                 IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(75), "Currency", "EUR", "IsAvailable", true);
@@ -847,6 +853,7 @@ public final class DevelopmentSamples {
             IMendixObject type = s.make("MembershipType", "Name", names[i],
                 "Description", "[DEMO] Inclusive age range in years; available categories are summarized once per club.",
                 "IsCompetitionPlayer", i < 3, "MinimumAge", minimums[i], "MaximumAge", maximums[i],
+                "AudienceYouth", i == 0, "AudienceAdults", i >= 1 && i <= 3,
                 "IsAvailable", i != 4, "Fee", s.fee(i == 2 ? 65 : 90), "Currency", "EUR");
             if (i == 5) { type.setValue(ctx, "AvailableFrom", s.date(14)); Core.commitWithoutEvents(ctx, type); }
             s.link(type, "MembershipType_Club", club);
@@ -857,6 +864,109 @@ public final class DevelopmentSamples {
         owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
         manifest.setValue(ctx, "Summary", summary + " Fictional Gent club: repeated competition category/age range, recreational members, disjoint inclusive ages, closed and future options. " + MEMBERSHIP_AUDIENCE_FEATURE);
         Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** Append explicit discovery choices once; never migrate flags on user-edited older memberships. */
+    private static void extendDiscoveryFilterSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        require(manifest != null, "Sample ownership manifest is missing.");
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(DIRECTORY_FILTER_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds")); Seed s = new Seed(ctx);
+        IMendixObject club = s.make("Club", "Name", "[DEMO] Filter Rackets Leuven", "City", "Leuven",
+            "Address", "Voorbeeldlaan 64", "PostalCode", "3000",
+            "Description", "Fictional club for searchable membership filters; not a real contact address.",
+            "IsPublished", true, "LocationVerified", false, "RequiresApproval", true, "RequiresPayment", true);
+        IMendixObject city = first(ctx, "//MyFirstModule.ClubDirectoryCity[NormalizedName='leuven']");
+        if (city == null) city = s.make("ClubDirectoryCity", "Name", "Leuven", "NormalizedName", "leuven");
+        s.link(club, "Club_DirectoryCity", city);
+        IMendixObject season = s.make("Season", "Name", s.season, "StartsOn", s.date(-30), "EndsOn", s.date(130), "IsPublished", true);
+        s.link(season, "Season_Club", club);
+        String[] names = {"Youth competition", "Adult competition", "Senior competition", "Adult competition reduced", "Adult tennis recreation", "Closed youth padel", "Future senior table tennis"};
+        String[] sports = {"Badminton", "Badminton", "Badminton", "Badminton", "Tennis", "Padel", "Table tennis"};
+        int[] minimums = {6, 18, 60, 18, 18, 8, 55};
+        int[] maximums = {17, 59, 0, 59, 0, 17, 65};
+        for (int i = 0; i < names.length; i++) {
+            IMendixObject type = s.make("MembershipType", "Name", names[i], "Description", "[DEMO] Explicit audience and inclusive age limits",
+                "IsCompetitionPlayer", i < 4, "MinimumAge", minimums[i], "MaximumAge", maximums[i],
+                "AudienceYouth", i == 0 || i == 5, "AudienceAdults", i == 1 || i == 3 || i == 4,
+                "AudienceSeniors", i == 2 || i == 6, "IsAvailable", i != 5, "Fee", s.fee(i == 3 ? 65 : 90), "Currency", "EUR");
+            if (i == 6) { type.setValue(ctx, "AvailableFrom", s.date(14)); Core.commitWithoutEvents(ctx, type); }
+            s.link(type, "MembershipType_Club", club);
+            federateSampleMembership(ctx, s, club, type, sports[i]);
+            IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(i == 3 ? 65 : 90), "Currency", "EUR", "IsAvailable", true);
+            s.link(fee, "SeasonFee_Club", club); s.link(fee, "SeasonFee_Season", season); s.link(fee, "SeasonFee_MembershipType", type);
+        }
+        owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Explicit Youth/Adults/Seniors, age boundaries, duplicate competition fees, cross-sport and closed/future filter examples. " + DIRECTORY_FILTER_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** Execute native sources against new owned examples inside the caller's rollback-safe verification. */
+    private static void verifyDiscoveryFilters(IContext ctx, Set<Long> owned) throws Exception {
+        IMendixObject club = query(ctx, "//MyFirstModule.Club[Name='[DEMO] Filter Rackets Leuven']").stream()
+            .filter(o -> owned.contains(o.getId().toLong())).findFirst().orElseThrow();
+        Set<Long> before = ids(all(ctx));
+        IMendixObject search = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Search").execute(ctx);
+        search.setValue(ctx, "Name", club.getValue(ctx, "Name"));
+        List<IMendixObject> groups = discoveryChoices(ctx, search, "Ages");
+        List<String> labels = new ArrayList<>();
+        for (IMendixObject choice : groups) labels.add(choice.getValue(ctx, "Label"));
+        require(labels.equals(Arrays.asList("Youth", "Adults", "Seniors")), "Available audience choices/order disagree with memberships.");
+        for (String kind : new String[]{"Cities", "Sports", "Ages", "Levels"}) {
+            Set<String> unique = new HashSet<>();
+            for (IMendixObject choice : discoveryChoices(ctx, search, kind))
+                require(unique.add(Objects.toString(choice.getValue(ctx, "Label"), "").toLowerCase(Locale.ROOT)), "Duplicate filter choice: " + kind);
+        }
+        for (IMendixObject level : discoveryChoices(ctx, search, "Levels"))
+            require(Arrays.asList("Competition", "Recreational").contains(level.getValue(ctx, "Label")), "Combined/unspecified playing-level choice leaked into search.");
+        List<IMendixObject> offers = Core.microflowCall("MyFirstModule.DS_Club_Offers").withParam("Club", club).execute(ctx);
+        require(offers.size() == 5, "Closed/future memberships affected discovery offers.");
+        require(discoveryRows(ctx, search, club).size() == 1, "A club was duplicated by its membership offers.");
+        selectDiscovery(ctx, search, "Cities", "Leuven", "Gent");
+        selectDiscovery(ctx, search, "Ages", "Youth", "Adults"); search.setValue(ctx, "Age", "15");
+        require(discoveryRows(ctx, search, club).size() == 1, "Multiple city or audience selections were not alternatives.");
+        selectDiscovery(ctx, search, "Sports", "Tennis");
+        require(discoveryRows(ctx, search, club).isEmpty(), "Age matched a different sport's membership.");
+        search.setValue(ctx, "Age", "18");
+        require(discoveryRows(ctx, search, club).size() == 1, "Inclusive lower age bound failed.");
+        selectDiscovery(ctx, search, "Levels", "Competition");
+        require(discoveryRows(ctx, search, club).isEmpty(), "Level matched a different sport's membership.");
+        selectDiscovery(ctx, search, "Sports", "Badminton", "Tennis");
+        require(discoveryRows(ctx, search, club).size() == 1, "Multiple sports were not alternatives.");
+        selectDiscovery(ctx, search, "Ages", "Seniors"); search.setValue(ctx, "Age", "59");
+        require(discoveryRows(ctx, search, club).isEmpty(), "Audience matched another membership's age.");
+        search.setValue(ctx, "Age", "60");
+        require(discoveryRows(ctx, search, club).size() == 1, "Open-ended senior age bound failed.");
+        search.setValue(ctx, "Age", "abc");
+        require(discoveryRows(ctx, search, club).isEmpty(), "Malformed age was not rejected safely.");
+        for (String kind : new String[]{"Cities", "Sports", "Ages", "Levels"}) selectDiscovery(ctx, search, kind);
+        search.setValue(ctx, "Age", "17");
+        require(discoveryRows(ctx, search, club).size() == 1, "Inclusive upper age bound failed.");
+        search.setValue(ctx, "Age", "0");
+        require(discoveryRows(ctx, search, club).isEmpty(), "Age below every membership minimum was accepted.");
+        search.setValue(ctx, "Age", "");
+        require(discoveryRows(ctx, search, club).size() == 1, "Clearing filters failed to restore the club.");
+        require(before.equals(ids(all(ctx))), "Discovery sources persisted business records.");
+    }
+
+    private static List<IMendixObject> discoveryChoices(IContext ctx, IMendixObject search, String kind) {
+        return Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Choices").withParam("Search", search).withParam("Kind", kind).execute(ctx);
+    }
+
+    private static List<IMendixObject> discoveryRows(IContext ctx, IMendixObject search, IMendixObject club) {
+        List<IMendixObject> rows = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+        rows.removeIf(row -> !club.getId().equals(row.getValue(ctx, "MyFirstModule.ClubDiscoveryProfile_Club")));
+        return rows;
+    }
+
+    private static void selectDiscovery(IContext ctx, IMendixObject search, String kind, String... labels) {
+        List<IMendixIdentifier> selected = new ArrayList<>();
+        Set<String> wanted = new HashSet<>(Arrays.asList(labels));
+        for (IMendixObject choice : discoveryChoices(ctx, search, kind))
+            if (wanted.contains(choice.getValue(ctx, "Label"))) selected.add(choice.getId());
+        require(selected.size() == wanted.size(), "Requested sample filter choice is unavailable: " + kind);
+        search.setValue(ctx, "MyFirstModule.ClubDiscoverySearch_" + kind, selected);
     }
 
     /** Link only a newly generated membership to an owned federation, never infer or rewrite an older federation's sport. */
@@ -912,7 +1022,7 @@ public final class DevelopmentSamples {
             IMendixObject type = s.make("MembershipType", "Name", sports[i] + (i == 0 ? " competition" : " recreational"),
                 "Description", "[DEMO] " + (i == 2 ? "Unavailable draft awaiting federation approval" : i == 3 ? "Ended affiliation: excluded from offers" : "Approved federation membership"),
                 "IsCompetitionPlayer", i == 0, "MinimumAge", i == 0 ? 12 : 18, "MaximumAge", 0, "IsAvailable", i != 2,
-                "Fee", s.fee(95 + i * 10), "Currency", "EUR");
+                "Fee", s.fee(95 + i * 10), "Currency", "EUR", "AudienceYouth", i == 0, "AudienceAdults", i <= 1, "AudienceSeniors", i >= 2);
             s.link(type, "MembershipType_Club", club);
             IMendixObject affiliation = federateSampleMembership(ctx, s, club, type, sports[i]);
             if (i == 2) {
@@ -1034,7 +1144,7 @@ public final class DevelopmentSamples {
         };
         for (int i = 0; i < stages.length; i++) {
             String[] state = stages[i];
-            IMendixObject type = s.make("MembershipType", "Name", "[DEMO] Progress " + (i + 1), "Description", "Isolated registration status example", "IsAvailable", true, "Fee", s.fee(i == 3 ? 75 : 0), "Currency", "EUR");
+            IMendixObject type = s.make("MembershipType", "Name", "[DEMO] Progress " + (i + 1), "Description", "Isolated registration status example", "IsAvailable", true, "Fee", s.fee(i == 3 ? 75 : 0), "Currency", "EUR", "AudienceAdults", true);
             s.link(type, "MembershipType_Club", club);
             federateSampleMembership(ctx, s, club, type, "Badminton");
             IMendixObject fee = s.make("SeasonFee", "Amount", s.fee(i == 3 ? 75 : 0), "Currency", "EUR", "IsAvailable", true);

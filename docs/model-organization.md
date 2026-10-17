@@ -19,11 +19,12 @@ Pages and workflows belong to the business feature they implement. The module ro
 | Development | Local administrator sample-data generation and removal |
 | Discovery | Club and player directories; read-only club audience projections derived from current membership offers |
 | Discovery/Configuration | Derived club age-group and playing-level filter choices |
+| Discovery/Filters | Searchable multiselect choices from current offers, exact-age filtering and transient search state; shared by both club directories |
 | Discovery/System | Derived city references: club save handler and idempotent startup backfill |
 | Federations | Federation details, affiliation, membership types and rates |
 | Federations/Affiliations | Affiliation request/approval/decline workflows and private concurrency claims |
 | Members | Member dashboard, membership editing, membership types, renewal pages and lifecycle workflows |
-| Members/Configuration | Membership age-range formatting and validation |
+| Members/Configuration | Membership age-range formatting and validation, and explicit Youth/Adults/Seniors audience summaries |
 | Registration | Registration forms, fields, overview, approval, waiting list, member withdrawal and season lookup |
 | Seasons | Season dates, fees, permissions and season selectors |
 | Team | Existing club team support |
