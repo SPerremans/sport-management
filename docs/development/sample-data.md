@@ -26,7 +26,7 @@ There are 52 disabled ordinary User accounts: 48 players and four applicants. Ei
 
 ## What to try
 
-1. **Players:** search `[DEMO] Player` or a sample club name. The directory shows active memberships in published clubs, one result per person and club.
+1. **Players:** search `[DEMO] Player` or a sample club name. The directory shows active memberships in published, affiliated clubs whose membership type links to a federation type published in the player list (the demo competition types), one result per person and club. Open a sample club workspace's **Player list access** tab to see the competition-player and names-only rules, and the **Players** tab for the club's list.
 2. **Club administration:** a platform administrator can open every club workspace. Inspect registrations, member types, season fees and form answers. Existing club owners/staff retain their scoped permissions.
 3. **Competitions → My federations:** open the sample federation, then **[DEMO] Ready to schedule**. Eight teams (two per club) are registered. Allocate two poules of four, generate double round-robin fixtures, plan and publish.
 4. **Competitions → My clubs:** each sample club has a third team available to register in **[DEMO] Open registration**, which uses single round-robin.

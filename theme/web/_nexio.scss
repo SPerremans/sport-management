@@ -203,6 +203,14 @@ section p {
 section > .btn, section > .mx-button {
   margin: 0 10px 10px 0;
 }
+/* Minimum spacing between neighbouring buttons anywhere; flex containers below already use gap. */
+.mx-button + .mx-button, .btn + .btn,
+.mx-button + .btn, .btn + .mx-button {
+  margin-left: 8px;
+}
+:where(.mx-dataview-footer, .nexio-table-actions, .nav-tabs, .nexio-page-actions, .nexio-tab-toolbar) > :is(.mx-button, .btn) + :is(.mx-button, .btn) {
+  margin-left: 0;
+}
 .btn-primary {
   background: var(--brand-primary);
   color: var(--nexio-surface);
@@ -504,4 +512,18 @@ section > .btn, section > .mx-button {
 }
 .nexio-permission-row input[type="checkbox"] {
   accent-color: #1264c4;
+}
+
+/* Record workspace header: name, one muted meta line, then quiet record-level actions.
+   Tab-specific actions live in a toolbar at the top of their own tab, so only one bar sits above the tabs. */
+.layout-atlas .nexio-page-heading { margin: 0 0 4px; font-size: 22px; font-weight: 600; color: var(--nexio-navy); }
+.layout-atlas .nexio-page-meta { margin: 0 0 4px; font-size: 14px; color: var(--nexio-muted); max-width: 72ch; }
+.nexio-page-actions, .nexio-tab-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+.nexio-page-actions { margin: 12px 0 20px; }
+.nexio-tab-toolbar { margin: 0 0 12px; }
+.nexio-page-actions :is(.btn, .mx-button),
+.nexio-tab-toolbar :is(.btn, .mx-button) {
+  min-height: 36px; padding: 7px 14px; border-radius: 8px; font-size: 14px; margin: 0;
 }

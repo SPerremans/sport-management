@@ -11,6 +11,8 @@ Pages and workflows belong to the business feature they implement. The module ro
 | Clubs | Club details and workspaces; Administration contains club roles and staff assignments |
 | Clubs/Affiliations | Club-facing federation affiliation requests, statuses and withdrawal |
 | Competition | Competition, league, team, venue, registration, scheduling and fixture management |
+| Competition/Fixtures | Fixture generation and the fixture detail page with date change, placement and match registration actions |
+| Competition/FixtureChanges | Fixture date proposals: propose, slot selection, home/away approval, rejection and the proposal review page |
 | Competition/Results | Dynamic match registration: formats, slots, division assignment, lineups, scores, eligibility, official assignment, approvals and rulings; includes the Match pages and JA_MatchRegistration |
 | Competition/Results/Configuration | Match configuration enumerations |
 | Competition/Results/System | Private startup and acceptance-expiry workflows |
@@ -24,8 +26,9 @@ Pages and workflows belong to the business feature they implement. The module ro
 | Federations | Federation details, affiliation, membership types and rates |
 | Federations/Affiliations | Affiliation request/approval/decline workflows and private concurrency claims |
 | Members | Member dashboard, membership editing, membership types, renewal pages and lifecycle workflows |
+| Members/PlayerLists | Club-managed internal player lists: access rules, rule editor, rule option sources, and the server-built player list view |
 | Members/Configuration | Membership age-range formatting and validation, and explicit Youth/Adults/Seniors audience summaries |
-| Registration | Registration forms, fields, overview, approval, waiting list, member withdrawal and season lookup |
+| Registration | Registration forms, fields, overview, staff review and approval, waiting list, member withdrawal and season lookup |
 | Seasons | Season dates, fees, permissions and season selectors |
 | Team | Existing club team support |
 | Enumerations | Existing shared enumerations; new feature-specific enumerations should stay with their feature |

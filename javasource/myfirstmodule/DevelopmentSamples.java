@@ -20,6 +20,8 @@ public final class DevelopmentSamples {
     private static final String TEST_ADMIN_FEATURE = "features:organization-test-admins-v1";
     private static final String TEST_ADMIN_PASSWORD = "TestAccount123!";
     private static final String USER_VIEW_FEATURE = "features:administrator-user-view-v1";
+    private static final String NEWS_HTML_FEATURE = "features:member-news-html-view-v1";
+    private static final String PLAYER_LIST_FEATURE = "features:federation-player-lists-v1";
     private static final String DIRECTORY_PROFILE_FEATURE = "features:club-directory-profiles-v2";
     private static final String REGISTRATION_PROGRESS_FEATURE = "features:member-registration-progress-v1";
     private static final String MEMBERSHIP_AUDIENCE_FEATURE = "features:membership-audience-v1";
@@ -28,7 +30,7 @@ public final class DevelopmentSamples {
     private static final String DIRECTORY_FILTER_FEATURE = "features:membership-directory-filters-v1";
     private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim", "MyFirstModule.AccountAudit"};
     private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
-    private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
+    private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.InvoicePdf","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.PlayerListRule","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
     private static final Map<String, String[]> EDGES = new LinkedHashMap<>();
     static {
         EDGES.put("MyFirstModule.MatchFormat", new String[]{"MyFirstModule.MatchFormat_Federation"});
@@ -40,8 +42,10 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.MatchAudit", new String[]{"MyFirstModule.MatchAudit_Registration", "MyFirstModule.MatchAudit_Federation", "MyFirstModule.MatchAudit_League"});
         EDGES.put("MyFirstModule.MatchEligibility", new String[]{"MyFirstModule.MatchEligibility_Federation", "MyFirstModule.MatchEligibility_Player"});
         EDGES.put("MyFirstModule.PaymentVerification", new String[]{"MyFirstModule.PaymentVerification_Invoice"});
+        EDGES.put("MyFirstModule.InvoicePdf", new String[]{"MyFirstModule.InvoicePdf_Invoice"});
         EDGES.put("MyFirstModule.Invoice", new String[]{"MyFirstModule.Invoice_RegistrationRequest","MyFirstModule.Invoice_Membership","MyFirstModule.Invoice_Club","MyFirstModule.Invoice_RenewalOffer","MyFirstModule.Invoice_RecipientClub","MyFirstModule.Invoice_Federation","MyFirstModule.Invoice_BillingPlan","MyFirstModule.Invoice_Person"});
         EDGES.put("MyFirstModule.NewsItem", new String[]{"MyFirstModule.NewsItem_Club"});
+        EDGES.put("MyFirstModule.PlayerListRule", new String[]{"MyFirstModule.PlayerListRule_Club","MyFirstModule.PlayerListRule_ViewerType","MyFirstModule.PlayerListRule_ViewerRole","MyFirstModule.PlayerListRule_VisibleType"});
         EDGES.put("MyFirstModule.ClubEvent", new String[]{"MyFirstModule.ClubEvent_Club"});
         EDGES.put("MyFirstModule.FormResponse", new String[]{"MyFirstModule.FormResponse_FormField","MyFirstModule.FormResponse_RegistrationRequest"});
         EDGES.put("MyFirstModule.FormField", new String[]{"MyFirstModule.FormField_Club"});
@@ -745,6 +749,60 @@ public final class DevelopmentSamples {
         extendUserViewExamples(ctx);
         extendRegistrationProgressSamples(ctx);
         extendAccountHistorySamples(ctx);
+        extendNewsHtmlSamples(ctx);
+        extendPlayerListSamples(ctx);
+    }
+
+    /** Publish competition federation types in the public player list and add club player list rules once. */
+    private static void extendPlayerListSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(PLAYER_LIST_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds")); Seed s = new Seed(ctx);
+        for (IMendixObject type : query(ctx, "//MyFirstModule.FederationType[contains(Name,'Competition')]")) {
+            if (!owned.contains(type.getId().toLong())) continue;
+            type.setValue(ctx, "ShowInPublicPlayerList", true); Core.commitWithoutEvents(ctx, type);
+        }
+        for (IMendixObject club : query(ctx, "//MyFirstModule.Club")) {
+            if (!owned.contains(club.getId().toLong())) continue;
+            IMendixObject competition = first(ctx, "//MyFirstModule.MembershipType[IsCompetitionPlayer = true()][MyFirstModule.MembershipType_Club=" + s.id(club) + "]");
+            if (competition == null || !owned.contains(competition.getId().toLong())) continue;
+            // Competition players see each other's names, membership type and team, but not email.
+            IMendixObject teammates = s.make("PlayerListRule", "ShowMembershipType", true, "ShowTeam", true);
+            s.link(teammates, "PlayerListRule_Club", club); s.link(teammates, "PlayerListRule_ViewerType", competition);
+            s.link(teammates, "PlayerListRule_VisibleType", competition);
+            IMendixObject recreational = first(ctx, "//MyFirstModule.MembershipType[IsCompetitionPlayer = false()][MyFirstModule.MembershipType_Club=" + s.id(club) + "]");
+            if (recreational == null || !owned.contains(recreational.getId().toLong())) continue;
+            // Recreational members only see competition player names.
+            IMendixObject namesOnly = s.make("PlayerListRule");
+            s.link(namesOnly, "PlayerListRule_Club", club); s.link(namesOnly, "PlayerListRule_ViewerType", recreational);
+            s.link(namesOnly, "PlayerListRule_VisibleType", competition);
+        }
+        owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Federation-published competition player list and club player list rules. " + PLAYER_LIST_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** Add one formatted HTML announcement per sample club with news, leaving existing (possibly edited) news untouched. */
+    private static void extendNewsHtmlSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);
+        String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");
+        if(summary.contains(NEWS_HTML_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds")); Seed s=new Seed(ctx);
+        for(IMendixObject club:query(ctx,"//MyFirstModule.Club")) {
+            if(!owned.contains(club.getId().toLong()))continue;
+            IMendixObject existing=first(ctx,"//MyFirstModule.NewsItem[MyFirstModule.NewsItem_Club="+s.id(club)+"]");
+            if(existing==null || !owned.contains(existing.getId().toLong()))continue;
+            IMendixObject news=s.make("NewsItem","Title","[DEMO] Training schedule update",
+                "Body","<p>From next week the <strong>Tuesday training</strong> starts at <em>19:30</em>.</p>"
+                    +"<ul><li>Juniors: 18:00 - 19:30</li><li>Adults: 19:30 - 21:30</li></ul>"
+                    +"<p>This is a fictional announcement for trying the news view.</p>",
+                "PublishedAt",s.date(-2),"IsImportant",true,"IsPublished",true);
+            s.link(news,"NewsItem_Club",club);
+        }
+        owned.addAll(ids(s.owned));manifest.setValue(ctx,"OwnedIds",encode(owned));
+        manifest.setValue(ctx,"Summary",summary+" Formatted HTML important news for the member news view. "+NEWS_HTML_FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
     }
 
     /** Append history examples once, including safe test targets and disabled-account detail views. */
@@ -970,7 +1028,7 @@ public final class DevelopmentSamples {
 
     /** Check the entire result set, including unrelated published rows; presence-only checks miss stale extra cities. */
     private static void verifyDiscoveryCityTransitions(IContext ctx, IMendixObject search) {
-        List<IMendixObject> baseline = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+        List<IMendixObject> baseline = discoveryResults(ctx, search);
         for (String[] cities : new String[][]{{"Mechelen"}, {"Mechelen", "Gent"}, {"Mechelen"}, {}}) {
             selectDiscovery(ctx, search, "Cities", cities);
             Core.microflowCall("MyFirstModule.OCH_ClubDiscovery_Refresh").withParam("Search", search).execute(ctx);
@@ -981,7 +1039,7 @@ public final class DevelopmentSamples {
                 String city = Objects.toString(row.getValue(ctx, "City"), "").trim().toLowerCase(Locale.ROOT);
                 if (wanted.isEmpty() || wanted.contains(city)) expected.add(row.getId().toLong());
             }
-            List<IMendixObject> actual = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+            List<IMendixObject> actual = discoveryResults(ctx, search);
             require(expected.equals(ids(actual)) && actual.size() == expected.size(),
                 "City selection retained stale/extra rows after refresh: " + Arrays.toString(cities));
             Collection<IMendixIdentifier> selected = search.getValue(ctx, "MyFirstModule.ClubDiscoverySearch_Cities");
@@ -991,7 +1049,7 @@ public final class DevelopmentSamples {
 
     /** Exercise two selections, one selection, and no selection for every dropdown. */
     private static void verifyDiscoveryEmptySelections(IContext ctx, IMendixObject search) {
-        List<IMendixObject> baseline = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+        List<IMendixObject> baseline = discoveryResults(ctx, search);
         for (String kind : new String[]{"Cities", "Sports", "Ages", "Levels"}) {
             List<IMendixObject> choices = discoveryChoices(ctx, search, kind);
             require(choices.size() >= 2, "Sample dropdown needs two choices: " + kind);
@@ -1009,14 +1067,20 @@ public final class DevelopmentSamples {
                 require((selected == null ? 0 : selected.size()) == values.length,
                     "Reading options restored a removed dropdown value: " + kind);
             }
-            List<IMendixObject> restored = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+            List<IMendixObject> restored = discoveryResults(ctx, search);
             require(ids(restored).equals(ids(baseline)) && restored.size() == baseline.size(),
                 "Clearing the final dropdown value did not restore unfiltered results: " + kind);
         }
     }
 
-    private static List<IMendixObject> discoveryRows(IContext ctx, IMendixObject search, IMendixObject club) {
+    /** The data source returns empty (null) for rejected input such as an invalid age; treat that as no rows. */
+    private static List<IMendixObject> discoveryResults(IContext ctx, IMendixObject search) {
         List<IMendixObject> rows = Core.microflowCall("MyFirstModule.DS_ClubDiscovery_Results").withParam("Search", search).execute(ctx);
+        return rows == null ? new ArrayList<>() : new ArrayList<>(rows);
+    }
+
+    private static List<IMendixObject> discoveryRows(IContext ctx, IMendixObject search, IMendixObject club) {
+        List<IMendixObject> rows = discoveryResults(ctx, search);
         rows.removeIf(row -> !club.getId().equals(row.getValue(ctx, "MyFirstModule.ClubDiscoveryProfile_Club")));
         return rows;
     }

@@ -1,6 +1,6 @@
 {
   "date": "2026-10-15",
-  "pages": 34,
+  "pages": 35,
   "component": "Mendix Data Grid 2",
   "tables": [
     {
@@ -409,13 +409,12 @@
         "Next action",
         "Season",
         "Fee adjustment reason",
-        "Actions",
-        "Details"
+        "Actions"
       ],
       "searchFields": []
     },
     {
-      "page": "Club_Workspace",
+      "page": "Registration_Review",
       "table": "answers",
       "columns": [
         "Name",

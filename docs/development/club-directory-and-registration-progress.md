@@ -28,7 +28,7 @@ The four selection reference sets are owned only by `ClubDiscoverySearch` (`owne
 
 ## Member dashboard
 
-Tabs: Important news, Upcoming events, My registrations, Invoices, Find a club. The former My clubs table is now under My registrations as Other memberships, limited to memberships that have no corresponding registration request. This retains imported/direct membership records without repeating a membership already represented by a request.
+Tabs: Important news, Upcoming events, My registrations, Invoices, Find a club. The Important news table shows Club, Title and Published At with a View action; the body is stored as HTML and rendered (sanitized) only in the `Content/NewsItem_View` popup. Sample generation adds one formatted HTML announcement per sample club (`features:member-news-html-view-v1`). The former My clubs table is now under My registrations as Other memberships, limited to memberships that have no corresponding registration request. This retains imported/direct membership records without repeating a membership already represented by a request.
 
 Registration columns are Club, Membership, Season, Status, Payment, Next action and Actions. `DS_Member_Registrations` retrieves only the current user's requests and orders them as drafts, awaiting approval, waiting list, awaiting payment, active, and closed history; newest submitted requests come first within each group. The data source performs no writes or client refreshes.
 
