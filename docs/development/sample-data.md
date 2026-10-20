@@ -33,7 +33,8 @@ There are 52 disabled ordinary User accounts: 48 players and four applicants. Ei
 5. **Venue planning:** each club has 13 weeks of two evening availability windows per week, capacity two, daily hosting limit three and concurrent limit two.
 6. **Seasons:** the default view should contain two rows (current and next). **All seasons and history** also contains a previous season and a later draft. Earlier season dates and fees remain read-only for club staff; the platform administrator can edit them. Overlapping dates, including unpublished dates, are rejected.
 7. **Team and roles:** open the sample Secretary or Competition coordinator to inspect a populated CRUD matrix and its staff assignment. Disabled staff accounts cannot sign in; these are development records, not shared test credentials.
-8. Delete the sample batch using **Remove sample data** when finished. Do not use sample invoices for real payments.
+8. **Invoice PDF:** open one of the open **[DEMO]** member invoices (the two linked to the account that generated the batch appear under that member's invoices; sample club administrators reach their club's invoices through **Manage invoice**) and click **View as PDF**. The PDF opens in the browser with the issuer, recipient, one line and the total. The line description contains a dash and curly quotes on purpose; the PDF shows them as plain `-` and `"`. PDFs are not part of the generated batch: each viewing user gets their own `InvoicePdf`, readable only by them, and clicking again replaces it, so there is at most one per user and invoice. **Remove sample data** also removes PDFs of sample invoices.
+9. Delete the sample batch using **Remove sample data** when finished. Do not use sample invoices for real payments.
 
 ## Implementation and validation
 

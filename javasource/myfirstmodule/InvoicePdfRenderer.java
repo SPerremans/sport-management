@@ -29,19 +29,24 @@ public final class InvoicePdfRenderer {
 
     private InvoicePdfRenderer() {}
 
-    /** Replace this user's earlier PDF for the invoice, so repeated views do not accumulate files. */
+    /**
+     * Replace this user's earlier PDF for the invoice, so repeated views do not accumulate files.
+     * Invoice lines are read with the caller's own access rights. The file itself is created through a sudo clone of the
+     * same session, so it is owned by the current user while no client role needs create, write or delete rights on it.
+     */
     public static IMendixObject generate(IContext ctx, IMendixObject invoice) throws Exception {
         if (invoice == null) throw new IllegalArgumentException("No invoice to render.");
         long invoiceId = invoice.getId().toLong();
-        List<IMendixObject> previous = Core.createXPathQuery("//" + PDF + "[" + PDF_INVOICE + "=" + invoiceId + "][System.owner='[%CurrentUser%]']").execute(ctx);
-        if (!previous.isEmpty()) Core.delete(ctx, previous);
         List<IMendixObject> lines = Core.createXPathQuery("//MyFirstModule.InvoiceLine[MyFirstModule.InvoiceLine_Invoice=" + invoiceId + "]").execute(ctx);
         byte[] bytes = render(ctx, invoice, lines);
-        IMendixObject pdf = Core.instantiate(ctx, PDF);
-        pdf.setValue(ctx, PDF_INVOICE, invoice.getId());
+        IContext files = ctx.createSudoClone();
+        List<IMendixObject> previous = Core.createXPathQuery("//" + PDF + "[" + PDF_INVOICE + "=" + invoiceId + "][System.owner='[%CurrentUser%]']").execute(files);
+        if (!previous.isEmpty()) Core.delete(files, previous);
+        IMendixObject pdf = Core.instantiate(files, PDF);
+        pdf.setValue(files, PDF_INVOICE, invoice.getId());
         String number = text(ctx, invoice, "Number");
         String fileName = "Invoice-" + (number.isEmpty() ? String.valueOf(invoiceId) : number.replaceAll("[^A-Za-z0-9._-]", "_")) + ".pdf";
-        Core.storeFileDocumentContent(ctx, pdf, fileName, new ByteArrayInputStream(bytes));
+        Core.storeFileDocumentContent(files, pdf, fileName, new ByteArrayInputStream(bytes));
         return pdf;
     }
 
@@ -150,12 +155,33 @@ public final class InvoicePdfRenderer {
         rows.add(row.toString());
         return rows;
     }
-    /** Standard PDF fonts only encode WinAnsi; replace anything else instead of failing the download. */
+    /**
+     * Standard PDF fonts only encode WinAnsi. Common typographic punctuation is mapped to plain ASCII and every other
+     * character the font cannot encode (including C1 controls 127-159) becomes '?', instead of failing the download.
+     */
     private static String safe(String value) {
         if (value == null) return "";
         StringBuilder out = new StringBuilder();
-        for (char c : value.replace('\t', ' ').toCharArray()) out.append(c >= 32 && c <= 255 || c == '€' ? c : '?');
+        for (char c : value.toCharArray()) {
+            switch (c) {
+                case '\t': out.append(' '); break;
+                case '–': case '—': case '−': out.append('-'); break;
+                case '‘': case '’': case '‚': case '′': out.append('\''); break;
+                case '“': case '”': case '„': case '″': out.append('"'); break;
+                case '…': out.append("..."); break;
+                default: out.append(encodable(c) ? c : '?');
+            }
+        }
         return out.toString();
+    }
+    private static boolean encodable(char c) {
+        if (c < 32 || c >= 127 && c < 160 || Character.isSurrogate(c)) return false;
+        try {
+            REGULAR.encode(String.valueOf(c));
+            return true;
+        } catch (IllegalArgumentException | java.io.IOException e) {
+            return false;
+        }
     }
     private static String text(IContext ctx, IMendixObject obj, String member) {
         return Objects.toString(obj.getValue(ctx, member), "").trim();
