@@ -12,9 +12,9 @@ package myfirstmodule.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.UserAction;
 
-public class Java_action extends UserAction<java.lang.Void>
+public class JA_DevelopmentSamples_Remove extends UserAction<java.lang.Void>
 {
-	public Java_action(IContext context)
+	public JA_DevelopmentSamples_Remove(IContext context)
 	{
 		super(context);
 	}
@@ -23,7 +23,7 @@ public class Java_action extends UserAction<java.lang.Void>
 	public java.lang.Void executeAction() throws Exception
 	{
 		// BEGIN USER CODE
-        myfirstmodule.DevelopmentSamples.generate(getContext());
+        myfirstmodule.DevelopmentSamples.remove(getContext());
         return null;
 		// END USER CODE
 	}
@@ -35,7 +35,7 @@ public class Java_action extends UserAction<java.lang.Void>
 	@java.lang.Override
 	public java.lang.String toString()
 	{
-		return "Java_action";
+		return "JA_DevelopmentSamples_Remove";
 	}
 
 	// BEGIN EXTRA CODE

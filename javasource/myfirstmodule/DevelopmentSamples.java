@@ -28,6 +28,7 @@ public final class DevelopmentSamples {
     private static final String MULTI_AFFILIATION_FEATURE = "features:multi-affiliation-and-account-overview-v1";
     private static final String ACCOUNT_HISTORY_FEATURE = "features:account-details-and-audit-v1";
     private static final String DIRECTORY_FILTER_FEATURE = "features:membership-directory-filters-v1";
+    private static final String INVOICE_PDF_FEATURE = "features:invoice-pdf-lines-v1";
     private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim", "MyFirstModule.AccountAudit"};
     private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
     private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.InvoicePdf","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.PlayerListRule","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
@@ -751,6 +752,7 @@ public final class DevelopmentSamples {
         extendAccountHistorySamples(ctx);
         extendNewsHtmlSamples(ctx);
         extendPlayerListSamples(ctx);
+        extendInvoicePdfSamples(ctx);
     }
 
     /** Publish competition federation types in the public player list and add club player list rules once. */
@@ -781,6 +783,30 @@ public final class DevelopmentSamples {
         owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
         manifest.setValue(ctx, "Summary", summary + " Federation-published competition player list and club player list rules. " + PLAYER_LIST_FEATURE);
         Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /**
+     * Give each open sample member invoice one line, so View as PDF shows a line table and total.
+     * The description contains a dash and curly quotes to exercise the PDF text cleanup. Invoices that already have lines,
+     * including demo invoices someone has extended by hand, are left alone. PDFs themselves are created on demand.
+     */
+    private static void extendInvoicePdfSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);
+        String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");
+        if(summary.contains(INVOICE_PDF_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds")); Seed s=new Seed(ctx);
+        for(IMendixObject invoice:query(ctx,"//MyFirstModule.Invoice[Status='Open'][Kind='Member']")) {
+            if(!owned.contains(invoice.getId().toLong()))continue;
+            if(first(ctx,"//MyFirstModule.InvoiceLine[MyFirstModule.InvoiceLine_Invoice="+s.id(invoice)+"]")!=null)continue;
+            Object amount=invoice.getValue(ctx,"Amount");
+            IMendixObject line=s.make("InvoiceLine","Description","[DEMO] Season membership – “competition” player",
+                "MemberName",invoice.getValue(ctx,"RecipientName"),"Quantity",BigDecimal.ONE,
+                "UnitPrice",amount,"Amount",amount);
+            s.link(line,"InvoiceLine_Invoice",invoice);
+        }
+        owned.addAll(ids(s.owned));manifest.setValue(ctx,"OwnedIds",encode(owned));
+        manifest.setValue(ctx,"Summary",summary+" Invoice lines on open sample member invoices for View as PDF. "+INVOICE_PDF_FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
     }
 
     /** Add one formatted HTML announcement per sample club with news, leaving existing (possibly edited) news untouched. */

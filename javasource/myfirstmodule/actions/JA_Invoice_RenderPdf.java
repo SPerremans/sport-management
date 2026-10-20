@@ -10,21 +10,31 @@
 package myfirstmodule.actions;
 
 import com.mendix.systemwideinterfaces.core.IContext;
+import com.mendix.systemwideinterfaces.core.IMendixObject;
 import com.mendix.systemwideinterfaces.core.UserAction;
 
-public class Java_action_2 extends UserAction<java.lang.Void>
+public class JA_Invoice_RenderPdf extends UserAction<IMendixObject>
 {
-	public Java_action_2(IContext context)
+	/** @deprecated use Invoice.getMendixObject() instead. */
+	@java.lang.Deprecated(forRemoval = true)
+	private final IMendixObject __Invoice;
+	private final myfirstmodule.proxies.Invoice Invoice;
+
+	public JA_Invoice_RenderPdf(
+		IContext context,
+		IMendixObject _invoice
+	)
 	{
 		super(context);
+		this.__Invoice = _invoice;
+		this.Invoice = _invoice == null ? null : myfirstmodule.proxies.Invoice.initialize(getContext(), _invoice);
 	}
 
 	@java.lang.Override
-	public java.lang.Void executeAction() throws Exception
+	public IMendixObject executeAction() throws Exception
 	{
 		// BEGIN USER CODE
-        myfirstmodule.DevelopmentSamples.remove(getContext());
-        return null;
+		return myfirstmodule.InvoicePdfRenderer.generate(getContext(), Invoice == null ? null : Invoice.getMendixObject());
 		// END USER CODE
 	}
 
@@ -35,7 +45,7 @@ public class Java_action_2 extends UserAction<java.lang.Void>
 	@java.lang.Override
 	public java.lang.String toString()
 	{
-		return "Java_action_2";
+		return "JA_Invoice_RenderPdf";
 	}
 
 	// BEGIN EXTRA CODE
