@@ -86,6 +86,11 @@
 }
 .mx-datagrid .mx-datagrid-body-table td,
 .widget-datagrid .td { padding: 9px 12px; border-color: var(--nexio-line); }
+/* Long unbroken values (emails, usernames) wrap inside their own column instead of overlapping the next one. */
+.widget-datagrid .td { min-width: 0; }
+.widget-datagrid .td,
+.widget-datagrid .td .mx-text,
+.widget-datagrid .td .td-text { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
 .widget-datagrid .tr:nth-child(even) > .td, .mx-datagrid tbody tr:nth-child(even) { background: var(--nexio-light); }
 .widget-datagrid .column-header { padding: 0; margin: 0; color: var(--nexio-navy); font-size: 13px; }
 .nexio-data-table {
@@ -241,6 +246,9 @@
 .nexio-membership-audience { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-bottom: 16px; }
 .nexio-membership-audience .form-group { margin: 0; }
 .nexio-membership-audience label { font-size: 14px; }
+/* Four-filter variant of the shared filter bar (e.g. application accounts). */
+.nexio-discovery-filters.nexio-discovery-filters-4 { grid-template-columns: repeat(4, minmax(160px, 1fr)); }
 @media (max-width: 1300px) { .nexio-discovery-filters { grid-template-columns: repeat(3, minmax(160px, 1fr)); } }
+@media (max-width: 1000px) { .nexio-discovery-filters.nexio-discovery-filters-4 { grid-template-columns: repeat(2, minmax(160px, 1fr)); } }
 @media (max-width: 767px) { .nexio-discovery-filters { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
-@media (max-width: 480px) { .nexio-discovery-filters { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 480px) { .nexio-discovery-filters, .nexio-discovery-filters.nexio-discovery-filters-4 { grid-template-columns: minmax(0, 1fr); } }
