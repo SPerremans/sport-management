@@ -11,12 +11,17 @@ public final class MatchRegistrationBridge {
     private MatchRegistrationBridge() {}
 
     public static void dispatch(IContext context, String command) throws Exception {
+        if (command != null && command.startsWith("Table|")) {
+            TableLifecycleService.dispatch(context, command);
+            return;
+        }
         if ("Initialize".equals(command)) {
             if (!context.isSudo()) throw new SecurityException("Private startup action.");
             AdminUserView.initialize();
             synchronized (MatchRegistrationBridge.class) {
                 if (!expiryScheduled) {
                     Core.scheduleAtFixedRate("MyFirstModule.SE_Match_AcceptanceExpiry",new Date(System.currentTimeMillis()+60000),1,java.util.concurrent.TimeUnit.MINUTES,"MatchAcceptanceExpiry","Accept undisputed submitted results after federation-configured deadlines");
+                    Core.scheduleAtFixedRate("MyFirstModule.SE_TableRetention_Purge",new Date(System.currentTimeMillis()+300000),24,java.util.concurrent.TimeUnit.HOURS,"TableRetentionPurge","Delete eligible archived records only when their global and organisation policies explicitly enable it");
                     expiryScheduled=true;
                 }
             }

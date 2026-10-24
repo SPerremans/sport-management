@@ -1,0 +1,54 @@
+{
+  "sha256": "919a1ad89f1ab9660b3fcc6df1dd4c988b2ef9912bc9fda8cb6b4c7963b381aa",
+  "capturedOn": "2026-10-24",
+  "sources": [
+    {
+      "name": "Victor League 2026-2027",
+      "clubs": 44,
+      "teams": 16,
+      "draws": 6,
+      "fixtures": 56,
+      "detailedResults": 24
+    },
+    {
+      "name": "Vlaamse interclubcompetitie 2026-2027",
+      "clubs": 66,
+      "teams": 150,
+      "draws": 22,
+      "fixtures": 884,
+      "detailedResults": 205
+    },
+    {
+      "name": "PBA competitie 2026-2027",
+      "clubs": 41,
+      "teams": 204,
+      "draws": 31,
+      "fixtures": 1148,
+      "detailedResults": 222
+    },
+    {
+      "name": "VVBBC interclubcompetitie 2026-2027",
+      "clubs": 29,
+      "teams": 128,
+      "draws": 20,
+      "fixtures": 702,
+      "detailedResults": 170
+    },
+    {
+      "name": "Jupiler Pro League",
+      "clubs": 18,
+      "teams": 18,
+      "draws": 1,
+      "fixtures": 342,
+      "detailedResults": 0
+    },
+    {
+      "name": "Challenger Pro League",
+      "clubs": 15,
+      "teams": 15,
+      "draws": 1,
+      "fixtures": 210,
+      "detailedResults": 0
+    }
+  ]
+}

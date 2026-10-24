@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-24",
+  "modelConsistency": {
+    "result": "No errors found.",
+    "scope": "global and all seven changed pages",
+    "newDocumentFoldersVerified": [
+      "Competition/Results",
+      "Competition/Fixtures"
+    ]
+  },
+  "compilation": {
+    "java": "Java 21 compilation passed for standings rules, match service, sample generator, source importer and standalone checks",
+    "fullApplication": "BUILD SUCCESSFUL in 5s",
+    "log": "deployment/log/build_clean-custom-classes_compile_package_gradle_log.txt",
+    "deployedSourceSha256": "919a1ad89f1ab9660b3fcc6df1dd4c988b2ef9912bc9fda8cb6b4c7963b381aa",
+    "deployedResourceMatches": true
+  },
+  "standaloneVerification": {
+    "test": "docs/competition/tests/CompetitionStandingsTest.java",
+    "passedAssertions": 127,
+    "screenshotReconciliation": "Exact eight-team order and all 88 numeric standings values",
+    "cases": [
+      "League points per fixture and per individual game",
+      "Draws, losses, negative loss points and adjustments",
+      "Only official same-poule fixtures count",
+      "Zero-played teams remain and ranks restart for each poule",
+      "Official winner overrides",
+      "Policy changes recompute a fresh table without mutating earlier projections",
+      "Unplayed, provisional, disputed, awarded, won and drawn calendar labels",
+      "Whole-number point validation and plain integer text, including zero and negative deductions"
+    ],
+    "sourceSnapshotChecks": "Passed independently: 3342 fixture memberships, 621 eight-game source sheets, 4968 game results, 10439 numeric set scores, 54 unplayed/awarded sheets, 12 completed-score retirement exceptions and 121 completed football results"
+  },
+  "runtime": {
+    "started": true,
+    "browserReached": "http://localhost:8080/index.html",
+    "authenticatedSessionAvailable": true,
+    "renderedStandingsAndCalendar": "Verified as platform administrator: all eight national teams and all 88 numeric values match the supplied screenshot; national and football calendars show score, named winner, draws and pending fixtures.",
+    "leagueSettingsPermissionAndSave": "Administrator settings rendered: national game breakdown + per-game 1/0/0; football no game breakdown + per-fixture 3/1/0. Save and other-role permission scenarios not executed.",
+    "directFootballScoreAndReview": "Source football fixture rendered direct home/away score inputs and no individual-game grid. Score save/submission/review not executed.",
+    "gameBreakdownVisibilityAndLineupPrivacy": "Verified national mixed fixture renders eight public games with participants, set scores and official winners. Football standings and fixture view hide game breakdown. Opposing private-lineup privacy scenarios not executed.",
+    "sampleGenerationUpgradeIdempotenceAndCleanup": "Existing-batch Generate sample data completed successfully. Its repeated extension pass checked record-ID idempotence. Fresh generation, edited-record lifecycle and scoped removal checks not executed.",
+    "limitation": "Role-specific saves, direct-score submission/review, fresh-generation lifecycle, edited-record preservation and scoped cleanup were not executed. Public source sheets retain display-only participants and show registration participant diagnostics; they are not linked to private member accounts.",
+    "wholeNumberDisplay": "Verified after final rebuild: both standings tables show integer competition points; league inputs and summary show 1/0/0; badminton fixture summary shows 7 / 1 and adjustment inputs show 0.",
+    "screenshots": [
+      "docs/competition/screenshots/whole-number-standings.png",
+      "docs/competition/screenshots/badminton-eight-games.png"
+    ]
+  }
+}

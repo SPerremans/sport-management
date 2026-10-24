@@ -16,6 +16,7 @@ public final class DevelopmentSamples {
     private static final String SEASON_ROLE_FEATURE = "features:season-roles-v2";
     private static final String MATCH_FEATURE = "features:match-registration-v1";
     private static final String MATCH_REVIEW_FEATURE = "features:match-review-v2";
+    private static final String LEAGUE_RESULTS_FEATURE = "features:league-standings-and-result-settings-v1";
     private static final String DISCOVERY_FEATURE = "features:belgian-club-discovery-v1";
     private static final String TEST_ADMIN_FEATURE = "features:organization-test-admins-v1";
     private static final String TEST_ADMIN_PASSWORD = "TestAccount123!";
@@ -29,11 +30,18 @@ public final class DevelopmentSamples {
     private static final String ACCOUNT_HISTORY_FEATURE = "features:account-details-and-audit-v1";
     private static final String DIRECTORY_FILTER_FEATURE = "features:membership-directory-filters-v1";
     private static final String INVOICE_PDF_FEATURE = "features:invoice-pdf-lines-v1";
+    private static final String FEDERATION_FIELDS_FEATURE = "features:federation-registration-fields-v1";
+    private static final String FEDERATION_CONVENTIONS_FEATURE = "features:federation-genders-team-categories-v1";
+    private static final String TABLE_RETENTION_FEATURE = "features:table-actions-and-retention-v1";
+    private static final String CHECKS_ROLE_FEATURE = "features:checks-role-examples-v1";
+    private static final String[] RETENTION_TYPES = {"MyFirstModule.RecordLifecycle", "MyFirstModule.TableRetentionPolicy"};
     private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim", "MyFirstModule.AccountAudit"};
     private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
-    private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.InvoicePdf","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.PlayerListRule","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
+    private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.InvoicePdf","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.PlayerListRule","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.TeamCategory","MyFirstModule.FederationGender","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
     private static final Map<String, String[]> EDGES = new LinkedHashMap<>();
     static {
+        EDGES.put("MyFirstModule.RecordLifecycle", new String[]{"MyFirstModule.RecordLifecycle_Club", "MyFirstModule.RecordLifecycle_Federation"});
+        EDGES.put("MyFirstModule.TableRetentionPolicy", new String[]{"MyFirstModule.TableRetentionPolicy_Club", "MyFirstModule.TableRetentionPolicy_Federation"});
         EDGES.put("MyFirstModule.MatchFormat", new String[]{"MyFirstModule.MatchFormat_Federation"});
         EDGES.put("MyFirstModule.MatchSlot", new String[]{"MyFirstModule.MatchSlot_Format", "MyFirstModule.MatchSlot_ScoringOverride"});
         EDGES.put("MyFirstModule.MatchRegistration", new String[]{"MyFirstModule.MatchRegistration_Fixture", "MyFirstModule.MatchRegistration_Format"});
@@ -49,7 +57,9 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.PlayerListRule", new String[]{"MyFirstModule.PlayerListRule_Club","MyFirstModule.PlayerListRule_ViewerType","MyFirstModule.PlayerListRule_ViewerRole","MyFirstModule.PlayerListRule_VisibleType"});
         EDGES.put("MyFirstModule.ClubEvent", new String[]{"MyFirstModule.ClubEvent_Club"});
         EDGES.put("MyFirstModule.FormResponse", new String[]{"MyFirstModule.FormResponse_FormField","MyFirstModule.FormResponse_RegistrationRequest"});
-        EDGES.put("MyFirstModule.FormField", new String[]{"MyFirstModule.FormField_Club"});
+        // FormField_FederationFields is deliberately not an edge: a real club question that covers a sample federation field
+        // only loses that link on cleanup, it is never deleted with the sample federation.
+        EDGES.put("MyFirstModule.FormField", new String[]{"MyFirstModule.FormField_Club","MyFirstModule.FormField_Federation"});
         EDGES.put("MyFirstModule.RegistrationRequest", new String[]{"MyFirstModule.RegistrationRequest_Membership","MyFirstModule.RegistrationRequest_MembershipType","MyFirstModule.RegistrationRequest_Club","MyFirstModule.RegistrationRequest_SeasonFee","MyFirstModule.RegistrationRequest_Season","MyFirstModule.RegistrationRequest_Person"});
         EDGES.put("MyFirstModule.Membership", new String[]{"MyFirstModule.Membership_MembershipType","MyFirstModule.Membership_Club","MyFirstModule.Membership_Season","MyFirstModule.Membership_Person"});
         EDGES.put("MyFirstModule.MembershipType", new String[]{"MyFirstModule.MembershipType_Club","MyFirstModule.MembershipType_FederationType"});
@@ -69,6 +79,9 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.FederationAffiliation", new String[]{"MyFirstModule.FederationAffiliation_Club","MyFirstModule.FederationAffiliation_Federation"});
         EDGES.put("MyFirstModule.FederationRate", new String[]{"MyFirstModule.FederationRate_FederationType"});
         EDGES.put("MyFirstModule.FederationType", new String[]{"MyFirstModule.FederationType_Federation"});
+        // CompetitionTeam_Category and FormResponse_Gender are deliberately not edges: a real team or answer only loses the link.
+        EDGES.put("MyFirstModule.FederationGender", new String[]{"MyFirstModule.FederationGender_Federation"});
+        EDGES.put("MyFirstModule.TeamCategory", new String[]{"MyFirstModule.TeamCategory_Federation","MyFirstModule.TeamCategory_Genders"});
         EDGES.put("MyFirstModule.AccountInvitation", new String[]{"MyFirstModule.AccountInvitation_Club","MyFirstModule.AccountInvitation_Creator","MyFirstModule.AccountInvitation_Person"});
         EDGES.put("MyFirstModule.CompetitionAudit", new String[]{"MyFirstModule.CompetitionAudit_Fixture","MyFirstModule.CompetitionAudit_League"});
         EDGES.put("MyFirstModule.FederationCompetitionDelegate", new String[]{"MyFirstModule.FederationCompetitionDelegate_Federation","MyFirstModule.FederationCompetitionDelegate_User"});
@@ -111,11 +124,11 @@ public final class DevelopmentSamples {
         IContext ctx=Core.createSystemContext();ctx.startTransaction();
         try {
             Set<Long> baseline=ids(all(ctx));IMendixObject existing=batch(ctx);
-            Map<Long,String> before=new HashMap<>();for(IMendixObject o:all(ctx))before.put(o.getId().toLong(),primitiveSnapshot(ctx,o));
-            if(existing!=null){extendMatchSamples(ctx);extendDiscoveryAndAdminSamples(ctx);Set<Long> once=ids(all(ctx));extendMatchSamples(ctx);extendDiscoveryAndAdminSamples(ctx);require(once.equals(ids(all(ctx))),"Existing-batch feature upgrade is not idempotent.");for(IMendixObject o:all(ctx))if(before.containsKey(o.getId().toLong()))require(before.get(o.getId().toLong()).equals(primitiveSnapshot(ctx,o)),"Existing business record was overwritten by sample upgrade.");}
+            Set<Long> previouslyOwned=existing==null?new HashSet<>():decode(existing.getValue(ctx,"OwnedIds"));Map<Long,String> before=new HashMap<>();for(IMendixObject o:all(ctx))before.put(o.getId().toLong(),primitiveSnapshot(ctx,o,previouslyOwned));
+            if(existing!=null){extendMatchSamples(ctx);extendDiscoveryAndAdminSamples(ctx);extendPublicCompetitionSamples(ctx);Set<Long> once=ids(all(ctx));extendMatchSamples(ctx);extendDiscoveryAndAdminSamples(ctx);extendPublicCompetitionSamples(ctx);require(once.equals(ids(all(ctx))),"Existing-batch feature upgrade is not idempotent.");for(IMendixObject o:all(ctx))if(before.containsKey(o.getId().toLong()))require(before.get(o.getId().toLong()).equals(primitiveSnapshot(ctx,o,previouslyOwned)),"Existing business record was overwritten by sample upgrade.");baseline=ids(all(ctx));}
             // Hide only the registry within this rollback-only transaction to exercise a fresh batch.
             if(existing!=null)Core.deleteWithoutEvents(ctx,Collections.singletonList(existing),false);
-            generateIn(ctx,caller);Set<Long> fresh=ids(all(ctx));extendMatchSamples(ctx);generateIn(ctx,caller);require(fresh.equals(ids(all(ctx))),"Fresh generation is not idempotent.");
+            generateIn(ctx,caller);Set<Long> fresh=ids(all(ctx));extendMatchSamples(ctx);extendPublicCompetitionSamples(ctx);generateIn(ctx,caller);require(fresh.equals(ids(all(ctx))),"Fresh generation is not idempotent.");
             IMendixObject registry=batch(ctx);Set<Long> owned=decode(registry.getValue(ctx,"OwnedIds"));
             Set<Long> added=new HashSet<>(fresh);added.removeAll(baseline);require(owned.containsAll(added),"A generated business record is absent from the ownership manifest.");
             verifyMembershipAudience(ctx, owned);
@@ -123,21 +136,37 @@ public final class DevelopmentSamples {
             verifySampleAccounts(ctx, owned);
             verifyAccountHistory(ctx, owned);
             verifyDiscoveryFilters(ctx, owned);
+            verifyFederationFields(ctx, owned);
+            verifyFederationConventions(ctx, owned);
             removeIn(ctx);require(baseline.equals(ids(all(ctx))),"Sample cleanup changed pre-existing business records.");
             return "PASS: fresh generation, repeated generation, manifest coverage, scoped test administrators, disabled ordinary sample accounts and scoped cleanup (rolled back). "+(existing==null?"Existing-batch upgrade simulated by repeated extension.":"Existing-batch upgrade and preservation of all pre-existing primitive values verified.");
         } finally {ctx.rollbackTransaction();}
     }
-    private static String primitiveSnapshot(IContext ctx,IMendixObject o){List<String> values=new ArrayList<>();for(com.mendix.systemwideinterfaces.core.meta.IMetaPrimitive a:o.getMetaObject().getMetaPrimitives())values.add(a.getName()+"="+String.valueOf(o.getValue(ctx,a.getName())));Collections.sort(values);return String.join(";",values);}
+    /** Fields a feature upgrade may rewrite on manifest-owned demo records, and only while they still hold the generated value. */
+    private static final Map<String,Set<String>> CONVENTION_FIELDS=new HashMap<>();
+    static {
+        CONVENTION_FIELDS.put("MyFirstModule.CompetitionTeam",new HashSet<>(Arrays.asList("Name","TeamNumber")));
+        CONVENTION_FIELDS.put("MyFirstModule.LeagueEntry",new HashSet<>(Arrays.asList("TeamName")));
+        CONVENTION_FIELDS.put("MyFirstModule.CompetitionFixture",new HashSet<>(Arrays.asList("HomeName","AwayName")));
+        CONVENTION_FIELDS.put("MyFirstModule.CompetitionLeague",new HashSet<>(Arrays.asList("Sport","ResultSettingsConfigured","UseGameBreakdown","PointsPerGame","WinPoints","DrawPoints","LossPoints")));
+        CONVENTION_FIELDS.put("MyFirstModule.MatchRegistration",new HashSet<>(Arrays.asList("SourceTotalsAvailable","SourceCountsInStandings","SourceHomeSets","SourceAwaySets","SourceHomeRallies","SourceAwayRallies")));
+        CONVENTION_FIELDS.put("MyFirstModule.FormField",new HashSet<>(Arrays.asList("Kind","HelpText")));
+        CONVENTION_FIELDS.put("MyFirstModule.FormResponse",new HashSet<>(Arrays.asList("Kind","HelpText","Answer")));
+        CONVENTION_FIELDS.put("MyFirstModule.FederationType",new HashSet<>(Arrays.asList("OnePerPlayer")));
+    }
+    private static String primitiveSnapshot(IContext ctx,IMendixObject o,Set<Long> owned){Set<String> skip=owned.contains(o.getId().toLong())?CONVENTION_FIELDS.getOrDefault(o.getType(),Collections.emptySet()):Collections.emptySet();List<String> values=new ArrayList<>();for(com.mendix.systemwideinterfaces.core.meta.IMetaPrimitive a:o.getMetaObject().getMetaPrimitives())if(!a.isVirtual()&&!skip.contains(a.getName()))values.add(a.getName()+"="+String.valueOf(o.getValue(ctx,a.getName())));Collections.sort(values);return String.join(";",values);}
     /** Verify a newly generated set inside the same transaction, then leave the final sample set ready. */
     private static void verifyAndPopulate(IContext ctx, IContext caller) throws Exception {
             if (batch(ctx) != null) {
                 extendSeasonAndRoleSamples(ctx);
                 extendMatchSamples(ctx);
                 extendDiscoveryAndAdminSamples(ctx);
+                extendPublicCompetitionSamples(ctx);
                 Set<Long> once = ids(all(ctx));
                 extendSeasonAndRoleSamples(ctx);
                 extendMatchSamples(ctx);
                 extendDiscoveryAndAdminSamples(ctx);
+                extendPublicCompetitionSamples(ctx);
                 require(once.equals(ids(all(ctx))), "Feature upgrade created duplicate sample records.");
                 Core.getLogger("NexioSamples").info("Sample set ready; missing feature examples added without removing existing demo work.");
                 return;
@@ -146,6 +175,7 @@ public final class DevelopmentSamples {
             generateIn(ctx, caller);
             Set<Long> once = ids(all(ctx));
             extendMatchSamples(ctx);
+            extendPublicCompetitionSamples(ctx);
             require(once.equals(ids(all(ctx))), "Match feature upgrade was not idempotent for a fresh batch.");
             generateIn(ctx, caller);
             require(once.equals(ids(all(ctx))), "Repeated generation created duplicate records.");
@@ -154,6 +184,8 @@ public final class DevelopmentSamples {
             verifyMultiAffiliation(ctx, manifestOwned);
             verifyAccountHistory(ctx, manifestOwned);
             verifyDiscoveryFilters(ctx, manifestOwned);
+            verifyFederationFields(ctx, manifestOwned);
+            verifyFederationConventions(ctx, manifestOwned);
             IMendixObject demoClub = query(ctx, "//MyFirstModule.Club").stream()
                 .filter(o -> manifestOwned.contains(o.getId().toLong())).findFirst().orElseThrow();
             IMendixObject extra = Core.instantiate(ctx, "MyFirstModule.ClubEvent");
@@ -212,6 +244,7 @@ public final class DevelopmentSamples {
     private static List<IMendixObject> all(IContext ctx) throws Exception {
         List<IMendixObject> result = new ArrayList<>();
         for (String type : DIRECTORY_TYPES) result.addAll(query(ctx, "//" + type));
+        for (String type : RETENTION_TYPES) result.addAll(query(ctx, "//" + type));
         for (String type : TYPES) result.addAll(query(ctx, "//" + type));
         for (String type : MATCH_TYPES) result.addAll(query(ctx, "//" + type));
         return result;
@@ -385,7 +418,7 @@ public final class DevelopmentSamples {
                 IMendixObject team = teams.get(side);
                 IMendixIdentifier clubId = team.getValue(ctx, "MyFirstModule.CompetitionTeam_Club");
                 IMendixObject club = Core.retrieveId(ctx, clubId); clubs.add(club);
-                IMendixObject entry = s.make("LeagueEntry", "TeamName", team.getValue(ctx, "Name"), "ClubName", club.getValue(ctx, "Name"),
+                IMendixObject entry = s.make("LeagueEntry", "TeamName", entryTeamName(ctx, team, club), "ClubName", club.getValue(ctx, "Name"),
                     "ClubKey", s.id(club), "EntryKey", "DEMO-MATCH:" + s.marker + ":" + sport + ":" + side, "Order", (long) side + 1);
                 s.link(entry, "LeagueEntry_Team", team); s.link(entry, "LeagueEntry_Club", club); s.link(entry, "LeagueEntry_League", league); s.link(entry, "LeagueEntry_Poule", poule); entries.add(entry);
                 List<IMendixObject> roster = query(ctx, "//MyFirstModule.CompetitionPlayer[MyFirstModule.CompetitionPlayer_Team=" + s.id(team) + "]"); players.add(roster);
@@ -434,6 +467,54 @@ public final class DevelopmentSamples {
         Core.commitWithoutEvents(ctx, manifest);
         Core.getLogger("NexioSamples").info("Added " + s.owned.size() + " manifest-owned match examples; existing sample records preserved.");
         extendMatchReviewSamples(ctx);
+    }
+
+    /** Append a frozen public season once; real and user-edited demo records are never matched or rewritten. */
+    private static void extendPublicCompetitionSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=manifest.getValue(ctx,"Summary");
+        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);return;}
+        Seed s=new Seed(ctx);PublicCompetitionSamples.populate(ctx,s);
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));owned.addAll(ids(s.owned));
+        Set<Long> publicOrganizations=new HashSet<>();
+        for(IMendixObject record:s.owned)if(record.getType().equals("MyFirstModule.Club")||record.getType().equals("MyFirstModule.Federation"))publicOrganizations.add(record.getId().toLong());
+        manifest.setValue(ctx,"PublicCompetitionOrganizationIds",encode(publicOrganizations));
+        manifest.setValue(ctx,"OwnedIds",encode(owned));
+        manifest.setValue(ctx,"Summary",(summary==null?"":summary)+" Public 2026-2027 competition snapshots captured 24 October 2026. "+PublicCompetitionSamples.FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
+        PublicCompetitionSamples.verify(ctx,owned);
+        extendLeagueResultSamples(ctx);
+    }
+
+    /** Initialize only the new, unset league policy fields; configured or user-edited policies remain untouched. */
+    private static void extendLeagueResultSamples(IContext ctx) throws Exception {
+        extendLeagueSportSamples(ctx);
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");if(summary.contains(LEAGUE_RESULTS_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));
+        PublicCompetitionSamples.initializeStandingsTotals(ctx,owned);
+        for(IMendixObject league:query(ctx,"//MyFirstModule.CompetitionLeague[ResultSettingsConfigured=false()]")){
+            if(!owned.contains(league.getId().toLong()))continue;
+            IMendixIdentifier formatId=league.getValue(ctx,"MyFirstModule.CompetitionLeague_MatchFormat");IMendixObject format=formatId==null?null:Core.retrieveId(ctx,formatId);
+            boolean games=format!=null&&!"Total".equals(format.getValue(ctx,"Scoring"));boolean national=games&&Objects.toString(league.getValue(ctx,"Info"),"").toLowerCase(Locale.ROOT).contains("0c62bb49-5d47-4217-864d-ec86875b1c00");
+            league.setValue(ctx,"UseGameBreakdown",games);league.setValue(ctx,"PointsPerGame",national);
+            league.setValue(ctx,"WinPoints",national?BigDecimal.ONE:format==null?BigDecimal.valueOf(2):format.getValue(ctx,"WinPoints"));
+            league.setValue(ctx,"DrawPoints",national?BigDecimal.ZERO:format==null?BigDecimal.ONE:format.getValue(ctx,"DrawPoints"));
+            league.setValue(ctx,"LossPoints",national?BigDecimal.ZERO:format==null?BigDecimal.ZERO:format.getValue(ctx,"LossPoints"));
+            league.setValue(ctx,"ResultSettingsConfigured",true);Core.commitWithoutEvents(ctx,league);
+        }
+        manifest.setValue(ctx,"Summary",summary+" League standings: accepted wins/draws/losses, zero-played teams, badminton game/set/rally totals, optional games, direct football scores and league points policies. "+LEAGUE_RESULTS_FEATURE);Core.commitWithoutEvents(ctx,manifest);
+    }
+
+    /** Fill only the newly introduced sport on manifest-owned leagues, once per batch. */
+    private static void extendLeagueSportSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),""),marker="features:league-sport-filters-v1";
+        if(summary.contains(marker))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));
+        for(IMendixObject league:query(ctx,"//MyFirstModule.CompetitionLeague")) {
+            if(!owned.contains(league.getId().toLong())||!Objects.toString(league.getValue(ctx,"Sport"),"").isBlank())continue;
+            LeagueSports.initializeOrValidate(ctx,league);Core.commitWithoutEvents(ctx,league);
+        }
+        manifest.setValue(ctx,"Summary",summary+" League sport filters, home-or-away club search and compact fixture result examples reuse the owned multi-sport and source fixtures. "+marker);
+        Core.commitWithoutEvents(ctx,manifest);
     }
 
     /** Append review/ruling scenarios once; never rewrite the user's existing sample fixtures. */
@@ -501,7 +582,7 @@ public final class DevelopmentSamples {
         Core.getLogger("NexioSamples").info("Removed " + deletion.size() + " owned sample records; existing records preserved.");
     }
 
-    private static final class Seed {
+    static final class Seed {
         final IContext ctx;
         final List<IMendixObject> owned = new ArrayList<>();
         final String marker = UUID.randomUUID().toString().substring(0, 8);
@@ -675,6 +756,7 @@ public final class DevelopmentSamples {
         extendSeasonAndRoleSamples(ctx);
         extendMatchSamples(ctx);
         extendDiscoveryAndAdminSamples(ctx);
+        extendPublicCompetitionSamples(ctx);
         Core.getLogger("NexioSamples").info("Generated sample records. Only dedicated organization test administrators can sign in; no email or verified payment.");
     }
 
@@ -724,6 +806,8 @@ public final class DevelopmentSamples {
                 require(appRole != null, "The organization administrator app role is missing.");
                 for (IMendixObject organization : query(ctx, "//MyFirstModule." + entity)) {
                     if (!owned.contains(organization.getId().toLong())) continue;
+                    // Public-name season copies never receive the older generator's enabled test logins.
+                    if (decode(manifest.getValue(ctx,"PublicCompetitionOrganizationIds")).contains(organization.getId().toLong())) continue;
                     String username = "demo." + entity.toLowerCase(Locale.ROOT) + "." + s.id(organization) + "@example.invalid";
                     IMendixObject existingAdmin = first(ctx, "//System.User[Name='" + username + "']");
                     if (existingAdmin != null) {
@@ -753,6 +837,312 @@ public final class DevelopmentSamples {
         extendNewsHtmlSamples(ctx);
         extendPlayerListSamples(ctx);
         extendInvoicePdfSamples(ctx);
+        extendFederationFieldSamples(ctx);
+        extendFederationConventionSamples(ctx);
+        extendTableRetentionSamples(ctx);
+        extendChecksRoleSamples(ctx);
+    }
+
+    /** Documentation scenarios: disabled identities, owned organisation assignments, no elevated platform account. */
+    private static void extendChecksRoleSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(CHECKS_ROLE_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds"));
+        Seed seed = new Seed(ctx);
+        for (String kind : new String[]{"Club", "Federation"}) {
+            IMendixObject organization = query(ctx, "//MyFirstModule." + kind).stream()
+                .filter(o -> owned.contains(o.getId().toLong())).findFirst().orElseThrow();
+            IMendixObject role = first(ctx, "//System.UserRole[Name='" + kind + "Admin']");
+            require(role != null, "The " + kind + "Admin role is missing.");
+            IMendixObject person = seed.person("[DEMO] Checks guide - disabled " + kind.toLowerCase(Locale.ROOT) + " administrator", kind.equals("Club") ? 9101 : 9102);
+            person.setValue(ctx, "System.UserRoles", Arrays.asList(seed.ordinaryRole.getId(), role.getId()));
+            Core.commitWithoutEvents(ctx, person);
+            String association = "MyFirstModule." + kind + "_Admins";
+            List<IMendixIdentifier> admins = new ArrayList<>();
+            Object previous = organization.getValue(ctx, association);
+            if (previous instanceof Collection<?>) for (Object value : (Collection<?>)previous)
+                if (value instanceof IMendixIdentifier) admins.add((IMendixIdentifier)value);
+            admins.add(person.getId()); organization.setValue(ctx, association, admins);
+            Core.commitWithoutEvents(ctx, organization);
+        }
+        seed.person("[DEMO] Checks guide - disabled ordinary user", 9103);
+        for (IMendixObject person : seed.owned)
+            require(!Boolean.TRUE.equals(person.getValue(ctx, "Active")), "A checks-guide account must remain disabled.");
+        owned.addAll(ids(seed.owned));
+        manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Checks guide: disabled club admin, federation admin and ordinary user; use an existing platform administrator for the super admin scenario. " + CHECKS_ROLE_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** Append disposable retention examples once; never rewrite existing policies or archived records. */
+    private static void extendTableRetentionSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);
+        String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");
+        if(summary.contains(TABLE_RETENTION_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));Seed seed=new Seed(ctx);
+        IMendixObject club=query(ctx,"//MyFirstModule.Club").stream().filter(o->owned.contains(o.getId().toLong())).findFirst().orElseThrow();
+        String scope="Club:"+seed.id(club),entity="MyFirstModule.NewsItem";
+        IMendixObject existing=first(ctx,"//MyFirstModule.TableRetentionPolicy[PolicyKey='"+entity+"|"+scope+"']");
+        if(existing==null){
+            IMendixObject policy=seed.make("TableRetentionPolicy","PolicyKey",entity+"|"+scope,"EntityName",entity,"ScopeKey",scope,
+                "RetentionDays",90,"KeepForever",true,"AllowPermanentDelete",false,"AutoPurge",false);
+            seed.link(policy,"TableRetentionPolicy_Club",club);
+        }
+        IMendixObject news=seed.make("NewsItem","Title","[DEMO] Archived season notice","Body","Fictional archived notice for the shared table toolbar. Restore keeps its publication status unchanged.",
+            "PublishedAt",seed.date(-90),"IsImportant",false,"IsPublished",false);
+        seed.link(news,"NewsItem_Club",club);
+        IMendixObject archive=seed.make("RecordLifecycle","RecordKey",seed.id(news),"EntityName",entity,"ArchivedAt",seed.date(-30),"ArchivedBy","Local development generator");
+        seed.link(archive,"RecordLifecycle_Club",club);
+        owned.addAll(ids(seed.owned));manifest.setValue(ctx,"OwnedIds",encode(owned));
+        manifest.setValue(ctx,"Summary",summary+" Shared toolbar examples: an archived fictional notice and a club-specific keep-indefinitely policy with automatic deletion disabled. "+TABLE_RETENTION_FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
+        verifyTableRetentionSamples(ctx,owned);
+    }
+
+    private static void verifyTableRetentionSamples(IContext ctx,Set<Long> owned) throws Exception {
+        for(IMendixObject marker:query(ctx,"//MyFirstModule.RecordLifecycle"))if(owned.contains(marker.getId().toLong())){
+            String recordKey=marker.getValue(ctx,"RecordKey");require(recordKey!=null&&owned.contains(Long.parseLong(recordKey)),"A sample archive references an unrelated record.");
+            require(marker.getValue(ctx,"PurgeAfter")==null,"Archived sample examples must not schedule permanent deletion.");
+        }
+        for(IMendixObject policy:query(ctx,"//MyFirstModule.TableRetentionPolicy"))if(owned.contains(policy.getId().toLong())){
+            IMendixIdentifier club=policy.getValue(ctx,"MyFirstModule.TableRetentionPolicy_Club");
+            require(club!=null&&owned.contains(club.toLong()),"A sample retention policy references an unrelated club.");
+            require(!Boolean.TRUE.equals(policy.getValue(ctx,"AutoPurge")),"Sample policies must not automatically delete data.");
+        }
+    }
+
+    /** Ancillary lifecycle records inherit ownership only from a manifest-owned local example. */
+    static void claimDerivedRetentionRecord(IContext ctx,IMendixObject source,IMendixObject derived) throws Exception {
+        if(!Core.getConfiguration().isInDevelopment()||!unittesting.ConfigurationManager.isLocalDevelopment())return;
+        if(!Arrays.asList(RETENTION_TYPES).contains(derived.getType()))throw new IllegalArgumentException("Unsupported sample derivative.");
+        IMendixObject manifest=batch(ctx);if(manifest==null)return;Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));
+        if(!owned.contains(source.getId().toLong()))return;owned.add(derived.getId().toLong());manifest.setValue(ctx,"OwnedIds",encode(owned));Core.commitWithoutEvents(ctx,manifest);
+    }
+
+    /**
+     * Give every sample federation the registration fields it requires (date of birth and gender overlap between
+     * federations, plus a per-sport code of conduct). Each sample club gets one "Date of birth" question that covers
+     * the date-of-birth field of every federation it is affiliated with, so members answer it once; gender and code of
+     * conduct stay uncovered and are asked automatically. Open sample registrations receive the resulting questions:
+     * pending ones with fictional answers, drafts empty. Existing fields, questions and answers are left alone.
+     */
+    private static void extendFederationFieldSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(FEDERATION_FIELDS_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds")); Seed s = new Seed(ctx);
+        Map<Long, IMendixObject> birthFields = new HashMap<>();
+        for (IMendixObject federation : query(ctx, "//MyFirstModule.Federation")) {
+            if (!owned.contains(federation.getId().toLong())) continue;
+            IMendixObject existing = first(ctx, "//MyFirstModule.FormField[MyFirstModule.FormField_Federation=" + s.id(federation) + "][Kind='Date']");
+            if (existing != null) { birthFields.put(federation.getId().toLong(), existing); continue; }
+            if (first(ctx, "//MyFirstModule.FormField[MyFirstModule.FormField_Federation=" + s.id(federation) + "]") != null) continue; // Edited by hand: keep.
+            String name = federation.getValue(ctx, "Name");
+            String sport = Objects.toString(federation.getValue(ctx, "Sport"), "Sport");
+            IMendixObject birth = s.make("FormField", "Label", "Date of birth", "HelpText", "Required by " + name + " for age categories. Development example; use a fictional date.",
+                "Kind", "Date", "IsRequired", true, "SortOrder", 100L, "IsActive", true);
+            s.link(birth, "FormField_Federation", federation);
+            IMendixObject gender = s.make("FormField", "Label", "Gender", "HelpText", "As registered with " + name + ": female, male or x.",
+                "Kind", "Text", "IsRequired", true, "SortOrder", 101L, "IsActive", true);
+            s.link(gender, "FormField_Federation", federation);
+            IMendixObject conduct = s.make("FormField", "Label", sport + " code of conduct accepted", "HelpText", "Confirms you accept the " + name + " code of conduct.",
+                "Kind", "YesNo", "IsRequired", true, "SortOrder", 102L, "IsActive", true);
+            s.link(conduct, "FormField_Federation", federation);
+            birthFields.put(federation.getId().toLong(), birth);
+        }
+        Date today = Date.from(s.today.atStartOfDay().toInstant(ZoneOffset.UTC));
+        for (IMendixObject club : query(ctx, "//MyFirstModule.Club")) {
+            if (!owned.contains(club.getId().toLong())) continue;
+            if (first(ctx, "//MyFirstModule.FormField[MyFirstModule.FormField_Club=" + s.id(club) + "][MyFirstModule.FormField_FederationFields/MyFirstModule.FormField]") != null) continue;
+            List<IMendixIdentifier> covers = new ArrayList<>();
+            for (IMendixObject affiliation : query(ctx, "//MyFirstModule.FederationAffiliation[MyFirstModule.FederationAffiliation_Club=" + s.id(club) + "][Status='Approved'][IsActive=true()]")) {
+                Date end = affiliation.getValue(ctx, "EndsOn");
+                IMendixIdentifier federation = affiliation.getValue(ctx, "MyFirstModule.FederationAffiliation_Federation");
+                if ((end != null && end.before(today)) || federation == null || !birthFields.containsKey(federation.toLong())) continue;
+                IMendixIdentifier field = birthFields.get(federation.toLong()).getId();
+                if (!covers.contains(field)) covers.add(field);
+            }
+            if (covers.isEmpty()) continue;
+            IMendixObject question = s.make("FormField", "Label", "Date of birth", "HelpText", "Asked once for the club and every federation it is affiliated with.",
+                "Kind", "Date", "IsRequired", true, "SortOrder", 2L, "IsActive", true);
+            s.link(question, "FormField_Club", club);
+            question.setValue(ctx, "MyFirstModule.FormField_FederationFields", covers); Core.commitWithoutEvents(ctx, question);
+        }
+        for (IMendixObject request : query(ctx, "//MyFirstModule.RegistrationRequest[Status='Draft' or Status='Pending']")) {
+            if (!owned.contains(request.getId().toLong())) continue;
+            IMendixIdentifier club = request.getValue(ctx, "MyFirstModule.RegistrationRequest_Club");
+            IMendixIdentifier type = request.getValue(ctx, "MyFirstModule.RegistrationRequest_MembershipType");
+            if (club == null || type == null) continue;
+            boolean answered = "Pending".equals(request.getValue(ctx, "Status"));
+            List<IMendixObject> fields = query(ctx, "//MyFirstModule.FormField[IsActive=true()][MyFirstModule.FormField_Club=" + club.toLong()
+                + " or (MyFirstModule.FormField_Federation/MyFirstModule.Federation/MyFirstModule.FederationType_Federation/MyFirstModule.FederationType/MyFirstModule.MembershipType_FederationType=" + type.toLong()
+                + " and not(MyFirstModule.FormField_FederationFields[reversed()]/MyFirstModule.FormField[IsActive=true() and MyFirstModule.FormField_Club=" + club.toLong() + "]))]");
+            for (IMendixObject field : fields) {
+                if (first(ctx, "//MyFirstModule.FormResponse[MyFirstModule.FormResponse_RegistrationRequest=" + s.id(request) + "][MyFirstModule.FormResponse_FormField=" + s.id(field) + "]") != null) continue;
+                String kind = field.getValue(ctx, "Kind");
+                IMendixObject response = s.make("FormResponse", "Label", field.getValue(ctx, "Label"), "HelpText", field.getValue(ctx, "HelpText"),
+                    "Kind", kind, "IsRequired", field.getValue(ctx, "IsRequired"), "SortOrder", field.getValue(ctx, "SortOrder"));
+                if (answered) {
+                    if ("Date".equals(kind)) { response.setValue(ctx, "AnswerDate", utcDate(LocalDate.of(1990, 5, 14))); response.setValue(ctx, "Answer", "1990-05-14"); }
+                    else if ("YesNo".equals(kind)) { response.setValue(ctx, "AnswerChoice", "Yes"); response.setValue(ctx, "Answer", "yes"); }
+                    else response.setValue(ctx, "Answer", "[DEMO] x");
+                    Core.commitWithoutEvents(ctx, response);
+                }
+                s.link(response, "FormResponse_FormField", field); s.link(response, "FormResponse_RegistrationRequest", request);
+            }
+        }
+        owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Federation registration fields (overlapping date of birth and gender, per-sport code of conduct), club questions covering them, and the resulting questions on open sample registrations. " + FEDERATION_FIELDS_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** A club question covering two federations' date-of-birth fields replaces both; uncovered federation fields stay on the form. */
+    private static void verifyFederationFields(IContext ctx, Set<Long> owned) throws Exception {
+        IMendixObject club = query(ctx, "//MyFirstModule.Club[Name='[DEMO] Gent Multi Rackets']").stream()
+            .filter(o -> owned.contains(o.getId().toLong())).findFirst().orElseThrow();
+        IMendixObject question = first(ctx, "//MyFirstModule.FormField[MyFirstModule.FormField_Club=" + club.getId().toLong() + "][Label='Date of birth']");
+        require(question != null, "The multi-federation sample club has no date-of-birth question.");
+        Collection<?> covered = question.getValue(ctx, "MyFirstModule.FormField_FederationFields");
+        require(covered != null && covered.size() >= 2, "The club question should cover the overlapping field of both approved federations.");
+        IMendixObject type = first(ctx, "//MyFirstModule.MembershipType[MyFirstModule.MembershipType_Club=" + club.getId().toLong() + "][Name='Badminton competition']");
+        List<IMendixObject> asked = query(ctx, "//MyFirstModule.FormField[IsActive=true()][MyFirstModule.FormField_Club=" + club.getId().toLong()
+            + " or (MyFirstModule.FormField_Federation/MyFirstModule.Federation/MyFirstModule.FederationType_Federation/MyFirstModule.FederationType/MyFirstModule.MembershipType_FederationType=" + type.getId().toLong()
+            + " and not(MyFirstModule.FormField_FederationFields[reversed()]/MyFirstModule.FormField[IsActive=true() and MyFirstModule.FormField_Club=" + club.getId().toLong() + "]))]");
+        long births = asked.stream().filter(f -> "Date of birth".equals(f.getValue(ctx, "Label"))).count();
+        require(births == 1 && asked.stream().anyMatch(f -> f.getId().equals(question.getId())), "Date of birth must be asked exactly once, by the club question.");
+        require(asked.stream().anyMatch(f -> "Gender".equals(f.getValue(ctx, "Label"))), "An uncovered federation field is missing from the registration form.");
+    }
+
+    /** League entries of convention-named teams read "Club 1H"; free-named teams keep their own name. */
+    private static String entryTeamName(IContext ctx, IMendixObject team, IMendixObject club) {
+        Object number = team.getValue(ctx, "TeamNumber");
+        String name = team.getValue(ctx, "Name");
+        return number instanceof Number && ((Number) number).intValue() > 0 ? club.getValue(ctx, "Name") + " " + name : name;
+    }
+
+    /**
+     * Federation-managed genders and team naming. Every sample federation gets the gender options Female, Male and X;
+     * the badminton federation gets the categories H (men), D (women) and G (mixed). Generated demo teams still named
+     * "[DEMO] Club n" become 1H, 1D and 1G, and league entries and fixtures still showing the old name follow. Generated
+     * Gender questions become the federation's choice list, and competition federation types allow one registration per
+     * player. Records already edited by hand keep their values.
+     */
+    private static void extendFederationConventionSamples(IContext ctx) throws Exception {
+        IMendixObject manifest = batch(ctx);
+        String summary = Objects.toString(manifest.getValue(ctx, "Summary"), "");
+        if (summary.contains(FEDERATION_CONVENTIONS_FEATURE)) return;
+        Set<Long> owned = decode(manifest.getValue(ctx, "OwnedIds")); Seed s = new Seed(ctx);
+        Map<Long, Map<String, IMendixObject>> genders = new HashMap<>();
+        Map<Long, Map<String, IMendixObject>> categories = new HashMap<>();
+        for (IMendixObject federation : query(ctx, "//MyFirstModule.Federation")) {
+            if (!owned.contains(federation.getId().toLong())) continue;
+            Map<String, IMendixObject> options = new HashMap<>();
+            for (IMendixObject gender : query(ctx, "//MyFirstModule.FederationGender[MyFirstModule.FederationGender_Federation=" + s.id(federation) + "]"))
+                options.put(Objects.toString(gender.getValue(ctx, "Code"), ""), gender);
+            if (options.isEmpty()) {
+                String[][] defaults = {{"Female", "F"}, {"Male", "M"}, {"X", "X"}};
+                for (int i = 0; i < defaults.length; i++) {
+                    IMendixObject gender = s.make("FederationGender", "Name", defaults[i][0], "Code", defaults[i][1], "SortOrder", (long) i + 1, "IsActive", true);
+                    s.link(gender, "FederationGender_Federation", federation);
+                    options.put(defaults[i][1], gender);
+                }
+            }
+            genders.put(federation.getId().toLong(), options);
+            if (!"Badminton".equalsIgnoreCase(Objects.toString(federation.getValue(ctx, "Sport"), ""))) continue;
+            Map<String, IMendixObject> codes = new HashMap<>();
+            for (IMendixObject category : query(ctx, "//MyFirstModule.TeamCategory[MyFirstModule.TeamCategory_Federation=" + s.id(federation) + "]"))
+                codes.put(Objects.toString(category.getValue(ctx, "Code"), ""), category);
+            if (codes.isEmpty() && options.containsKey("M") && options.containsKey("F")) {
+                String[][] defaults = {{"H", "Men", "M"}, {"D", "Women", "F"}, {"G", "Mixed", "MF"}};
+                for (int i = 0; i < defaults.length; i++) {
+                    IMendixObject category = s.make("TeamCategory", "Code", defaults[i][0], "Name", defaults[i][1], "SortOrder", (long) i + 1, "IsActive", true);
+                    s.link(category, "TeamCategory_Federation", federation);
+                    List<IMendixIdentifier> allowed = new ArrayList<>();
+                    for (char code : defaults[i][2].toCharArray()) allowed.add(options.get(String.valueOf(code)).getId());
+                    category.setValue(ctx, "MyFirstModule.TeamCategory_Genders", allowed); Core.commitWithoutEvents(ctx, category);
+                    codes.put(defaults[i][0], category);
+                }
+            }
+            categories.put(federation.getId().toLong(), codes);
+        }
+        // Rename generated badminton demo teams: team n of a club becomes the first team of category H, D or G.
+        java.util.regex.Pattern generated = java.util.regex.Pattern.compile("^\\[DEMO\\] (.+) ([1-3])$");
+        String[] order = {"H", "D", "G"};
+        for (IMendixObject team : query(ctx, "//MyFirstModule.CompetitionTeam[TeamNumber=0][not(MyFirstModule.CompetitionTeam_Category/MyFirstModule.TeamCategory)]")) {
+            if (!owned.contains(team.getId().toLong())) continue;
+            IMendixIdentifier clubId = team.getValue(ctx, "MyFirstModule.CompetitionTeam_Club");
+            String oldName = team.getValue(ctx, "Name");
+            java.util.regex.Matcher match = generated.matcher(Objects.toString(oldName, ""));
+            if (clubId == null || !match.matches()) continue;
+            IMendixObject club = Core.retrieveId(ctx, clubId);
+            if (!("[DEMO] " + match.group(1)).equals(club.getValue(ctx, "Name"))) continue;
+            Map<String, IMendixObject> codes = null;
+            for (IMendixObject affiliation : query(ctx, "//MyFirstModule.FederationAffiliation[MyFirstModule.FederationAffiliation_Club=" + s.id(club) + "][Status='Approved'][IsActive=true()]")) {
+                IMendixIdentifier federation = affiliation.getValue(ctx, "MyFirstModule.FederationAffiliation_Federation");
+                if (federation != null && categories.containsKey(federation.toLong()) && !categories.get(federation.toLong()).isEmpty()) { codes = categories.get(federation.toLong()); break; }
+            }
+            IMendixObject category = codes == null ? null : codes.get(order[Integer.parseInt(match.group(2)) - 1]);
+            if (category == null) continue;
+            String code = category.getValue(ctx, "Code");
+            if (first(ctx, "//MyFirstModule.CompetitionTeam[MyFirstModule.CompetitionTeam_Club=" + s.id(club) + "][Name='1" + code + "']") != null) continue;
+            team.setValue(ctx, "Name", "1" + code); team.setValue(ctx, "TeamNumber", 1);
+            team.setValue(ctx, "MyFirstModule.CompetitionTeam_Category", category.getId()); Core.commitWithoutEvents(ctx, team);
+            String entryName = entryTeamName(ctx, team, club);
+            for (IMendixObject entry : query(ctx, "//MyFirstModule.LeagueEntry[MyFirstModule.LeagueEntry_Team=" + s.id(team) + "]")) {
+                if (!owned.contains(entry.getId().toLong()) || !Objects.equals(oldName, entry.getValue(ctx, "TeamName"))) continue;
+                entry.setValue(ctx, "TeamName", entryName); Core.commitWithoutEvents(ctx, entry);
+                for (String side : new String[]{"Home", "Away"})
+                    for (IMendixObject fixture : query(ctx, "//MyFirstModule.CompetitionFixture[" + side + "Key='" + s.id(entry) + "']")) {
+                        if (!owned.contains(fixture.getId().toLong()) || !Objects.equals(oldName, fixture.getValue(ctx, side + "Name"))) continue;
+                        fixture.setValue(ctx, side + "Name", entryName); Core.commitWithoutEvents(ctx, fixture);
+                    }
+            }
+        }
+        // Generated Gender questions become the federation's choice list; untouched sample answers pick X.
+        for (IMendixObject field : query(ctx, "//MyFirstModule.FormField[Kind='Text'][Label='Gender'][MyFirstModule.FormField_Federation/MyFirstModule.Federation]")) {
+            String help = Objects.toString(field.getValue(ctx, "HelpText"), "");
+            IMendixIdentifier federation = field.getValue(ctx, "MyFirstModule.FormField_Federation");
+            if (!owned.contains(field.getId().toLong()) || !help.startsWith("As registered with ") || !genders.containsKey(federation.toLong())) continue;
+            String newHelp = "Choose one of the federation's gender options.";
+            field.setValue(ctx, "Kind", "Gender"); field.setValue(ctx, "HelpText", newHelp); Core.commitWithoutEvents(ctx, field);
+            IMendixObject x = genders.get(federation.toLong()).get("X");
+            for (IMendixObject response : query(ctx, "//MyFirstModule.FormResponse[Kind='Text'][MyFirstModule.FormResponse_FormField=" + s.id(field) + "]")) {
+                String answer = response.getValue(ctx, "Answer");
+                if (!owned.contains(response.getId().toLong()) || !(answer == null || answer.isEmpty() || "[DEMO] x".equals(answer))) continue;
+                response.setValue(ctx, "Kind", "Gender"); response.setValue(ctx, "HelpText", newHelp);
+                if ("[DEMO] x".equals(answer) && x != null) { response.setValue(ctx, "MyFirstModule.FormResponse_Gender", x.getId()); response.setValue(ctx, "Answer", x.getValue(ctx, "Name")); }
+                Core.commitWithoutEvents(ctx, response);
+            }
+        }
+        for (IMendixObject type : query(ctx, "//MyFirstModule.FederationType[contains(Name,'Competition')][OnePerPlayer=false()]")) {
+            if (!owned.contains(type.getId().toLong())) continue;
+            type.setValue(ctx, "OnePerPlayer", true); Core.commitWithoutEvents(ctx, type);
+        }
+        owned.addAll(ids(s.owned)); manifest.setValue(ctx, "OwnedIds", encode(owned));
+        manifest.setValue(ctx, "Summary", summary + " Federation gender options, badminton team categories H/D/G with demo teams renamed 1H/1D/1G, gender choice questions and one competition registration per player. " + FEDERATION_CONVENTIONS_FEATURE);
+        Core.commitWithoutEvents(ctx, manifest);
+    }
+
+    /** The badminton federation defines H/D/G with a mixed category, a generated demo team follows the naming convention, and competition types are limited. */
+    private static void verifyFederationConventions(IContext ctx, Set<Long> owned) throws Exception {
+        Set<Long> publicOrganizations=decode(batch(ctx).getValue(ctx,"PublicCompetitionOrganizationIds"));
+        IMendixObject federation = query(ctx, "//MyFirstModule.Federation[Sport='Badminton']").stream()
+            .filter(o -> owned.contains(o.getId().toLong())&&!publicOrganizations.contains(o.getId().toLong())).findFirst().orElseThrow();
+        long fid = federation.getId().toLong();
+        require(query(ctx, "//MyFirstModule.FederationGender[MyFirstModule.FederationGender_Federation=" + fid + "][IsActive=true()]").size() >= 3, "The sample federation should offer at least three gender options.");
+        IMendixObject mixed = first(ctx, "//MyFirstModule.TeamCategory[MyFirstModule.TeamCategory_Federation=" + fid + "][Code='G']");
+        require(mixed != null, "The badminton federation has no mixed category G.");
+        Collection<?> allowed = mixed.getValue(ctx, "MyFirstModule.TeamCategory_Genders");
+        require(allowed != null && allowed.size() >= 2, "The mixed category should allow more than one gender.");
+        IMendixObject team = query(ctx, "//MyFirstModule.CompetitionTeam[Name='1H'][TeamNumber=1][MyFirstModule.CompetitionTeam_Category/MyFirstModule.TeamCategory/MyFirstModule.TeamCategory_Federation=" + fid + "]").stream()
+            .filter(o -> owned.contains(o.getId().toLong())).findFirst().orElse(null);
+        require(team != null, "No generated demo team follows the federation naming convention.");
+        IMendixObject entry = first(ctx, "//MyFirstModule.LeagueEntry[MyFirstModule.LeagueEntry_Team=" + team.getId().toLong() + "]");
+        require(entry == null || Objects.toString(entry.getValue(ctx, "TeamName"), "").endsWith(" 1H"), "A renamed team's league entry still shows the old name.");
+        require(query(ctx, "//MyFirstModule.FederationType[contains(Name,'Competition')][OnePerPlayer=true()]").stream().anyMatch(o -> owned.contains(o.getId().toLong())),
+            "No sample competition federation type limits players to one registration.");
+        require(query(ctx, "//MyFirstModule.FormField[Kind='Gender'][MyFirstModule.FormField_Federation=" + fid + "]").size() == 1, "The federation's gender question should use the gender options.");
     }
 
     /** Publish competition federation types in the public player list and add club player list rules once. */

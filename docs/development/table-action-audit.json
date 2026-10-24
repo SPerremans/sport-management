@@ -1,0 +1,1380 @@
+{
+  "date": "2026-10-23",
+  "scope": "40 application pages / 79 Data Grid 2 tables in MyFirstModule; Marketplace/system tables excluded",
+  "baselineModelConsistency": "No errors found",
+  "saveStatus": "Mendixx page-write requests timed out; no cleanup save confirmed. Platform_Clubs first request failed and a subsequent read showed the original controls still present. Accounts_Overview readback also retained both View buttons.",
+  "pages": [
+    {
+      "page": "Account_Detail",
+      "tables": [
+        "accountAudit"
+      ],
+      "outsideButtons": [
+        {
+          "name": "backToAccounts",
+          "caption": "Back to accounts",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "accountViewAsUser",
+          "caption": "View as user (local development)",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/0/widgets/1",
+          "actionType": "Pages$OpenLinkClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Accounts_Overview",
+      "tables": [
+        "applicationAccounts"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "globalRetentionSettings",
+          "caption": "Retention settings",
+          "style": "Default",
+          "path": "/widgets/0/widgets/3/widgets/0",
+          "flow": "MyFirstModule.ACT_TableRetention_Global",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "accountSearchClear",
+          "caption": "Reset filters",
+          "style": "Default",
+          "path": "/widgets/0/widgets/4/widgets/0/widgets/1",
+          "flow": "MyFirstModule.ACT_AccountSearch_Clear",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Club_Administration",
+      "tables": [
+        "adminClubList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Club_Detail",
+      "tables": [
+        "clubCurrentOffers"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Club_Directory",
+      "tables": [
+        "clubList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "clubSearchClear",
+          "caption": "Reset filters",
+          "style": "Default",
+          "path": "/widgets/0/widgets/3/widgets/0/widgets/1",
+          "flow": "MyFirstModule.ACT_ClubDiscovery_Clear",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Club_Federations",
+      "tables": [
+        "clubAffiliations",
+        "availableFederations"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Club_Players",
+      "tables": [
+        "clubPlayersPlayerGrid"
+      ],
+      "outsideButtons": [
+        {
+          "name": "clubPlayersClose",
+          "caption": "Close",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Club_Workspace",
+      "tables": [
+        "MembershipTypeList",
+        "FormFieldList",
+        "FederationRequirementList",
+        "ClubEventList",
+        "NewsItemList",
+        "requestList",
+        "memberList",
+        "workspacePlayerGrid",
+        "playerListRuleList",
+        "invoiceList",
+        "clubSeasonList",
+        "historyClubSeasonList",
+        "clubRolesList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "widget12",
+          "caption": "Save settings",
+          "style": "Success",
+          "path": "/widgets/0/widgets/3/widgets/1/widgets/0/tabPages/0/widgets/0/widgets/10",
+          "actionType": "Pages$SaveChangesClientAction"
+        },
+        {
+          "name": "manageClubFederations",
+          "caption": "Federation affiliations",
+          "style": "Default",
+          "path": "/widgets/0/widgets/3/widgets/1/widgets/0/tabPages/0/widgets/0/widgets/11",
+          "flow": "MyFirstModule.ACT_ClubAffiliation_Open",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "p2Widget27",
+          "caption": "Add Secretary role",
+          "style": "Default",
+          "path": "/widgets/0/widgets/3/widgets/1/widgets/0/tabPages/11/widgets/0/widgets/2",
+          "flow": "MyFirstModule.ACT_ClubRole_CreateSecretary",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "ClubRole_Edit",
+      "tables": [
+        "roleStaff"
+      ],
+      "outsideButtons": [
+        {
+          "name": "seasonWidget47",
+          "caption": "Assign this role",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/2/widgets/7",
+          "flow": "MyFirstModule.ACT_ClubStaff_Open",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "seasonWidget53",
+          "caption": "Disable role",
+          "style": "Danger",
+          "path": "/widgets/0/widgets/2/widgets/9",
+          "flow": "MyFirstModule.ACT_ClubRole_Delete",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionPermissionsAdd",
+          "caption": "Add competition permissions",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/2/widgets/10",
+          "flow": "MyFirstModule.ACT_CompetitionPermission_Add",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "seasonWidget54",
+          "caption": "Save",
+          "style": "Success",
+          "path": "/widgets/0/widgets/2/footerWidgets/0",
+          "flow": "MyFirstModule.ACT_ClubRole_Save",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "seasonWidget55",
+          "caption": "Cancel",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/footerWidgets/1",
+          "actionType": "Pages$CancelChangesClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Competition_Overview",
+      "tables": [
+        "competitionWidget204",
+        "competitionWidget209",
+        "competitionWidget214",
+        "competitionWidget217",
+        "competitionWidget220",
+        "competitionWidget229"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "CompetitionFederation_Workspace",
+      "tables": [
+        "competitionWidget192",
+        "competitionWidget195"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "matchFormatsEntry",
+          "caption": "Match formats and eligibility",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/widgets/1/widgets/0",
+          "flow": "MyFirstModule.ACT_Match_FormatsEntry",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "CompetitionLeague_Workspace",
+      "tables": [
+        "competitionWidget157",
+        "competitionWidget160",
+        "competitionWidget169",
+        "competitionWidget178"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "competitionWidget148",
+          "caption": "League settings",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/widgets/3/widgets/0",
+          "flow": "MyFirstModule.ACT_CompetitionLeague_Edit",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "matchDivisionEntry",
+          "caption": "Match registration and format",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/widgets/3/widgets/1",
+          "flow": "MyFirstModule.ACT_Match_DivisionEntry",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget149",
+          "caption": "Allocate poules",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/2/widgets/4/tabPages/1/widgets/0/widgets/0",
+          "flow": "MyFirstModule.ACT_Competition_AllocateOpen",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget150",
+          "caption": "Generate fixtures",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/widgets/4/tabPages/2/widgets/0/widgets/0",
+          "flow": "MyFirstModule.ACT_CompetitionFixture_Generate",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget151",
+          "caption": "Plan draft schedule",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/widgets/4/tabPages/2/widgets/0/widgets/1",
+          "flow": "MyFirstModule.ACT_CompetitionFixture_Plan",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget152",
+          "caption": "Publish schedule",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/2/widgets/4/tabPages/2/widgets/0/widgets/2",
+          "flow": "MyFirstModule.ACT_CompetitionFixture_Publish",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "CompetitionPlayer_Add",
+      "tables": [
+        "competitionWidget26"
+      ],
+      "outsideButtons": [
+        {
+          "name": "competitionWidget27",
+          "caption": "Save",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/widgets/2",
+          "flow": "MyFirstModule.ACT_CompetitionPlayer_Add",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget28",
+          "caption": "Cancel",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/3",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "CompetitionTeam_Workspace",
+      "tables": [
+        "competitionWidget131"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "competitionWidget128",
+          "caption": "Register in a league",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/widgets/2/widgets/0",
+          "flow": "MyFirstModule.ACT_LeagueEntry_Open",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "CompetitionVenue_Workspace",
+      "tables": [
+        "competitionWidget140"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Federation_Overview",
+      "tables": [
+        "federationList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Federation_Workspace",
+      "tables": [
+        "federationTypeList",
+        "affiliationList",
+        "federationRegistrationList",
+        "federationInvoiceList",
+        "FederationFieldList",
+        "FederationGenderList",
+        "TeamCategoryList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "p2Widget113",
+          "caption": "Settings",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/2/widgets/0",
+          "flow": "MyFirstModule.ACT_Federation_Settings",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "p2Widget114",
+          "caption": "Invoice appearance",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/2/widgets/1",
+          "flow": "MyFirstModule.ACT_FederationInvoiceStyle_Open",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "p2Widget115",
+          "caption": "Assign administrator",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/2/widgets/2",
+          "flow": "MyFirstModule.ACT_Federation_AssignmentOpen",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "p2Widget140",
+          "caption": "Generate annual invoices",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/widgets/3/tabPages/3/widgets/0",
+          "flow": "MyFirstModule.ACT_FederationBilling_Open",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "FederationType_Edit",
+      "tables": [
+        "federationRateList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "p2Widget49",
+          "caption": "Save",
+          "style": "Success",
+          "path": "/widgets/0/widgets/2/footerWidgets/0",
+          "flow": "MyFirstModule.ACT_FederationType_Save",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "p2Widget50",
+          "caption": "Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/footerWidgets/1",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "FixtureChange_Propose",
+      "tables": [
+        "competitionWidget87"
+      ],
+      "outsideButtons": [
+        {
+          "name": "competitionWidget90",
+          "caption": "Save",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/widgets/5",
+          "flow": "MyFirstModule.ACT_FixtureChange_Submit",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget91",
+          "caption": "Cancel",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/6",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "FixturePlacement_Edit",
+      "tables": [
+        "competitionWidget101"
+      ],
+      "outsideButtons": [
+        {
+          "name": "competitionWidget104",
+          "caption": "Save",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/widgets/5",
+          "flow": "MyFirstModule.ACT_FixturePlacement_Save",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget105",
+          "caption": "Cancel",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/6",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "LeagueEntry_Move",
+      "tables": [
+        "competitionWidget64"
+      ],
+      "outsideButtons": [
+        {
+          "name": "competitionWidget66",
+          "caption": "Save",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/widgets/3",
+          "flow": "MyFirstModule.ACT_LeagueEntry_Move",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget67",
+          "caption": "Cancel",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/4",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "LeagueEntry_Poule",
+      "tables": [
+        "competitionWidget73"
+      ],
+      "outsideButtons": [
+        {
+          "name": "competitionWidget76",
+          "caption": "Save",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/widgets/4",
+          "flow": "MyFirstModule.ACT_LeagueEntry_PouleMove",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget77",
+          "caption": "Cancel",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/5",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "LeagueEntry_Register",
+      "tables": [
+        "competitionWidget34"
+      ],
+      "outsideButtons": [
+        {
+          "name": "competitionWidget35",
+          "caption": "Save",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/widgets/2",
+          "flow": "MyFirstModule.ACT_LeagueEntry_Submit",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget36",
+          "caption": "Cancel",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/widgets/3",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MatchAssignments",
+      "tables": [
+        "competitionWidget6"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MatchContest",
+      "tables": [
+        "competitionWidget137",
+        "competitionWidget143"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "competitionWidget138",
+          "caption": "Home lineup",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/4",
+          "flow": "MyFirstModule.ACT_Match_HomeLineup",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget139",
+          "caption": "Away lineup",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/5",
+          "flow": "MyFirstModule.ACT_Match_AwayLineup",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget149",
+          "caption": "Save complete score and outcome",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/12",
+          "flow": "MyFirstModule.ACT_Match_Scores",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget152",
+          "caption": "Save order / outcome",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/15",
+          "flow": "MyFirstModule.ACT_Match_Outcome",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget153",
+          "caption": "Back to fixture",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/16",
+          "flow": "MyFirstModule.ACT_Match_Fixture",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MatchDivision",
+      "tables": [
+        "competitionWidget95",
+        "competitionWidget99"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "competitionWidget100",
+          "caption": "Refresh division",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/5",
+          "flow": "MyFirstModule.ACT_Match_Division",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MatchEligibility",
+      "tables": [
+        "competitionWidget202",
+        "competitionWidget205"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "competitionWidget206",
+          "caption": "Back to formats",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/4",
+          "flow": "MyFirstModule.ACT_Match_Formats",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MatchFixture",
+      "tables": [
+        "competitionWidget114",
+        "competitionWidget129"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "competitionWidget105",
+          "caption": "Claim home captain role",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/2",
+          "flow": "MyFirstModule.ACT_Match_ClaimHome",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget106",
+          "caption": "Claim away captain role",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/3",
+          "flow": "MyFirstModule.ACT_Match_ClaimAway",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget108",
+          "caption": "Appoint official",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/5",
+          "flow": "MyFirstModule.ACT_Match_Appoint",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget110",
+          "caption": "Start fixture and reveal lineups",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/7",
+          "flow": "MyFirstModule.ACT_Match_Start",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget115",
+          "caption": "Submit completed fixture",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/9",
+          "flow": "MyFirstModule.ACT_Match_Submit",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget116",
+          "caption": "Home: accept result",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/10",
+          "flow": "MyFirstModule.ACT_Match_AcceptHome",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget117",
+          "caption": "Away: accept result",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/11",
+          "flow": "MyFirstModule.ACT_Match_AcceptAway",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget119",
+          "caption": "Home: dispute",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/13",
+          "flow": "MyFirstModule.ACT_Match_DisputeHome",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget120",
+          "caption": "Away: dispute",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/14",
+          "flow": "MyFirstModule.ACT_Match_DisputeAway",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget124",
+          "caption": "Finalize federation ruling",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/18",
+          "flow": "MyFirstModule.ACT_Match_Finalize",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget125",
+          "caption": "Refresh fixture",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/19",
+          "flow": "MyFirstModule.ACT_Match_Fixture",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MatchFormats",
+      "tables": [
+        "competitionWidget6"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "competitionWidget2",
+          "caption": "Eligibility warnings",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/2/widgets/0",
+          "flow": "MyFirstModule.ACT_Match_Eligibility",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "matchVerifySamples",
+          "caption": "Verify development examples (local administrator)",
+          "style": "Default",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/2/widgets/1",
+          "flow": "MyFirstModule.ACT_Match_VerifySamples",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MatchRoster",
+      "tables": [
+        "competitionWidget176"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "matchClearPlayer1",
+          "caption": "Clear player 1",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/4",
+          "flow": "MyFirstModule.ACT_Match_Clear1",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "matchClearPlayer2",
+          "caption": "Clear player 2",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/5",
+          "flow": "MyFirstModule.ACT_Match_Clear2",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget179",
+          "caption": "Save lineup",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/10",
+          "flow": "MyFirstModule.ACT_Match_SaveLineup",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget180",
+          "caption": "Back to contest",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/11",
+          "flow": "MyFirstModule.ACT_Match_RefreshContest",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MatchSlot_Edit",
+      "tables": [
+        "competitionWidget83"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "competitionWidget85",
+          "caption": "Save slot",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/11",
+          "flow": "MyFirstModule.ACT_Match_SaveSlot",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "competitionWidget86",
+          "caption": "Remove unused slot",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/1/rows/0/columns/0/widgets/1/widgets/12",
+          "flow": "MyFirstModule.ACT_Match_RemoveSlot",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Member_Dashboard",
+      "tables": [
+        "news",
+        "events",
+        "dashboardRequestsRequestList",
+        "memberships",
+        "dashboardPlayerClubs",
+        "invoices",
+        "dashboardFindClubList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "dashboardClubSearchClear",
+          "caption": "Reset filters",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/2/tabPages/5/widgets/1/widgets/0/widgets/1",
+          "flow": "MyFirstModule.ACT_ClubDiscovery_Clear",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "MyClub_Competitions",
+      "tables": [
+        "sectionFixtures"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Platform_Accounts",
+      "tables": [
+        "invitationList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "viewAllApplicationAccounts",
+          "caption": "View all accounts",
+          "style": "Default",
+          "path": "/widgets/0/widgets/3",
+          "actionType": "Pages$PageClientAction"
+        },
+        {
+          "name": "platformViewAsUser",
+          "caption": "View as user",
+          "style": "Default",
+          "path": "/widgets/0/widgets/4",
+          "actionType": "Pages$OpenLinkClientAction"
+        },
+        {
+          "name": "p2Widget11",
+          "caption": "Create account and queue invitation",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/5/widgets/2",
+          "flow": "MyFirstModule.ACT_AdminAccount_Create",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Platform_Clubs",
+      "tables": [
+        "clubList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "widget7",
+          "caption": "Create",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/3",
+          "actionType": "Pages$CreateObjectClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Player_Directory",
+      "tables": [
+        "playerDirectoryResults"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        },
+        {
+          "name": "playerDirectorySearchButton",
+          "caption": "Search",
+          "style": "Primary",
+          "path": "/widgets/0/widgets/3/widgets/1",
+          "flow": "MyFirstModule.ACT_PlayerDirectory_Search",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Registration_Review",
+      "tables": [
+        "answers"
+      ],
+      "outsideButtons": [
+        {
+          "name": "approveRegistration",
+          "caption": "Approve",
+          "style": "Success",
+          "path": "/widgets/0/widgets/2/widgets/0/widgets/10/widgets/0",
+          "flow": "MyFirstModule.ACT_Registration_Approve",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "holdRegistration",
+          "caption": "Put on hold",
+          "style": "Warning",
+          "path": "/widgets/0/widgets/2/widgets/0/widgets/10/widgets/1/widgets/0",
+          "flow": "MyFirstModule.ACT_Registration_OnHold",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "cancelRegistration",
+          "caption": "Cancel registration",
+          "style": "Danger",
+          "path": "/widgets/0/widgets/2/widgets/0/widgets/10/widgets/2",
+          "flow": "MyFirstModule.ACT_Registration_CancelByStaff",
+          "actionType": "Pages$MicroflowClientAction"
+        },
+        {
+          "name": "closeRegistrationReview",
+          "caption": "Close",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/widgets/0/widgets/10/widgets/3",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Registrations",
+      "tables": [
+        "requestList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Renewals",
+      "tables": [
+        "renewalList"
+      ],
+      "outsideButtons": [
+        {
+          "name": "nexioBackButton",
+          "caption": "← Back",
+          "style": "Default",
+          "path": "/widgets/0/widgets/0/widgets/0",
+          "actionType": "Pages$ClosePageClientAction"
+        }
+      ]
+    },
+    {
+      "page": "Season_Edit",
+      "tables": [
+        "seasonFees",
+        "seasonTypes"
+      ],
+      "outsideButtons": [
+        {
+          "name": "seasonInlineCancel",
+          "caption": "Cancel",
+          "style": "Default",
+          "path": "/widgets/0/widgets/2/widgets/0/widgets/0/widgets/8",
+          "actionType": "Pages$CancelChangesClientAction"
+        },
+        {
+          "name": "seasonInlineSave",
+          "caption": "Save",
+          "style": "Success",
+          "path": "/widgets/0/widgets/2/widgets/0/widgets/0/widgets/9",
+          "flow": "MyFirstModule.ACT_Season_Save",
+          "actionType": "Pages$MicroflowClientAction"
+        }
+      ]
+    }
+  ],
+  "duplicateCaptions": [
+    {
+      "page": "Accounts_Overview",
+      "table": "applicationAccounts",
+      "caption": "View",
+      "buttons": [
+        {
+          "name": "accountsViewAccount1",
+          "path": "/0/widgets/1",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/CanView",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        },
+        {
+          "name": "accountsViewAccount",
+          "path": "/0/widgets/9",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/CanView",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        }
+      ]
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget204",
+      "caption": "View",
+      "buttons": [
+        {
+          "name": "tableFeature1_competitionWidget204",
+          "path": "/0/widgets/1",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/Feature1",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        },
+        {
+          "name": "leaguesOpen",
+          "path": "/0/widgets/9",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/CanView",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        }
+      ]
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget214",
+      "caption": "View",
+      "buttons": [
+        {
+          "name": "tableFeature1_competitionWidget214",
+          "path": "/0/widgets/1",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/Feature1",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        },
+        {
+          "name": "teamsOpen",
+          "path": "/0/widgets/9",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/CanView",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        }
+      ]
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget217",
+      "caption": "View",
+      "buttons": [
+        {
+          "name": "tableFeature1_competitionWidget217",
+          "path": "/0/widgets/1",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/Feature1",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        },
+        {
+          "name": "venuesOpen",
+          "path": "/0/widgets/9",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/CanView",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        }
+      ]
+    },
+    {
+      "page": "Competition_Overview",
+      "table": "competitionWidget229",
+      "caption": "Propose date change",
+      "buttons": [
+        {
+          "name": "fixturesProposeChange",
+          "path": "/0/widgets/8",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/SelectedCount = 1",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        },
+        {
+          "name": "tableFeature1_competitionWidget229",
+          "path": "/0/widgets/10",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/Feature1",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        }
+      ]
+    },
+    {
+      "page": "Federation_Overview",
+      "table": "federationList",
+      "caption": "View",
+      "buttons": [
+        {
+          "name": "tableFeature1_federationList",
+          "path": "/0/widgets/1",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/Feature1",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        },
+        {
+          "name": "federationsOpen",
+          "path": "/0/widgets/9",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/CanView",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        }
+      ]
+    },
+    {
+      "page": "Platform_Clubs",
+      "table": "clubList",
+      "caption": "Assign administrator",
+      "buttons": [
+        {
+          "name": "clubsAssignAdmin",
+          "path": "/1/widgets/9",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/SelectedCount = 1",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        },
+        {
+          "name": "tableFeature1_clubList",
+          "path": "/1/widgets/12",
+          "visibility": {
+            "$Type": "Pages$ConditionalVisibilitySettings",
+            "conditions": [],
+            "expression": "$currentObject/Feature1",
+            "moduleRoles": [],
+            "ignoreSecurity": false
+          }
+        }
+      ]
+    }
+  ],
+  "additionalRedundancies": [
+    {
+      "page": "Platform_Clubs",
+      "name": "widget7",
+      "reason": "Standalone Create duplicates the toolbar creation route to Club_Edit."
+    },
+    {
+      "page": "Competition_Overview",
+      "name": "fixturesPlacement",
+      "reason": "Placement duplicates the permission-aware Federation placement / override route to ACT_FixturePlacement_Open."
+    }
+  ]
+}

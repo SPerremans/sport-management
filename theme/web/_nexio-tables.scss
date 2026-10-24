@@ -113,8 +113,23 @@
 .nexio-data-table .form-control {
   min-height: 32px; padding: 5px 8px; font-size: 14px; border-radius: 6px;
 }
-.nexio-data-table .widget-datagrid-header { padding: 10px 12px; }
+.nexio-data-table .widget-datagrid-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 12px;
+}
+.nexio-data-table .widget-datagrid-header > .nexio-table-actions { margin: 0; }
 .nexio-table-search { width: min(100%, 480px); }
+/* Filters precede the separate action row; headers only label columns. */
+.nexio-registration-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
+.nexio-data-table .widget-datagrid-header > .nexio-registration-filters { margin-bottom: 0; }
+.nexio-registration-filters > * { flex: 1 1 170px; min-width: 0; }
+.nexio-registration-filters > .nexio-table-search { flex: 2 1 300px; width: auto; }
+.nexio-registration-filters .form-control,
+.nexio-registration-filters .widget-combobox-input-container { min-height: 40px; font-size: 14px; line-height: 22px; }
+.nexio-registration-filters input.form-control { height: 40px; padding: 8px 10px; }
 .nexio-data-table .pagination-bar { margin: 8px 12px; font-size: 13px; }
 .nexio-data-table .nexio-table-details { padding: 0; }
 .nexio-data-table .nexio-data-table { margin: 6px 0; }
@@ -199,7 +214,18 @@
 .nexio-account-table .nexio-account-column-4 { min-width: 140px; }
 .nexio-account-table .nexio-account-column-5 { min-width: 170px; }
 .nexio-account-table .nexio-account-actions { min-width: 140px; }
-.nexio-account-detail .nexio-table-actions { margin-bottom: 20px; }
+.nexio-account-toolbar { margin: 16px 0 8px; }
+/* Multi-select table wrapper: a data view holding the selection counts, the toolbar and the grid. */
+.nexio-table-selection > .mx-dataview-content { padding: 0; }
+.nexio-table-selection > .mx-dataview-content > .nexio-table-actions { margin: 16px 0 8px; }
+.nexio-table-selection > .mx-dataview-content > .nexio-table-actions:empty { display: none; }
+.nexio-account-toolbar .nexio-table-actions:empty { display: none; }
+/* Account popups: labels above fields, actions right-aligned. Padding comes from the shared popup rule in _nexio.scss. */
+.nexio-account-edit > .mx-dataview-content { padding: 0; }
+.nexio-account-edit .form-group { margin-bottom: 16px; }
+.nexio-account-edit .control-label { font-weight: 600; margin-bottom: 6px; }
+.nexio-account-edit p { margin: 0 0 16px; color: var(--nexio-muted); }
+.nexio-account-edit > .mx-dataview-controls { display: flex; justify-content: flex-end; gap: 8px; padding: 16px 0 0; }.nexio-account-detail .nexio-table-actions { margin-bottom: 20px; }
 .nexio-account-summary { display: grid; grid-template-columns: repeat(3, minmax(180px, 1fr)); gap: 16px 24px; margin-bottom: 16px; }
 .nexio-account-field { min-width: 0; display: flex; flex-direction: column; gap: 4px; overflow-wrap: anywhere; }
 .nexio-account-field > .mx-text:first-child { font-size: 13px; font-weight: 600; color: var(--nexio-muted); }
@@ -209,6 +235,20 @@
 .nexio-account-audit .td { overflow-wrap: anywhere; }
 @media (max-width: 1000px) { .nexio-account-filters, .nexio-account-summary { grid-template-columns: repeat(2, minmax(160px, 1fr)); } }
 @media (max-width: 480px) { .nexio-account-filters, .nexio-account-summary { grid-template-columns: 1fr; } }
+
+/* Registration form: one stacked question per answer, label above the input, required marker and muted help text. */
+.nexio-form-intro { color: var(--nexio-muted); margin: 8px 0 4px; }
+.nexio-form-questions { max-width: 640px; margin: 8px 0 24px; }
+.nexio-form-questions > .mx-listview-list,
+.nexio-form-questions ul { list-style: none; margin: 0; padding: 0; border: 0; }
+.nexio-form-questions .mx-listview-item { border: 0; padding: 0; background: transparent; }
+.nexio-form-questions .mx-listview-item:hover { background: transparent; }
+.nexio-form-question { padding: 12px 0; }
+.nexio-form-question .form-group { margin-bottom: 4px; }
+.nexio-form-question .control-label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--nexio-navy); }
+.nexio-form-required .control-label::after { content: " *"; color: var(--brand-danger, #c62828); }
+.nexio-form-question .radio, .nexio-form-question .mx-radiogroup label { margin-right: 20px; }
+.nexio-form-help { display: block; font-size: 13px; color: var(--nexio-muted); }
 
 /* Shared discovery filters: one consistent searchable multiselect, compact removable chips. */
 .nexio-discovery-search { min-width: 0; }
@@ -222,22 +262,27 @@
 .nexio-discovery-filters > .form-group { min-width: 0; margin: 0; }
 .nexio-discovery-filters .control-label { display: block; text-align: left; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--nexio-navy); }
 .nexio-discovery-filters .form-control,
-.nexio-discovery-filters .widget-combobox-input-container { min-height: 38px; border-radius: 6px; font-size: 14px; box-shadow: none; }
-.nexio-discovery-filters .form-control { padding: 7px 10px; }
-.nexio-discovery-filters .widget-combobox { width: 100%; min-width: 0; }
-.nexio-discovery-filters .widget-combobox-input-container { height: auto; align-items: flex-start; padding: 4px 8px; }
-.nexio-discovery-filters .widget-combobox-selected-items { min-width: 0; align-items: center; gap: 2px; }
-.nexio-discovery-filters .widget-combobox-input { flex-basis: 100%; min-width: 80px; height: 30px; min-height: 30px; font-size: 14px; padding: 4px 2px; }
-.nexio-discovery-filters .widget-combobox-selected-item { font-size: 12px; line-height: 1.4; padding: 3px 6px; border-radius: 4px; background: var(--brand-default); color: var(--nexio-navy); }
-.nexio-discovery-filters .widget-combobox-selected-item-remove-button { width: 24px; height: 24px; min-height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
-.nexio-discovery-filters .widget-combobox-clear-button,
-.nexio-discovery-filters .widget-combobox-down-arrow { align-self: flex-start; height: 30px; min-height: 30px; padding: 5px; }
-.nexio-discovery-filters .widget-combobox-menu { background: var(--nexio-surface); }
-.nexio-discovery-filters .widget-combobox-item { min-height: 38px; padding: 8px 10px; color: var(--nexio-navy); font-size: 14px; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-input-container { min-height: 40px; border-radius: 6px; font-size: 14px; line-height: 22px; box-shadow: none; }
+.nexio-discovery-filters .form-control { padding: 8px 10px; }
+.nexio-discovery-filters input.form-control,
+.nexio-discovery-filters select.form-control { height: 40px; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox { width: 100%; min-width: 0; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-input-container { height: auto; align-items: center; padding: 4px 8px; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-selected-items { min-width: 0; min-height: 30px; align-items: center; gap: 2px; margin: 0; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-selected-items.widget-combobox-boxes { margin: 0; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-input { flex-basis: 100%; min-width: 80px; height: 30px; min-height: 30px; font-size: 14px; line-height: 22px; padding: 4px 2px; }
+/* Combobox renders its idle placeholder in an absolute span, separate from the input. */
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-placeholder-text { box-sizing: border-box; height: 30px; padding: 4px 2px; font-size: 14px; line-height: 22px; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-selected-item { font-size: 12px; line-height: 1.4; padding: 3px 6px; border-radius: 4px; background: var(--brand-default); color: var(--nexio-navy); }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-selected-item-remove-button { width: 24px; height: 24px; min-height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-clear-button,
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-down-arrow { align-self: center; height: 30px; min-height: 30px; padding: 5px; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-menu { background: var(--nexio-surface); }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-item { min-height: 38px; padding: 8px 10px; color: var(--nexio-navy); font-size: 14px; }
 /* The listbox owns mouse/keyboard selection. Decorative checkbox/label clicks must reach the row. */
-.nexio-discovery-filters .widget-combobox-item > .widget-combobox-icon-container,
-.nexio-discovery-filters .widget-combobox-item .widget-combobox-caption-text { pointer-events: none; }
-.nexio-discovery-filters .widget-combobox-item-selected + .widget-combobox-item:not(.widget-combobox-item-selected) { border-top: 1px solid var(--nexio-line); }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-item > .widget-combobox-icon-container,
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-item .widget-combobox-caption-text { pointer-events: none; }
+:is(.nexio-discovery-filters, .nexio-registration-filters) .widget-combobox-item-selected + .widget-combobox-item:not(.widget-combobox-item-selected) { border-top: 1px solid var(--nexio-line); }
 .nexio-discovery-filters input[type="checkbox"],
 .nexio-membership-audience input[type="checkbox"] { flex: 0 0 16px; width: 16px; height: 16px; min-width: 16px; min-height: 16px; padding: 0; border-radius: 3px; margin: 0 8px 0 0; box-shadow: none; }
 .nexio-discovery-actions { justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -252,3 +297,5 @@
 @media (max-width: 1000px) { .nexio-discovery-filters.nexio-discovery-filters-4 { grid-template-columns: repeat(2, minmax(160px, 1fr)); } }
 @media (max-width: 767px) { .nexio-discovery-filters { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
 @media (max-width: 480px) { .nexio-discovery-filters, .nexio-discovery-filters.nexio-discovery-filters-4 { grid-template-columns: minmax(0, 1fr); } }
+
+.nexio-record-details { white-space: pre-line; overflow-wrap: anywhere; }

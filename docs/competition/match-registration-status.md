@@ -1,5 +1,7 @@
 # Match registration - 15 October 2026
 
+24 October update: [league standings and result settings](standings-and-league-results.md) adds team tables and calendar winners, league-level competition points and optional game breakdowns. This supersedes the competition-table limitation below; player rankings remain outside scope.
+
 Implemented in the Mendix model and connected to the Java service. Final validation has the limits below.
 
 ## Where to use it

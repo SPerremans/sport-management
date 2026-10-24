@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-24",
+  "snapshotSha256": "919a1ad89f1ab9660b3fcc6df1dd4c988b2ef9912bc9fda8cb6b4c7963b381aa",
+  "modelConsistency": {
+    "tool": "mnd.ped_check_errors",
+    "scope": "global",
+    "errors": 0,
+    "result": "No errors found."
+  },
+  "compilation": {
+    "standalone": "Java 21 compilation passed for PublicCompetitionSamples, DevelopmentSamples, MatchRegistrationService, MatchRules and PublicCompetitionSnapshotChecks",
+    "fullApplication": "BUILD SUCCESSFUL",
+    "log": "deployment/log/build_clean-custom-classes_compile_package_gradle_log.txt",
+    "deployedSnapshotHashMatches": true,
+    "existingWarnings": "CommunityCommons StringUtils.removeEnd deprecation and generated proxy unchecked-operation note"
+  },
+  "offlineSourceVerification": {
+    "test": "docs/development/tests/PublicCompetitionSnapshotChecks.java",
+    "result": "passed",
+    "fixtureMemberships": 3342,
+    "badmintonSheets": 621,
+    "badmintonGames": 4968,
+    "numericSets": 10439,
+    "unplayedOrAwardedSheets": 54,
+    "retirementsWithAwardedCompletedScores": 12,
+    "finishedFootballResults": 121,
+    "limitation": "Source retirement exceptions retain their raw scores; they do not pass the ordinary editor's retirement-after-completion validation. These offline checks do not exercise Mendix workflows."
+  },
+  "runtime": {
+    "started": true,
+    "samplesPopulatedByThisTask": true,
+    "freshGeneration": "not executed",
+    "existingBatchUpgradeAndIdempotence": "Existing-batch upgrade completed through Generate sample data; built-in repeated extension record-ID idempotence check succeeded.",
+    "editedRecordPreservation": "not executed",
+    "ownershipAndScopedCleanup": "not executed",
+    "signedInFormatsAndEightGameFixtureUI": "Verified administrator national and football league policies and standings; national mixed fixture shows all eight games, public participants and sets. Football fixture uses direct scores and hides game breakdown. Final national standings, settings and fixture points display whole numbers.",
+    "blocker": null
+  }
+}

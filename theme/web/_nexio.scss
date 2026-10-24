@@ -193,6 +193,27 @@ section p {
   padding-top: 22px;
   margin-top: 24px;
 }
+/* Every popup keeps breathing room, whatever widget sits at its root: the window body owns the padding. */
+.mx-window .mx-window-body,
+.mx-window.mx-window-view .mx-window-body {
+  padding: 20px 24px 24px;
+}
+.mx-window.mx-window-view .mx-window-body > .mx-dataview > .mx-dataview-content,
+.mx-window.mx-window-view .mx-window-body > .mx-placeholder > .mx-dataview > .mx-dataview-content {
+  padding: 0;
+}
+.mx-window.mx-window-view .mx-window-body > .mx-dataview > .mx-dataview-controls,
+.mx-window.mx-window-view .mx-window-body > .mx-placeholder > .mx-dataview > .mx-dataview-controls {
+  padding: 16px 0 0;
+  margin-top: 16px;
+}
+.mx-window .mx-dataview-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+}
+/* Back link at the top of every full-screen page: closes the page and returns to the previous one. */
+.nexio-back-bar { margin: 0 0 12px; }
+.nexio-back-bar .nexio-back-button { min-height: 0; padding: 4px 0; font-weight: 600; }
 .btn, .mx-button {
   min-height: 44px;
   border-radius: 12px;

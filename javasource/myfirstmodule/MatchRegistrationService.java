@@ -88,13 +88,22 @@ public final class MatchRegistrationService {
 
     public static synchronized IMendixObject execute(IContext caller, IMendixObject input, String operation) throws Exception {
 
+        // Calculated calendar cells are read-only and must also work in private system reads.
+        if("CalendarSummary".equals(operation)){
+            IContext readContext=Core.createSystemContext();
+            MatchRegistrationService s=caller.getSession()==null&&caller.isSudo()?new MatchRegistrationService(readContext):new MatchRegistrationService(caller,readContext);
+            IMendixObject fixture=s.required(input,"FixtureKey","CompetitionFixture");
+            if(s.user!=null)s.require(s.canRead(fixture),"You cannot access this fixture.");
+            IMendixObject result=s.form("Calendar result");s.put(result,"Info",s.calendarSummary(fixture,s.registration(fixture,false)));return result;
+        }
+
         IContext ctx = Core.createSystemContext(); ctx.startTransaction();
 
         try {
 
             MatchRegistrationService s = new MatchRegistrationService(caller, ctx);
 
-            Core.microflowCall(M + "SUB_Competition_Lock").execute(ctx);
+            if(!"Division".equals(operation))Core.microflowCall(M + "SUB_Competition_Lock").execute(ctx);
 
             IMendixObject output = s.command(input, operation);
 
@@ -141,6 +150,10 @@ public final class MatchRegistrationService {
             case "AssignFormat": return assign(f);
 
             case "Division": return division(required(f, "LeagueKey", "CompetitionLeague"));
+
+            case "SaveLeagueResults": return saveLeagueResults(f);
+
+            case "SaveFixtureScore": return saveFixtureScore(f);
 
             case "OpenFixture": return fixture(required(f, "FixtureKey", "CompetitionFixture"));
 
@@ -404,7 +417,7 @@ public final class MatchRegistrationService {
 
         if(date(league,"StartsOn")!=null&&!date(league,"StartsOn").after(new Date())){require(fedPermission(fed,"Override"),"A started season requires federation override permission.");requireReason(f);}
 
-        IMendixObject old=ref(league,"CompetitionLeague_MatchFormat");link(league,"CompetitionLeague_MatchFormat",rule);save(league);
+        IMendixObject old=ref(league,"CompetitionLeague_MatchFormat");String leagueSport=text(league,"Sport").trim();require(leagueSport.isEmpty()||leagueSport.equalsIgnoreCase(text(rule,"Sport").trim()),"The match format must use the league's sport.");link(league,"CompetitionLeague_MatchFormat",rule);LeagueSports.initializeOrValidate(ctx,league);save(league);
 
         audit(null,fed,league,"Division format assigned",reasonOr(f,"Division format selection"),old==null?"None":id(old),id(rule)+"; existing fixture snapshots preserved","");return division(league);
 
@@ -414,16 +427,87 @@ public final class MatchRegistrationService {
 
     private IMendixObject division(IMendixObject league) throws Exception {
 
-        IMendixObject fed=ref(league,"CompetitionLeague_Federation"); boolean readable=fedPermission(fed,"Read");for(IMendixObject entry:query("LeagueEntry","["+M+"LeagueEntry_League="+id(league)+"]")){IMendixObject club=ref(entry,"LeagueEntry_Club");if(club!=null&&Boolean.TRUE.equals(Core.microflowCall(M+"SUB_Competition_ClubPermission").withParam("Club",club).withParam("Operation","Read").execute(caller)))readable=true;}require(readable,"You cannot access this division."); IMendixObject f=form(text(league,"Name")+" · Match registration");put(f,"LeagueKey",id(league));put(f,"FederationKey",id(fed));put(f,"CanManage",fedPermission(fed,"Manage"));
+        IMendixObject fed=ref(league,"CompetitionLeague_Federation"); boolean readable="Published".equals(text(league,"Stage"))||fedPermission(fed,"Read");for(IMendixObject entry:query("LeagueEntry","["+M+"LeagueEntry_League="+id(league)+"]")){IMendixObject club=ref(entry,"LeagueEntry_Club");if(club!=null&&Boolean.TRUE.equals(Core.microflowCall(M+"SUB_Competition_ClubPermission").withParam("Club",club).withParam("Operation","Read").execute(caller)))readable=true;}require(readable,"You cannot access this division."); IMendixObject f=form(text(league,"Name")+" · Results and standings");put(f,"LeagueKey",id(league));put(f,"FederationKey",id(fed));put(f,"CanManage",fedPermission(fed,"Manage"));
 
         IMendixObject rule=ref(league,"CompetitionLeague_MatchFormat");put(f,"Info",rule==null?"Federation: choose a match format before registering fixtures.":"Format: "+text(rule,"Name")+" v"+integer(rule,"Version")+". All poules/subdivisions inherit this format.");
 
         if(bool(f,"CanManage"))for(IMendixObject r:query("MatchFormat","["+M+"MatchFormat_Federation="+id(fed)+"]"))row(f,r,"FormatChoice",text(r,"Name")+" v"+integer(r,"Version"),MatchRules.available(bool(r,"IsAvailable"),instant(r,"AvailableFrom"),instant(r,"AvailableUntil"),instant(league,"StartsOn"))?"Available for division start":"Unavailable for division start");
 
-        for(IMendixObject fixture:query("CompetitionFixture","["+M+"CompetitionFixture_League="+id(league)+"]"))if(canRead(fixture))row(f,fixture,"Fixture",text(fixture,"HomeName")+" — "+text(fixture,"AwayName"),text(fixture,"StartsAt")+" | "+text(fixture,"Issue"));
+        CompetitionStandings.Policy policy=leaguePolicy(league);put(f,"UseGameBreakdown",policy.games());put(f,"PointsPerGame",policy.pointsPerGame());put(f,"WinPoints",policy.win());put(f,"DrawPoints",policy.draw());put(f,"LossPoints",policy.loss());
+        put(f,"Info",text(f,"Info")+"\nLeague points: win "+CompetitionStandings.pointsText(policy.win())+", draw "+CompetitionStandings.pointsText(policy.draw())+", loss "+CompetitionStandings.pointsText(policy.loss())+(policy.pointsPerGame()?" per individual game.":" per fixture.")+" Standings include accepted, federation-final and published source results. Ties: score difference, set difference, rally-point difference, team name.");
+        appendLeagueOverview(f,league,policy);
 
         return f;
 
+    }
+
+    private CompetitionStandings.Policy leaguePolicy(IMendixObject league) throws Exception {
+        IMendixObject format=ref(league,"CompetitionLeague_MatchFormat");
+        if(bool(league,"ResultSettingsConfigured"))return new CompetitionStandings.Policy(bool(league,"UseGameBreakdown"),bool(league,"PointsPerGame"),decimal(league,"WinPoints"),decimal(league,"DrawPoints"),decimal(league,"LossPoints"));
+        boolean games=format!=null&&!"Total".equals(text(format,"Scoring"));
+        return new CompetitionStandings.Policy(games,false,format==null?new BigDecimal("2"):decimal(format,"WinPoints"),format==null?BigDecimal.ONE:decimal(format,"DrawPoints"),format==null?BigDecimal.ZERO:decimal(format,"LossPoints"));
+    }
+
+    private IMendixObject saveLeagueResults(IMendixObject f) throws Exception {
+        IMendixObject league=required(f,"LeagueKey","CompetitionLeague"),fed=ref(league,"CompetitionLeague_Federation");
+        require(fedPermission(fed,"Manage"),"Only federation league managers can change result settings.");
+        CompetitionStandings.Policy previous=leaguePolicy(league),next=new CompetitionStandings.Policy(bool(f,"UseGameBreakdown"),bool(f,"PointsPerGame"),decimal(f,"WinPoints"),decimal(f,"DrawPoints"),decimal(f,"LossPoints"));
+        require(CompetitionStandings.wholePoints(next.win())&&CompetitionStandings.wholePoints(next.draw())&&CompetitionStandings.wholePoints(next.loss()),"Competition points must be whole numbers.");
+        require(next.win().abs().compareTo(BigDecimal.valueOf(100000))<=0&&next.draw().abs().compareTo(BigDecimal.valueOf(100000))<=0&&next.loss().abs().compareTo(BigDecimal.valueOf(100000))<=0,"Competition points must be between -100000 and 100000.");
+        if(previous.games()!=next.games())require(first("MatchRegistration","["+M+"MatchRegistration_Fixture/"+M+"CompetitionFixture/"+M+"CompetitionFixture_League="+id(league)+"]")==null,"The game breakdown cannot change after fixture registration has started. Create a separate league to change its result structure.");
+        if(date(league,"StartsOn")!=null&&!new Date().before(date(league,"StartsOn"))){require(fedPermission(fed,"Override"),"Changing an active league's points requires federation override permission.");requireReason(f);}
+        if(next.games()){IMendixObject format=ref(league,"CompetitionLeague_MatchFormat");require(format!=null&&!slots(format).isEmpty(),"Select a federation format with game slots before enabling the breakdown.");}
+        copy(f,league,"UseGameBreakdown","PointsPerGame","WinPoints","DrawPoints","LossPoints");put(league,"ResultSettingsConfigured",true);save(league);
+        audit(null,fed,league,"League result settings changed",reasonOr(f,"Federation league configuration"),previous.toString(),next.toString(),"");return division(league);
+    }
+
+    private String calendarSummary(IMendixObject fixture,IMendixObject reg){
+        if(reg==null)return "No result yet";
+        return CompetitionStandings.summary(text(fixture,"HomeName"),text(fixture,"AwayName"),integer(reg,"HomeScore"),integer(reg,"AwayScore"),text(reg,"Winner"),text(reg,"State"),bool(reg,"Disputed"),text(reg,"State").equals("SourceSnapshot")&&bool(reg,"SourceTotalsAvailable")&&!bool(reg,"SourceCountsInStandings"));
+    }
+
+    private void appendLeagueOverview(IMendixObject form,IMendixObject league,CompetitionStandings.Policy policy) throws Exception {
+        String lid=id(league);List<IMendixObject> fixtures=query("CompetitionFixture","["+M+"CompetitionFixture_League="+lid+"]");
+        Map<String,IMendixObject> poules=new HashMap<>(),entries=new LinkedHashMap<>(),registrations=new HashMap<>();Map<String,List<IMendixObject>> games=new HashMap<>();
+        for(IMendixObject p:query("CompetitionPoule","["+M+"CompetitionPoule_League="+lid+"]"))poules.put(id(p),p);
+        for(IMendixObject e:query("LeagueEntry","["+M+"LeagueEntry_League="+lid+"]"))entries.put(id(e),e);
+        for(IMendixObject r:query("MatchRegistration","["+M+"MatchRegistration_Fixture/"+M+"CompetitionFixture/"+M+"CompetitionFixture_League="+lid+"]"))registrations.put(referenceKey(r,"MatchRegistration_Fixture"),r);
+        if(policy.games())for(IMendixObject c:query("MatchContest","["+M+"MatchContest_Registration/"+M+"MatchRegistration/"+M+"MatchRegistration_Fixture/"+M+"CompetitionFixture/"+M+"CompetitionFixture_League="+lid+"]"))games.computeIfAbsent(referenceKey(c,"MatchContest_Registration"),k->new ArrayList<>()).add(c);
+        List<CompetitionStandings.Team> teams=new ArrayList<>();List<CompetitionStandings.Result> results=new ArrayList<>();
+        for(IMendixObject e:entries.values()){IMendixObject p=poules.get(referenceKey(e,"LeagueEntry_Poule"));teams.add(new CompetitionStandings.Team(id(e),text(e,"TeamName"),p==null?"Unallocated":text(p,"Name")));}
+        fixtures.sort(Comparator.comparing((IMendixObject fx)->date(fx,"StartsAt"),Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(fx->text(fx,"HomeName")));
+        for(IMendixObject fixture:fixtures){
+            if(!"Published".equals(text(fixture,"Status"))&&!canRead(fixture))continue;
+            IMendixObject reg=registrations.get(id(fixture)),poule=poules.get(referenceKey(fixture,"CompetitionFixture_Poule"));
+            IMendixObject row=row(form,fixture,"Fixture",text(fixture,"HomeName")+" — "+text(fixture,"AwayName"),calendarSummary(fixture,reg));
+            put(row,"PouleName",text(poule,"Name"));put(row,"StartsAt",date(fixture,"StartsAt"));copy(fixture,row,"HomeName","AwayName","VenueName");put(row,"ResultSummary",calendarSummary(fixture,reg));
+            if(reg==null)continue;
+            List<IMendixObject> contests=games.getOrDefault(id(reg),Collections.emptyList());
+            boolean official=Set.of("Accepted","FederationFinal","SourceSnapshot").contains(text(reg,"State"))&&!bool(reg,"Disputed")&&!text(reg,"Winner").isBlank();
+            // A provider may pre-award future withdrawals while its standings still count zero appearances.
+            if(text(reg,"State").equals("SourceSnapshot")&&policy.games()&&!contests.isEmpty()&&contests.stream().allMatch(c->text(c,"Outcome").equals("NotPlayed"))&&decimal(reg,"HomePoints").signum()==0&&decimal(reg,"AwayPoints").signum()==0)official=false;
+            long hs=0,as=0,hp=0,ap=0;int draws=0;
+            for(IMendixObject c:contests)if(!bool(c,"Excluded")){hs+=integer(c,"HomeSets");as+=integer(c,"AwaySets");hp+=integer(c,"HomeTotal");ap+=integer(c,"AwayTotal");if(text(c,"OfficialWinner").equals("Draw"))draws++;}
+            if(text(reg,"State").equals("SourceSnapshot")&&bool(reg,"SourceTotalsAvailable")&&integer(reg,"Revision")==1&&contests.stream().allMatch(c->integer(c,"Revision")==1)){
+                official=official&&bool(reg,"SourceCountsInStandings");hs=integer(reg,"SourceHomeSets");as=integer(reg,"SourceAwaySets");hp=integer(reg,"SourceHomeRallies");ap=integer(reg,"SourceAwayRallies");
+            }
+            results.add(new CompetitionStandings.Result(referenceKey(fixture,"CompetitionFixture_Home"),referenceKey(fixture,"CompetitionFixture_Away"),integer(reg,"HomeScore"),integer(reg,"AwayScore"),text(reg,"Winner"),hs,as,hp,ap,draws,decimal(reg,"HomeAdjustment"),decimal(reg,"AwayAdjustment"),official));
+        }
+        for(CompetitionStandings.Team t:CompetitionStandings.table(teams,results,policy)){
+            IMendixObject row=row(form,entries.get(t.key),"Standing",t.name,t.poule);put(row,"PouleName",t.poule);put(row,"Position",t.position);put(row,"Points",t.points);
+            put(row,"Played",t.played);put(row,"Won",t.won);put(row,"Drawn",t.drawn);put(row,"Lost",t.lost);put(row,"ScoreForAgainst",t.forScore+" – "+t.againstScore);
+            if(policy.games()){put(row,"SetsForAgainst",t.forSets+" – "+t.againstSets);put(row,"PointsForAgainst",t.forPoints+" – "+t.againstPoints);}
+        }
+    }
+
+    private String referenceKey(IMendixObject object,String association){IMendixIdentifier value=object.getValue(ctx,M+association);return value==null?"":Long.toString(value.toLong());}
+
+    private IMendixObject saveFixtureScore(IMendixObject f) throws Exception {
+        IMendixObject reg=required(f,"RecordKey","MatchRegistration"),fixture=ref(reg,"MatchRegistration_Fixture");
+        require(!leaguePolicy(ref(fixture,"CompetitionFixture_League")).games(),"This league requires results for its individual games.");require(canEnter(reg),"Only the appointed official or federation may enter this score.");version(reg,f);
+        int home=integer(f,"Home"),away=integer(f,"Away");require(home>=0&&away>=0&&home<=1000000&&away<=1000000,"Scores must be between zero and one million.");if(date(reg,"SubmittedAt")!=null)requireReason(f);
+        String before=snapshot(reg,"HomeScore","AwayScore","Winner");put(reg,"HomeScore",home);put(reg,"AwayScore",away);put(reg,"HasFixtureScore",true);recalculate(reg,date(reg,"SubmittedAt")!=null);touch(reg);
+        audit(reg,null,null,"Fixture score saved",reasonOr(f,"Official fixture result entry"),before,snapshot(reg,"HomeScore","AwayScore","Winner"),"");return fixture(fixture);
     }
 
 
@@ -434,13 +518,13 @@ public final class MatchRegistrationService {
 
         if(r!=null||!create)return r;
 
-        IMendixObject league=ref(fixture,"CompetitionFixture_League"),rule=ref(league,"CompetitionLeague_MatchFormat");require(rule!=null,"The federation must select a division format first.");
+        IMendixObject league=ref(fixture,"CompetitionFixture_League"),rule=ref(league,"CompetitionLeague_MatchFormat");boolean games=leaguePolicy(league).games();require(!games||rule!=null,"The federation must select a division format first.");
 
         require(fedPermission(ref(league,"CompetitionLeague_Federation"),"Manage")||club(fixture,"Home","Update")||club(fixture,"Away","Update"),"Only participating team managers or the federation can initialize registration.");
 
-        require(!slots(rule).isEmpty(),"This format has no fixture slots.");r=make("MatchRegistration");link(r,"MatchRegistration_Fixture",fixture);link(r,"MatchRegistration_Format",rule);put(r,"State","Draft");put(r,"Revision",1);save(r);
+        require(!games||!slots(rule).isEmpty(),"This format has no fixture slots.");r=make("MatchRegistration");link(r,"MatchRegistration_Fixture",fixture);if(rule!=null)link(r,"MatchRegistration_Format",rule);put(r,"State","Draft");put(r,"Revision",1);save(r);
 
-        for(IMendixObject slot:slots(rule)){
+        for(IMendixObject slot:games?slots(rule):Collections.<IMendixObject>emptyList()){
 
             IMendixObject c=make("MatchContest");copy(slot,c,"Name","Sequence","PlayersPerSide","Discipline","IsDecider");put(c,"Outcome","Pending");link(c,"MatchContest_Registration",r);IMendixObject override=ref(slot,"MatchSlot_ScoringOverride");link(c,"MatchContest_Format",override==null?rule:override);put(c,"Revision",1);save(c);
 
@@ -459,12 +543,17 @@ public final class MatchRegistrationService {
         require(canRead(fixture),"You cannot access this fixture."); IMendixObject r=registration(fixture,true), rule=ref(r,"MatchRegistration_Format"); refreshAcceptance(r);
 
         IMendixObject f=form(text(fixture,"HomeName")+" — "+text(fixture,"AwayName")); put(f,"FixtureKey",id(fixture));put(f,"RecordKey",id(r));put(f,"Revision",integer(r,"Revision"));put(f,"LeaderName",text(r,"LeaderName"));
+        CompetitionStandings.Policy pointsPolicy=leaguePolicy(ref(fixture,"CompetitionFixture_League"));put(f,"UseGameBreakdown",pointsPolicy.games());put(f,"Home",integer(r,"HomeScore"));put(f,"Away",integer(r,"AwayScore"));
 
         put(f,"CanHome",club(fixture,"Home","Update"));put(f,"CanAway",club(fixture,"Away","Update"));put(f,"CanLead",isLeader(r));put(f,"CanOverride",override(r));put(f,"CanManage",manage(r));
 
-        put(f,"Info",text(r,"State")+" · Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore")+" · Official winner: "+text(r,"Winner")+" · Competition points "+decimal(r,"HomePoints")+" / "+decimal(r,"AwayPoints")+" · Home: "+text(r,"HomeAcceptance")+" until "+text(r,"HomeDeadline")+" · Away: "+text(r,"AwayAcceptance")+" until "+text(r,"AwayDeadline")+(bool(r,"Disputed")?" · DISPUTED: "+text(r,"DisputeReason"):""));
+        boolean sourceSnapshot="SourceSnapshot".equals(text(r,"State"));
+        int drawnGames=pointsPolicy.pointsPerGame()?(int)contests(r).stream().filter(c->text(c,"OfficialWinner").equals("Draw")&&!bool(c,"Excluded")).count():0;
+        BigDecimal homePoints=text(r,"Winner").isBlank()?BigDecimal.ZERO:pointsPolicy.points(integer(r,"HomeScore"),integer(r,"AwayScore"),drawnGames,text(r,"Winner"),"Home").add(decimal(r,"HomeAdjustment"));
+        BigDecimal awayPoints=text(r,"Winner").isBlank()?BigDecimal.ZERO:pointsPolicy.points(integer(r,"AwayScore"),integer(r,"HomeScore"),drawnGames,text(r,"Winner"),"Away").add(decimal(r,"AwayAdjustment"));
+        put(f,"Info",text(r,"State")+" · "+(sourceSnapshot&&text(r,"Winner").isBlank()?"No published score":"Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"))+" · Official winner: "+text(r,"Winner")+" · Competition points "+CompetitionStandings.pointsText(homePoints)+" / "+CompetitionStandings.pointsText(awayPoints)+(sourceSnapshot?"\n"+text(fixture,"Issue")+"\n"+text(r,"Reason"):" · Home: "+text(r,"HomeAcceptance")+" until "+text(r,"HomeDeadline")+" · Away: "+text(r,"AwayAcceptance")+" until "+text(r,"AwayDeadline"))+(bool(r,"Disputed")?" · DISPUTED: "+text(r,"DisputeReason"):""));
 
-        for(IMendixObject c:contests(r))row(f,c,"Contest",integer(c,"Sequence")+". "+text(c,"Name"),text(c,"Outcome")+" · recorded winner "+text(c,"RecordedWinner")+" · official winner "+text(c,"OfficialWinner")+(bool(c,"Excluded")?" · EXCLUDED from fixture and ranking":""));
+        if(bool(f,"UseGameBreakdown"))for(IMendixObject c:contests(r))row(f,c,"Contest",integer(c,"Sequence")+". "+text(c,"Name"),fixtureContestDetail(r,c));
 
         for(IMendixObject a:query("MatchAudit","["+M+"MatchAudit_Registration="+id(r)+"]"))if(text(a,"PrivateSide").isEmpty()||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(a,"PrivateSide")+"CaptainKey")))row(f,a,"Audit",text(a,"At")+" · "+text(a,"Actor")+" · "+text(a,"Action"),text(a,"Reason")+" · Before: "+text(a,"BeforeValue")+" · After: "+text(a,"AfterValue"));
 
@@ -472,6 +561,19 @@ public final class MatchRegistrationService {
 
         copy(r,f,"HomeAdjustment","AwayAdjustment","WinnerOverride");return f;
 
+    }
+
+    /** All games stay visible together; each participant side still uses the existing lineup privacy guard. */
+    private String fixtureContestDetail(IMendixObject registration,IMendixObject contest) throws Exception {
+        List<String> detail=new ArrayList<>();
+        detail.add(integer(contest,"PlayersPerSide")==0?"Team score":integer(contest,"PlayersPerSide")==1?"Singles":"Doubles");
+        detail.add(text(contest,"Discipline"));
+        for(IMendixObject lineup:lineups(contest))if(canSeeLineup(registration,lineup))
+            detail.add(text(lineup,"Side")+": "+(text(lineup,"Player1Name").isBlank()?"Not entered":text(lineup,"Player1Name"))+(text(lineup,"Player2Name").isBlank()?"":" / "+text(lineup,"Player2Name")));
+        String scores=scoreText(contest);detail.add(scores.isBlank()?"No score entered":scores.replace("\n"," · "));
+        detail.add(text(contest,"Outcome"));detail.add("Official winner: "+text(contest,"OfficialWinner"));
+        if(bool(contest,"Excluded"))detail.add("EXCLUDED from fixture and ranking");
+        return String.join(" · ",detail);
     }
 
 
@@ -676,11 +778,22 @@ public final class MatchRegistrationService {
 
     private void recalculate(IMendixObject r,boolean federation) throws Exception {
 
+        CompetitionStandings.Policy policy=leaguePolicy(ref(ref(r,"MatchRegistration_Fixture"),"CompetitionFixture_League"));
+        if(!policy.games()){
+            require(bool(r,"HasFixtureScore")||!text(r,"Winner").isBlank(),"Enter the final fixture score first.");
+            int h=integer(r,"HomeScore"),a=integer(r,"AwayScore");String winner=text(r,"WinnerOverride").isBlank()?(h>a?"Home":a>h?"Away":"Draw"):text(r,"WinnerOverride");
+            require(Set.of("Home","Away","Draw").contains(winner),"Choose Home, Away or Draw for the federation winner override.");
+            put(r,"Winner",winner);put(r,"HomePoints",policy.points(h,a,0,winner,"Home").add(decimal(r,"HomeAdjustment")));put(r,"AwayPoints",policy.points(a,h,0,winner,"Away").add(decimal(r,"AwayAdjustment")));
+            if(federation){put(r,"FederationFinal",true);put(r,"Disputed",false);put(r,"State","FederationFinal");}save(r);return;
+        }
+
         List<MatchRules.ContestResult> regular=new ArrayList<>(),deciders=new ArrayList<>();
 
         for(IMendixObject c:contests(r)){MatchRules.ContestResult result=calculate(c);applyResult(c,result);save(c);(bool(c,"IsDecider")?deciders:regular).add(result);}
 
-        MatchRules.FixtureResult result=MatchRules.fixture(rules(ref(r,"MatchRegistration_Format")),regular,deciders,decimal(r,"HomeAdjustment"),decimal(r,"AwayAdjustment"),text(r,"WinnerOverride"));put(r,"HomeScore",result.home);put(r,"AwayScore",result.away);put(r,"Winner",result.winner);put(r,"HomePoints",result.homePoints);put(r,"AwayPoints",result.awayPoints);
+        MatchRules.Format configured=rules(ref(r,"MatchRegistration_Format"));configured.winPoints=policy.win();configured.drawPoints=policy.draw();configured.lossPoints=policy.loss();
+        MatchRules.FixtureResult result=MatchRules.fixture(configured,regular,deciders,decimal(r,"HomeAdjustment"),decimal(r,"AwayAdjustment"),text(r,"WinnerOverride"));put(r,"HomeScore",result.home);put(r,"AwayScore",result.away);put(r,"Winner",result.winner);put(r,"HomePoints",result.homePoints);put(r,"AwayPoints",result.awayPoints);
+        if(policy.pointsPerGame()){int draws=(int)regular.stream().filter(c->c.officialWinner.equals("Draw")).count();put(r,"HomePoints",policy.points(result.home,result.away,draws,result.winner,"Home").add(decimal(r,"HomeAdjustment")));put(r,"AwayPoints",policy.points(result.away,result.home,draws,result.winner,"Away").add(decimal(r,"AwayAdjustment")));}
 
         if(federation){put(r,"FederationFinal",true);put(r,"Disputed",false);put(r,"State","FederationFinal");}save(r);
 
@@ -706,7 +819,7 @@ public final class MatchRegistrationService {
 
     private IMendixObject finalizeRuling(IMendixObject f) throws Exception {
 
-        IMendixObject r=required(f,"RecordKey","MatchRegistration");require(override(r),"Federation override permission is required.");version(r,f);requireReason(f);require(date(r,"StartedAt")!=null,"Start the fixture before applying an official ruling.");String before=snapshot(r,"Winner","WinnerOverride","HomePoints","AwayPoints","HomeAdjustment","AwayAdjustment");copy(f,r,"HomeAdjustment","AwayAdjustment","WinnerOverride");recalculate(r,true);if(date(r,"SubmittedAt")==null)put(r,"SubmittedAt",new Date());put(r,"Reason",text(f,"Reason"));touch(r);audit(r,null,null,"Federation ruling finalized",text(f,"Reason"),before,snapshot(r,"Winner","WinnerOverride","HomePoints","AwayPoints","HomeAdjustment","AwayAdjustment"),"");return fixture(ref(r,"MatchRegistration_Fixture"));
+        IMendixObject r=required(f,"RecordKey","MatchRegistration");require(override(r),"Federation override permission is required.");version(r,f);requireReason(f);require(date(r,"StartedAt")!=null,"Start the fixture before applying an official ruling.");String before=snapshot(r,"Winner","WinnerOverride","HomePoints","AwayPoints","HomeAdjustment","AwayAdjustment");require(CompetitionStandings.wholePoints(decimal(f,"HomeAdjustment"))&&CompetitionStandings.wholePoints(decimal(f,"AwayAdjustment")),"Competition points adjustments must be whole numbers.");copy(f,r,"HomeAdjustment","AwayAdjustment","WinnerOverride");recalculate(r,true);if(date(r,"SubmittedAt")==null)put(r,"SubmittedAt",new Date());put(r,"Reason",text(f,"Reason"));touch(r);audit(r,null,null,"Federation ruling finalized",text(f,"Reason"),before,snapshot(r,"Winner","WinnerOverride","HomePoints","AwayPoints","HomeAdjustment","AwayAdjustment"),"");return fixture(ref(r,"MatchRegistration_Fixture"));
 
     }
 
@@ -788,11 +901,11 @@ public final class MatchRegistrationService {
 
     private void applyResult(IMendixObject c,MatchRules.ContestResult r){put(c,"RecordedWinner",r.recordedWinner);put(c,"OfficialWinner",r.officialWinner);put(c,"HomeSets",r.homeSets);put(c,"AwaySets",r.awaySets);put(c,"HomeTotal",r.homeTotal);put(c,"AwayTotal",r.awayTotal);put(c,"Excluded",r.excluded);put(c,"RankingEligible",r.rankingEligible&&!bool(c,"RankingExcluded")&&integer(c,"PlayersPerSide")>0);}
 
-    private MatchRules.Format rules(IMendixObject o){MatchRules.Format f=new MatchRules.Format();f.family=text(o,"Scoring");f.tiePolicy=text(o,"TiePolicy");f.approvalAnchor=text(o,"ApprovalAnchor");f.setsToWin=integer(o,"SetsToWin");f.target=integer(o,"Target");f.margin=integer(o,"Margin");f.cap=integer(o,"Cap");f.gamesToWin=integer(o,"GamesToWin");f.gamesMargin=integer(o,"GamesMargin");f.tieAt=integer(o,"TieAt");f.tieTarget=integer(o,"TieTarget");f.decidingTarget=integer(o,"DecidingTarget");f.homeHours=integer(o,"HomeHours");f.awayHours=integer(o,"AwayHours");f.minimumReviewHours=integer(o,"MinimumReviewHours");f.stopWhenDecided=bool(o,"StopWhenDecided");f.winPoints=decimal(o,"WinPoints");f.drawPoints=decimal(o,"DrawPoints");f.lossPoints=decimal(o,"LossPoints");return f;}
+    private MatchRules.Format rules(IMendixObject o){MatchRules.Format f=new MatchRules.Format();if(o==null)return f;f.family=text(o,"Scoring");f.tiePolicy=text(o,"TiePolicy");f.approvalAnchor=text(o,"ApprovalAnchor");f.setsToWin=integer(o,"SetsToWin");f.target=integer(o,"Target");f.margin=integer(o,"Margin");f.cap=integer(o,"Cap");f.gamesToWin=integer(o,"GamesToWin");f.gamesMargin=integer(o,"GamesMargin");f.tieAt=integer(o,"TieAt");f.tieTarget=integer(o,"TieTarget");f.decidingTarget=integer(o,"DecidingTarget");f.homeHours=integer(o,"HomeHours");f.awayHours=integer(o,"AwayHours");f.minimumReviewHours=integer(o,"MinimumReviewHours");f.stopWhenDecided=bool(o,"StopWhenDecided");f.winPoints=decimal(o,"WinPoints");f.drawPoints=decimal(o,"DrawPoints");f.lossPoints=decimal(o,"LossPoints");return f;}
 
 
 
-    private boolean canRead(IMendixObject fixture) throws Exception {IMendixObject r=registration(fixture,false);return fedPermission(ref(ref(fixture,"CompetitionFixture_League"),"CompetitionLeague_Federation"),"Read")||club(fixture,"Home","Read")||club(fixture,"Away","Read")||(r!=null&&isLeader(r));}
+    private boolean canRead(IMendixObject fixture) throws Exception {if("Published".equals(text(fixture,"Status")))return true;IMendixObject r=registration(fixture,false);return fedPermission(ref(ref(fixture,"CompetitionFixture_League"),"CompetitionLeague_Federation"),"Read")||club(fixture,"Home","Read")||club(fixture,"Away","Read")||(r!=null&&isLeader(r));}
 
     private boolean fedPermission(IMendixObject fed,String op) throws Exception{return fed!=null&&Boolean.TRUE.equals(Core.microflowCall(M+"SUB_Competition_FederationPermission").withParam("Federation",fed).withParam("Operation",op).execute(caller));}
 
@@ -808,7 +921,7 @@ public final class MatchRegistrationService {
 
     private boolean independentLeader(IMendixObject r){return isLeader(r)&&!userKey.equals(text(r,"HomeCaptainKey"))&&!userKey.equals(text(r,"AwayCaptainKey"));}
 
-    private boolean canSeeLineup(IMendixObject r,IMendixObject l) throws Exception{return canRead(ref(r,"MatchRegistration_Fixture"))&&(date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(l,"Side")+"CaptainKey")));}
+    private boolean canSeeLineup(IMendixObject r,IMendixObject l) throws Exception{return canRead(ref(r,"MatchRegistration_Fixture"))&&("SourceSnapshot".equals(text(r,"State"))||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(l,"Side")+"CaptainKey")));}
 
     private boolean canEditLineup(IMendixObject r,String side) throws Exception {if(date(r,"SubmittedAt")!=null)return override(r);if(date(r,"StartedAt")!=null)return isLeader(r);IMendixObject rule=ref(r,"MatchRegistration_Format"),fixture=ref(r,"MatchRegistration_Fixture");return (isLeader(r)||userKey.equals(text(r,side+"CaptainKey")))&&MatchRules.lineupEditable(text(rule,"LineupLock"),integer(rule,"LockMinutes"),instant(fixture,"StartsAt"),null,Instant.now());}
 
@@ -830,7 +943,7 @@ public final class MatchRegistrationService {
 
     private IMendixObject form(String title){IMendixObject f=make("MatchForm");put(f,"Title",title);return f;}
 
-    private void row(IMendixObject f,IMendixObject record,String kind,String label,String detail){IMendixObject row=make("MatchRow");put(row,"RecordKey",id(record));put(row,"Kind",kind);put(row,"Label",label);put(row,"Detail",detail);link(row,"MatchRow_Form",f);}
+    private IMendixObject row(IMendixObject f,IMendixObject record,String kind,String label,String detail){IMendixObject row=make("MatchRow");put(row,"RecordKey",id(record));put(row,"Kind",kind);put(row,"Label",label);put(row,"Detail",detail);link(row,"MatchRow_Form",f);return row;}
 
     private IMendixObject make(String type){return Core.instantiate(type.equals("MatchForm")||type.equals("MatchRow")?caller:ctx,M+type);}
 

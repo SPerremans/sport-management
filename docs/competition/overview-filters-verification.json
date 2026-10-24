@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-24",
+  "modelConsistency": {
+    "result": "No errors found.",
+    "scope": "global; Competition_Overview patches read back"
+  },
+  "compilation": {
+    "java": "Java 21 compilation passed for LeagueSports, TableLifecycleService, DevelopmentSamples and MatchRegistrationService",
+    "fullApplication": "BUILD SUCCESSFUL in 6s"
+  },
+  "runtime": {
+    "initialSportFilter": "Verified final league-specific sport: older tennis, padel, table-tennis and football examples display their actual sports. Football contains filter returns exactly the fictional football league and both public football leagues.",
+    "compactResult": "Published fixtures has Home team, Away team, Start, Venue, Status and Result. Removed repeated Published value and long Issue text. Official and pending symbols observed; prior rendered provisional/disputed examples retain short qualifiers. Winner nodes inspected in DOM have font-weight 700, including both home and away winners.",
+    "clubSearch": "Hebad 1 returned 19 rows including home and away occurrences; hEbAd 1 returned the same 19. Adding Football returned zero rows; restoring Badminton restored the matches. Clearing club query restored 50 visible rows (page size), confirming filter removal.",
+    "sampleUpgrade": "Generate sample data successfully upgraded existing batch. Its built-in repeated extension pass checked record-ID idempotence. Owned unset league sport values were initialized; configured sport preservation and fresh/cleanup lifecycle were not separately exercised.",
+    "singleSportMismatchGuard": "Compiled; save-time mismatch rejection was not exercised in the browser.",
+    "roles": "Verified using platform Administrator. Other-role checks not executed.",
+    "screenshot": "docs/competition/screenshots/fixture-club-search.png"
+  },
+  "runtimeVerifiedOn": "2026-10-25"
+}
