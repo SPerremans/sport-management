@@ -34,9 +34,10 @@ public final class DevelopmentSamples {
     private static final String FEDERATION_CONVENTIONS_FEATURE = "features:federation-genders-team-categories-v1";
     private static final String TABLE_RETENTION_FEATURE = "features:table-actions-and-retention-v1";
     private static final String CHECKS_ROLE_FEATURE = "features:checks-role-examples-v1";
+    private static final String FIXTURE_ENTRY_FEATURE = "features:fixture-entry-config-v1";
     private static final String[] RETENTION_TYPES = {"MyFirstModule.RecordLifecycle", "MyFirstModule.TableRetentionPolicy"};
     private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim", "MyFirstModule.AccountAudit"};
-    private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility"};
+    private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility", "MyFirstModule.MatchSquadPlayer", "MyFirstModule.MatchSubstitution"};
     private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.InvoicePdf","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.PlayerListRule","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.TeamCategory","MyFirstModule.FederationGender","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
     private static final Map<String, String[]> EDGES = new LinkedHashMap<>();
     static {
@@ -50,6 +51,8 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.MatchLineup", new String[]{"MyFirstModule.MatchLineup_Contest", "MyFirstModule.MatchLineup_Player1", "MyFirstModule.MatchLineup_Player2"});
         EDGES.put("MyFirstModule.MatchAudit", new String[]{"MyFirstModule.MatchAudit_Registration", "MyFirstModule.MatchAudit_Federation", "MyFirstModule.MatchAudit_League"});
         EDGES.put("MyFirstModule.MatchEligibility", new String[]{"MyFirstModule.MatchEligibility_Federation", "MyFirstModule.MatchEligibility_Player"});
+        EDGES.put("MyFirstModule.MatchSquadPlayer", new String[]{"MyFirstModule.MatchSquadPlayer_Registration", "MyFirstModule.MatchSquadPlayer_Player"});
+        EDGES.put("MyFirstModule.MatchSubstitution", new String[]{"MyFirstModule.MatchSubstitution_Registration", "MyFirstModule.MatchSubstitution_Off", "MyFirstModule.MatchSubstitution_On"});
         EDGES.put("MyFirstModule.PaymentVerification", new String[]{"MyFirstModule.PaymentVerification_Invoice"});
         EDGES.put("MyFirstModule.InvoicePdf", new String[]{"MyFirstModule.InvoicePdf_Invoice"});
         EDGES.put("MyFirstModule.Invoice", new String[]{"MyFirstModule.Invoice_RegistrationRequest","MyFirstModule.Invoice_Membership","MyFirstModule.Invoice_Club","MyFirstModule.Invoice_RenewalOffer","MyFirstModule.Invoice_RecipientClub","MyFirstModule.Invoice_Federation","MyFirstModule.Invoice_BillingPlan","MyFirstModule.Invoice_Person"});
@@ -150,6 +153,7 @@ public final class DevelopmentSamples {
         CONVENTION_FIELDS.put("MyFirstModule.CompetitionFixture",new HashSet<>(Arrays.asList("HomeName","AwayName")));
         CONVENTION_FIELDS.put("MyFirstModule.CompetitionLeague",new HashSet<>(Arrays.asList("Sport","ResultSettingsConfigured","UseGameBreakdown","PointsPerGame","WinPoints","DrawPoints","LossPoints")));
         CONVENTION_FIELDS.put("MyFirstModule.MatchRegistration",new HashSet<>(Arrays.asList("SourceTotalsAvailable","SourceCountsInStandings","SourceHomeSets","SourceAwaySets","SourceHomeRallies","SourceAwayRallies")));
+        CONVENTION_FIELDS.put("MyFirstModule.MatchFormat",new HashSet<>(Arrays.asList("MaxStarters","MaxReserves","RecordPlayers","RecordSetScores")));
         CONVENTION_FIELDS.put("MyFirstModule.FormField",new HashSet<>(Arrays.asList("Kind","HelpText")));
         CONVENTION_FIELDS.put("MyFirstModule.FormResponse",new HashSet<>(Arrays.asList("Kind","HelpText","Answer")));
         CONVENTION_FIELDS.put("MyFirstModule.FederationType",new HashSet<>(Arrays.asList("OnePerPlayer")));
@@ -472,7 +476,7 @@ public final class DevelopmentSamples {
     /** Append a frozen public season once; real and user-edited demo records are never matched or rewritten. */
     private static void extendPublicCompetitionSamples(IContext ctx) throws Exception {
         IMendixObject manifest=batch(ctx);String summary=manifest.getValue(ctx,"Summary");
-        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);return;}
+        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);return;}
         Seed s=new Seed(ctx);PublicCompetitionSamples.populate(ctx,s);
         Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));owned.addAll(ids(s.owned));
         Set<Long> publicOrganizations=new HashSet<>();
@@ -483,6 +487,35 @@ public final class DevelopmentSamples {
         Core.commitWithoutEvents(ctx,manifest);
         PublicCompetitionSamples.verify(ctx,owned);
         extendLeagueResultSamples(ctx);
+        extendTeamSheetSamples(ctx);
+        extendFixtureEntrySamples(ctx);
+    }
+
+    /** Fixture entry switches: owned team-score formats record one final score and no players per game. Runs once; later edits are kept. */
+    private static void extendFixtureEntrySamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");if(summary.contains(FIXTURE_ENTRY_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));int changed=0;
+        for(IMendixObject format:Core.createXPathQuery("//MyFirstModule.MatchFormat").execute(ctx)){
+            if(!owned.contains(format.getId().toLong()))continue;
+            boolean total="Total".equals(format.getValue(ctx,"Scoring"));
+            boolean teamOnly=Core.createXPathQuery("//MyFirstModule.MatchSlot[MyFirstModule.MatchSlot_Format=$f][PlayersPerSide > 0]").setVariable("f",format.getId().toLong()).execute(ctx).isEmpty();
+            if(!total&&!teamOnly)continue;
+            if(total)format.setValue(ctx,"RecordSetScores",false);
+            if(teamOnly)format.setValue(ctx,"RecordPlayers",false);
+            Core.commitWithoutEvents(ctx,format);changed++;
+        }
+        manifest.setValue(ctx,"Summary",summary+" Fixture entry: "+changed+" owned team-score format(s) record one final score without per-game players; badminton and tennis formats keep players and set scores. "+FIXTURE_ENTRY_FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
+    }
+
+    /** Append the Belgian football divisions and team-sheet examples once; configured format limits and edited records are preserved. */
+    private static void extendTeamSheetSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");if(summary.contains(BelgianFootballSamples.FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds")),publicOrganizations=decode(manifest.getValue(ctx,"PublicCompetitionOrganizationIds"));Seed s=new Seed(ctx);
+        BelgianFootballSamples.populate(ctx,s,owned,publicOrganizations);
+        owned.addAll(ids(s.owned));manifest.setValue(ctx,"OwnedIds",encode(owned));manifest.setValue(ctx,"PublicCompetitionOrganizationIds",encode(publicOrganizations));
+        manifest.setValue(ctx,"Summary",summary+" Belgian football: men's Nationale 1 (VV/FFA) and women's Super League, Eerste Nationale and Interprovinciale (A/B/FFA) team lists for 2026-2027, team-sheet limits, fictional starters, reserves and substitutions, one badminton reserve. "+BelgianFootballSamples.FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
     }
 
     /** Initialize only the new, unset league policy fields; configured or user-edited policies remain untouched. */

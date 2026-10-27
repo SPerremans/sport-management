@@ -299,3 +299,49 @@
 @media (max-width: 480px) { .nexio-discovery-filters, .nexio-discovery-filters.nexio-discovery-filters-4 { grid-template-columns: minmax(0, 1fr); } }
 
 .nexio-record-details { white-space: pre-line; overflow-wrap: anywhere; }
+/* Rows of checkbox-selection grids are clickable (nexio-table-rows.js): click toggles the checkbox, double click opens View. */
+.widget-datagrid-selection-method-checkbox .tr[role="row"] .td { cursor: pointer; }
+.widget-datagrid-selection-method-checkbox .tr[role="row"]:hover .td { background: var(--nexio-light); }
+/* Fixture games (Game | Home | Away | Score): narrow game and score columns, players get the room; the winner's players are bold. */
+/* Read-only detail facts in two columns (one column on phones); .nexio-detail-wide spans both. */
+.nexio-detail-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; row-gap: 4px; margin-bottom: 12px; }
+.nexio-detail-columns > * { margin: 0; overflow-wrap: anywhere; }
+.nexio-detail-columns > .nexio-detail-wide { grid-column: 1 / -1; margin-bottom: 4px; }
+@media (max-width: 576px) { .nexio-detail-columns { grid-template-columns: minmax(0, 1fr); } }
+/* One header row above the list view, both inside a single bordered, scrollable box. */
+.nexio-fixture-games {
+  overflow-x: auto; margin: 8px 0 18px; font-size: 14px; color: var(--nexio-navy);
+  border: 1px solid var(--nexio-line); border-radius: 6px; background: var(--nexio-surface);
+}
+.nexio-fixture-games-rows > ul { margin: 0; padding: 0; }
+.nexio-fixture-games-rows > ul > li.mx-listview-item { padding: 0; border: 0; background: var(--nexio-surface); }
+.nexio-fixture-games-rows > ul > li.mx-listview-item:nth-child(even) { background: var(--nexio-light); }
+.nexio-fixture-games .nexio-table-grid { grid-template-columns: minmax(60px, 0.4fr) minmax(160px, 2fr) minmax(160px, 2fr) minmax(110px, 1fr); min-width: 520px; }
+.nexio-fixture-games .nexio-table-grid > .nexio-table-cell { padding: 5px 10px; }
+.nexio-fixture-games .nexio-table-grid > .nexio-table-cell:nth-child(4) { white-space: nowrap; }
+/* Compact edit forms: tighter field spacing and short help paragraphs. */
+.nexio-compact-form .form-group { margin-bottom: 8px; }
+.nexio-compact-form p { margin: 2px 0 6px; font-size: 13px; }
+.nexio-compact-form .btn { margin: 0 6px 6px 0; }
+.nexio-compact-form textarea.form-control { min-height: 0; }
+/* Fixture registration games table: Game | Home | Away | Set 1..N | actions. nexio-sets-N comes from the format's set count. */
+.nexio-muted { color: var(--nexio-muted); font-size: 13px; }
+.nexio-fixture-entry {
+  overflow-x: auto; margin: 8px 0 18px; font-size: 14px; color: var(--nexio-navy);
+  border: 1px solid var(--nexio-line); border-radius: 6px; background: var(--nexio-surface);
+}
+.nexio-fixture-entry-rows > ul { margin: 0; padding: 0; }
+.nexio-fixture-entry-rows > ul > li.mx-listview-item { padding: 0; border: 0; background: var(--nexio-surface); }
+.nexio-fixture-entry-rows > ul > li.mx-listview-item:nth-child(even) { background: var(--nexio-light); }
+@for $sets from 1 through 5 {
+  .nexio-entry-grid.nexio-sets-#{$sets} { grid-template-columns: 64px minmax(170px, 2fr) minmax(170px, 2fr) repeat(#{$sets}, 104px) 150px; min-width: 520px + $sets * 104px; }
+  .nexio-no-players .nexio-entry-grid.nexio-sets-#{$sets} { grid-template-columns: minmax(120px, 1fr) repeat(#{$sets}, 104px) 150px; min-width: 300px + $sets * 104px; }
+}
+.nexio-no-players .nexio-entry-grid > .nexio-table-cell:nth-child(2),
+.nexio-no-players .nexio-entry-grid > .nexio-table-cell:nth-child(3) { display: none; }
+.nexio-entry-grid > .nexio-table-cell { padding: 6px 8px; align-self: center; }
+.nexio-entry-grid .nexio-player-pick { margin: 2px 0; }
+.nexio-set-inputs { display: flex; gap: 4px; align-items: center; }
+.nexio-set-inputs .form-group { margin: 0; }
+.nexio-set-inputs .form-control { width: 46px; padding: 4px 6px; text-align: center; }
+.nexio-entry-actions { display: flex; gap: 6px; justify-content: flex-end; }

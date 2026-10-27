@@ -20,7 +20,7 @@ public final class MatchRegistrationService {
 
     private static final String M = "MyFirstModule.";
 
-    private static final String[] CONFIG = ("Name Sport Version Scoring SetsToWin Target Margin Cap GamesToWin GamesMargin TieAt TieTarget DecidingTarget GameMode WinPoints DrawPoints LossPoints TiePolicy StopWhenDecided HomeHours AwayHours MinimumReviewHours ApprovalAnchor LineupLock LockMinutes MaxAppearances MaxSingles MaxDoubles MinIndex MaxIndex MaxTeamIndex CheckMembership CheckRegistration CheckSuspension CheckDiscipline CheckAppearances CheckIndex AvailableFrom AvailableUntil IsAvailable").split(" ");
+    private static final String[] CONFIG = ("Name Sport Version Scoring SetsToWin Target Margin Cap GamesToWin GamesMargin TieAt TieTarget DecidingTarget GameMode WinPoints DrawPoints LossPoints TiePolicy StopWhenDecided HomeHours AwayHours MinimumReviewHours ApprovalAnchor LineupLock LockMinutes MaxAppearances MaxSingles MaxDoubles MinIndex MaxIndex MaxTeamIndex CheckMembership CheckRegistration CheckSuspension CheckDiscipline CheckAppearances CheckIndex AvailableFrom AvailableUntil IsAvailable MaxStarters MaxReserves RecordPlayers RecordSetScores").split(" ");
 
     private final IContext caller, ctx;
 
@@ -103,7 +103,7 @@ public final class MatchRegistrationService {
 
             MatchRegistrationService s = new MatchRegistrationService(caller, ctx);
 
-            if(!"Division".equals(operation))Core.microflowCall(M + "SUB_Competition_Lock").execute(ctx);
+            if(!"Division".equals(operation)&&!"FixtureGames".equals(operation))Core.microflowCall(M + "SUB_Competition_Lock").execute(ctx);
 
             IMendixObject output = s.command(input, operation);
 
@@ -157,6 +157,8 @@ public final class MatchRegistrationService {
 
             case "OpenFixture": return fixture(required(f, "FixtureKey", "CompetitionFixture"));
 
+            case "FixtureGames": return fixtureGames(required(f, "FixtureKey", "CompetitionFixture"));
+
             case "ClaimHome": return claim(f, "Home");
 
             case "ClaimAway": return claim(f, "Away");
@@ -179,6 +181,22 @@ public final class MatchRegistrationService {
 
             case "OpenRoster": return roster(f);
 
+            case "OpenHomeSquad": return squadView(required(f,"RecordKey","MatchRegistration"),"Home");
+
+            case "OpenAwaySquad": return squadView(required(f,"RecordKey","MatchRegistration"),"Away");
+
+            case "SquadStarter": return saveSquadPlayer(f,"Starter");
+
+            case "SquadReserve": return saveSquadPlayer(f,"Reserve");
+
+            case "SquadRemove": return removeSquadPlayer(f);
+
+            case "SubstitutionOff": return pickSubstitution(f,1);
+
+            case "SubstitutionOn": return pickSubstitution(f,2);
+
+            case "SaveSubstitution": return saveSubstitution(f);
+
             case "NewSet": return setView(f, null);
 
             case "OpenSet": return setView(f, required(f, "SelectedKey", "MatchSet"));
@@ -188,6 +206,9 @@ public final class MatchRegistrationService {
             case "SaveContest": return saveContest(f);
 
             case "SaveScores": return saveScores(f);
+            case "PickHome": return pickPlayers(f,"Home");
+            case "PickAway": return pickPlayers(f,"Away");
+            case "SaveGame": return saveGame(f);
 
             case "Submit": return submit(f);
 
@@ -269,7 +290,7 @@ public final class MatchRegistrationService {
 
         values.put("TiePolicy", "Draw"); values.put("HomeHours", 36); values.put("AwayHours", 36); values.put("MinimumReviewHours", 12);
 
-        values.put("ApprovalAnchor", "Scheduled"); values.put("LineupLock", "Start"); values.put("IsAvailable", true);
+        values.put("ApprovalAnchor", "Scheduled"); values.put("LineupLock", "Start"); values.put("IsAvailable", true); values.put("RecordPlayers", true); values.put("RecordSetScores", true);
 
         for (String key : Arrays.asList("CheckMembership", "CheckRegistration", "CheckSuspension", "CheckDiscipline", "CheckAppearances", "CheckIndex")) values.put(key, true);
 
@@ -310,6 +331,8 @@ public final class MatchRegistrationService {
         require(!text(f,"Name").trim().isEmpty() && !text(f,"Sport").trim().isEmpty(),"Name and sport are required.");
 
         rules(f).validate(); require(integer(f,"LockMinutes")>=0 && integer(f,"MaxAppearances")>=0 && integer(f,"MaxSingles")>=0 && integer(f,"MaxDoubles")>=0,"Limits cannot be negative.");
+        require(integer(f,"MaxStarters")>=0&&integer(f,"MaxStarters")<=30&&integer(f,"MaxReserves")>=0&&integer(f,"MaxReserves")<=30,"Team sheet starters and reserves must be between 0 and 30.");
+        require(!bool(f,"RecordSetScores")||text(f,"Scoring").equals("Total")||(integer(f,"SetsToWin")>=1&&integer(f,"SetsToWin")<=3),"The fixture score table has up to five set columns: use one to three sets to win.");
 
         require(date(f,"AvailableFrom")==null || date(f,"AvailableUntil")==null || date(f,"AvailableFrom").before(date(f,"AvailableUntil")),"Availability end must follow its start.");
 
@@ -555,12 +578,39 @@ public final class MatchRegistrationService {
 
         if(bool(f,"UseGameBreakdown"))for(IMendixObject c:contests(r))row(f,c,"Contest",integer(c,"Sequence")+". "+text(c,"Name"),fixtureContestDetail(r,c));
 
+        if(rule!=null){put(f,"MaxStarters",integer(rule,"MaxStarters"));put(f,"MaxReserves",integer(rule,"MaxReserves"));}teamSheetRows(f,r,true);
+        gameTable(f,r,rule);
+
         for(IMendixObject a:query("MatchAudit","["+M+"MatchAudit_Registration="+id(r)+"]"))if(text(a,"PrivateSide").isEmpty()||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(a,"PrivateSide")+"CaptainKey")))row(f,a,"Audit",text(a,"At")+" · "+text(a,"Actor")+" · "+text(a,"Action"),text(a,"Reason")+" · Before: "+text(a,"BeforeValue")+" · After: "+text(a,"AfterValue"));
 
         List<String> visibleWarnings=new ArrayList<>();for(IMendixObject c:contests(r))for(IMendixObject l:lineups(c))if(canSeeLineup(r,l)){String w=lineupWarnings(r,c,l);if(!w.isEmpty())visibleWarnings.add(text(c,"Name")+" · "+text(l,"Side")+": "+w);}put(f,"Info",text(f,"Info")+"\n"+String.join("\n",visibleWarnings));
 
         copy(r,f,"HomeAdjustment","AwayAdjustment","WinnerOverride");return f;
 
+    }
+
+    /** Read-only game and player breakdown for the fixture detail page; never creates a registration. */
+    private IMendixObject fixtureGames(IMendixObject fixture) throws Exception {
+        require(canRead(fixture),"You cannot access this fixture.");IMendixObject r=registration(fixture,false);
+        IMendixObject f=form("Games");put(f,"FixtureKey",id(fixture));
+        if(r==null){put(f,"Info","No games or players registered yet.");return f;}
+        IMendixObject rule=ref(r,"MatchRegistration_Format");if(rule!=null){put(f,"MaxStarters",integer(rule,"MaxStarters"));put(f,"MaxReserves",integer(rule,"MaxReserves"));}
+        List<IMendixObject> contests=contests(r);
+        put(f,"UseGameBreakdown",contests.stream().anyMatch(c->integer(c,"PlayersPerSide")>0));
+        for(IMendixObject c:contests){
+            if(integer(c,"PlayersPerSide")==0)continue;
+            Map<String,String> names=new HashMap<>();
+            for(IMendixObject l:lineups(c))names.put(text(l,"Side"),!canSeeLineup(r,l)?"Hidden until start":text(l,"Player1Name").isBlank()?"Not entered":text(l,"Player1Name")+(text(l,"Player2Name").isBlank()?"":" / "+text(l,"Player2Name")));
+            // Score column holds only the sets; the page bolds the winning side (Detail = official winner).
+            String scores=scoreText(c).replace("\n",", "),note=text(c,"Outcome").equals("Played")||text(c,"Outcome").equals("Pending")?"":" ("+text(c,"Outcome")+")";
+            if(bool(c,"Excluded"))note+=" (excluded)";
+            IMendixObject row=row(f,c,"Game",text(c,"Name"),text(c,"OfficialWinner"));
+            put(row,"HomeName",names.getOrDefault("Home","Not entered"));put(row,"AwayName",names.getOrDefault("Away","Not entered"));put(row,"ResultSummary",(scores.isBlank()?"–":scores)+note);
+            put(row,"Position",integer(c,"Sequence"));
+        }
+        teamSheetRows(f,r,true);
+        if(!bool(f,"UseGameBreakdown")&&integer(f,"MaxStarters")+integer(f,"MaxReserves")==0)put(f,"Info","This fixture has no individual games or team sheet.");
+        return f;
     }
 
     /** All games stay visible together; each participant side still uses the existing lineup privacy guard. */
@@ -577,6 +627,88 @@ public final class MatchRegistrationService {
     }
 
 
+
+    /** Fixture games table: one row per configured game, player pickers per side before the start and set-score boxes once started. */
+    private void gameTable(IMendixObject f,IMendixObject r,IMendixObject rule) throws Exception {
+        boolean players=rule==null||bool(rule,"RecordPlayers"),started=date(r,"StartedAt")!=null,scoring=canEnter(r)&&date(r,"SubmittedAt")==null;int widest=0;
+        Map<String,Map<String,IMendixObject>> rosters=new HashMap<>();List<IMendixObject> gameRows=new ArrayList<>();
+        for(IMendixObject c:contests(r)){
+            int perSide=players?integer(c,"PlayersPerSide"):0,columns=setColumns(c);widest=Math.max(widest,columns);
+            IMendixObject row=row(f,c,"Game",text(c,"Name"),text(c,"OfficialWinner"));gameRows.add(row);
+            put(row,"Position",integer(c,"Sequence"));put(row,"PlayersPerSide",perSide);put(row,"CanScore",scoring&&!bool(c,"Excluded"));
+            String scores=scoreText(c).replace("\n",", "),outcome=text(c,"Outcome");put(row,"ResultSummary",outcome.equals("Played")||outcome.equals("Pending")?scores:(scores.isBlank()?outcome:scores+" ("+outcome+")"));
+            List<IMendixObject> sets=sets(c);for(int i=0;i<Math.min(5,sets.size());i++){put(row,"Set"+(i+1)+"Home",integer(sets.get(i),"Home"));put(row,"Set"+(i+1)+"Away",integer(sets.get(i),"Away"));}
+            for(String side:Arrays.asList("Home","Away")){
+                IMendixObject l=first("MatchLineup","["+M+"MatchLineup_Contest="+id(c)+"][Side='"+side+"']");
+                boolean visible=l!=null&&canSeeLineup(r,l),edit=visible&&perSide>0&&!started&&canEditLineup(r,side);
+                put(row,side+"Name",perSide==0?"":!visible?"Hidden until start":text(l,"Player1Name").isBlank()?"Not entered":text(l,"Player1Name")+(text(l,"Player2Name").isBlank()?"":" / "+text(l,"Player2Name")));
+                put(row,"CanEdit"+side,edit);if(!edit)continue;
+                Map<String,IMendixObject> roster=rosters.get(side);
+                if(roster==null){roster=new HashMap<>();List<IMendixObject> squad=query("CompetitionPlayer","["+M+"CompetitionPlayer_Team="+id(team(r,side))+"]");squad.sort(Comparator.comparing(p->text(p,"MemberName")));for(IMendixObject p:squad)roster.put(id(p),row(f,p,side+"Player",text(p,"MemberName"),""));rosters.put(side,roster);}
+                IMendixObject p1=ref(l,"MatchLineup_Player1"),p2=ref(l,"MatchLineup_Player2");
+                if(p1!=null)link(row,"MatchRow_"+side+"Pick1",roster.get(id(p1)));if(p2!=null)link(row,"MatchRow_"+side+"Pick2",roster.get(id(p2)));
+            }
+        }
+        // Every row shows the widest game's set columns so the table stays aligned; extra sets are rejected on save.
+        for(IMendixObject row:gameRows)put(row,"SetColumns",widest);
+        put(f,"RecordPlayers",players);put(f,"RecordSetScores",rule==null||bool(rule,"RecordSetScores"));put(f,"SetColumns",widest);put(f,"IsStarted",started);put(f,"CanScore",scoring);
+    }
+
+    /** Configured set columns for a game: one final score for team totals or when the format records no set scores. */
+    private int setColumns(IMendixObject c) throws Exception {MatchRules.Format rules=contestRules(c);return rules.family.equals("Total")?1:Math.min(5,Math.max(1,2*rules.setsToWin-1));}
+
+    /** The format's "record set scores" switch turns every game into a single final score. */
+    private MatchRules.Format contestRules(IMendixObject c) throws Exception {MatchRules.Format rules=rules(ref(c,"MatchContest_Format"));IMendixObject rule=ref(ref(c,"MatchContest_Registration"),"MatchRegistration_Format");if(rule!=null&&!bool(rule,"RecordSetScores"))rules.family="Total";return rules;}
+
+    /** The games-table row the client sent with this command (it carries the picked players and typed scores). */
+    private IMendixObject gameRow(IMendixObject f,IMendixObject c) throws Exception {
+        for(IMendixObject row:Core.retrieveByPath(caller,f,M+"MatchRow_Form"))if("Game".equals(text(row,"Kind"))&&id(c).equals(text(row,"RecordKey")))return row;
+        require(false,"Reopen the fixture; this game is no longer on the page.");return null;
+    }
+
+    private IMendixObject picked(IMendixObject row,String association) throws Exception {
+        Object key=row.getValue(caller,M+association);if(key==null)return null;
+        IMendixObject pick=Core.retrieveId(caller,(IMendixIdentifier)key);if(pick==null)return null;
+        return byKey(text(pick,"RecordKey"),"CompetitionPlayer");
+    }
+
+    /** Captain (or game leader) picks a side's players for one game straight from the games table, before the start. */
+    private IMendixObject pickPlayers(IMendixObject f,String side) throws Exception {
+        IMendixObject c=required(f,"SelectedKey","MatchContest"),r=ref(c,"MatchContest_Registration"),fixture=ref(r,"MatchRegistration_Fixture");
+        IMendixObject l=first("MatchLineup","["+M+"MatchLineup_Contest="+id(c)+"][Side='"+side+"']");
+        require(l!=null&&date(r,"StartedAt")==null&&canSeeLineup(r,l)&&canEditLineup(r,side),"Players are picked here before the start by the team captain or the game leader.");
+        IMendixObject row=gameRow(f,c),p1=picked(row,"MatchRow_"+side+"Pick1"),p2=integer(c,"PlayersPerSide")>1?picked(row,"MatchRow_"+side+"Pick2"):null;
+        for(IMendixObject p:Arrays.asList(p1,p2))if(p!=null)require(same(ref(p,"CompetitionPlayer_Team"),team(r,side)),"Choose a player from the team's registered roster.");
+        require(p1==null||p2==null||!same(p1,p2),"Choose two different players.");
+        String before=participants(l);link(l,"MatchLineup_Player1",p1);link(l,"MatchLineup_Player2",p2);put(l,"Player1Name",p1==null?"":text(p1,"MemberName"));put(l,"Player2Name",p2==null?"":text(p2,"MemberName"));put(l,"Warnings",lineupWarnings(r,c,l));touch(l);put(r,"WarningsAcknowledged",false);touch(r);
+        audit(r,null,null,"Lineup saved","Games table entry",before,participants(l),side);return fixture(fixture);
+    }
+
+    /** Game leader saves one game's set scores from the games table; partial scores stay pending until a side has won. */
+    private IMendixObject saveGame(IMendixObject f) throws Exception {
+        IMendixObject c=required(f,"SelectedKey","MatchContest"),r=ref(c,"MatchContest_Registration");
+        require(canEnter(r)&&date(r,"SubmittedAt")==null,"The game leader enters scores after the start and before submission. Corrections go through the game page.");
+        IMendixObject row=gameRow(f,c);int columns=setColumns(c);MatchRules.Format rules=contestRules(c);
+        List<MatchRules.SetScore> scores=new ArrayList<>();List<String> raw=new ArrayList<>();
+        for(int i=1;i<=5;i++){
+            Object home=row.getValue(caller,M+"MatchRow.Set"+i+"Home"),away=row.getValue(caller,M+"MatchRow.Set"+i+"Away");if(home==null&&away==null)continue;
+            require(i<=columns,"This game has "+columns+(columns==1?" score.":" sets."));require(home!=null&&away!=null,"Enter both scores for set "+i+".");require(scores.size()==i-1,"Fill in the sets in order; set "+(scores.size()+1)+" is empty.");
+            int h=((Number)home).intValue(),a=((Number)away).intValue();require(h>=0&&a>=0,"Scores cannot be negative.");
+            boolean deciding=rules.family.equals("Games")&&rules.decidingTarget>0&&i-1==2*rules.setsToWin-2;
+            scores.add(new MatchRules.SetScore(h,a,0,0,false,deciding));raw.add(h+"-"+a);
+        }
+        String current=text(c,"Outcome"),outcome=current.equals("Pending")||current.equals("Played")?"Pending":current;
+        MatchRules.ContestResult result=MatchRules.contest(rules,scores,outcome,text(c,"Reason"));
+        if(outcome.equals("Pending")&&!result.recordedWinner.isEmpty()){outcome="Played";result=MatchRules.contest(rules,scores,outcome,text(c,"Reason"));}
+        String before=scoreText(c)+"; "+snapshot(c,"Outcome","RecordedWinner","OfficialWinner");replaceSets(c,scores);put(c,"Outcome",outcome);applyResult(c,result);touch(c);touch(r);
+        audit(r,null,null,"Game score saved","Games table entry",before,String.join(", ",raw)+"; "+snapshot(c,"Outcome","RecordedWinner","OfficialWinner"),"");
+        return fixture(ref(r,"MatchRegistration_Fixture"));
+    }
+
+    private void replaceSets(IMendixObject c,List<MatchRules.SetScore> scores) throws Exception {
+        for(IMendixObject s:sets(c)){dirty.remove(s);Core.delete(ctx,s);}int sequence=0;
+        for(MatchRules.SetScore score:scores){IMendixObject s=make("MatchSet");put(s,"Sequence",++sequence);put(s,"Home",score.home);put(s,"Away",score.away);put(s,"HomeTie",score.homeTie);put(s,"AwayTie",score.awayTie);put(s,"HasTie",score.hasTie);put(s,"IsMatchTie",score.matchTie);link(s,"MatchSet_Contest",c);save(s);}
+    }
 
     private IMendixObject claim(IMendixObject f,String side) throws Exception {
 
@@ -686,6 +818,108 @@ public final class MatchRegistrationService {
 
 
 
+    /** Starters, reserves and substitutions per side; a side's sheet stays private until fixture start like its lineups. */
+    private void teamSheetRows(IMendixObject f,IMendixObject r,boolean prefixSide) throws Exception {
+        List<IMendixObject> substitutions=substitutions(r);
+        for(String side:Arrays.asList("Home","Away")){
+            if(!canSeeSide(r,side))continue;
+            for(IMendixObject p:squad(r,side)){String position=text(p,"Position");row(f,p,(prefixSide?side:"")+position,text(p,"PlayerName"),squadStatus(p,substitutions));}
+        }
+        for(IMendixObject s:substitutions)if(canSeeSide(r,text(s,"Side")))row(f,s,"Substitution",integer(s,"Minute")+"' · "+text(s,"Side")+": "+text(s,"OnName")+" on for "+text(s,"OffName"),text(s,"RecordedBy")+" · "+text(s,"RecordedAt")+(text(s,"Reason").isBlank()?"":" · "+text(s,"Reason")));
+    }
+
+    private String squadStatus(IMendixObject p,List<IMendixObject> substitutions){
+        List<String> status=new ArrayList<>();
+        for(IMendixObject s:substitutions){if(same(ref0(s,"MatchSubstitution_On"),p))status.add("On "+integer(s,"Minute")+"' for "+text(s,"OffName"));if(same(ref0(s,"MatchSubstitution_Off"),p))status.add("Off "+integer(s,"Minute")+"' for "+text(s,"OnName"));}
+        if(status.isEmpty())return text(p,"Position").equals("Starter")?"Started":"Not used";
+        return String.join(" · ",status);
+    }
+
+    private IMendixObject squadView(IMendixObject r,String side) throws Exception {
+        IMendixObject fixture=ref(r,"MatchRegistration_Fixture"),rule=ref(r,"MatchRegistration_Format");require(canRead(fixture),"You cannot access this fixture.");require(canSeeSide(r,side),"The opponent team sheet is private until fixture start.");
+        require(rule!=null&&integer(rule,"MaxStarters")+integer(rule,"MaxReserves")>0,"This league's match format has no team sheet.");
+        IMendixObject out=form(side+" team sheet · "+text(fixture,"HomeName")+" — "+text(fixture,"AwayName"));put(out,"RecordKey",id(r));put(out,"FixtureKey",id(fixture));put(out,"Side",side);put(out,"Revision",integer(r,"Revision"));
+        put(out,"MaxStarters",integer(rule,"MaxStarters"));put(out,"MaxReserves",integer(rule,"MaxReserves"));put(out,"CanEditLineup",canEditSquad(r,side));put(out,"CanLead",canSubstitute(r));put(out,"CanOverride",override(r));
+        List<IMendixObject> sheet=squad(r,side),substitutions=substitutions(r);
+        long starters=sheet.stream().filter(p->text(p,"Position").equals("Starter")).count();
+        put(out,"Info","Starters "+starters+" of "+integer(rule,"MaxStarters")+" · Reserves "+(sheet.size()-starters)+" of "+integer(rule,"MaxReserves")+". "
+            +(date(r,"StartedAt")==null?"Select roster players and add them as starter or reserve. The sheet locks with the lineups.":"The sheet is locked. The official records substitutions: mark the player going off and the reserve coming on, then save with the minute.")
+            +(date(r,"SubmittedAt")!=null?" Corrections after submission require federation override and a reason.":""));
+        Map<String,IMendixObject> bySheet=new HashMap<>();for(IMendixObject p:sheet)bySheet.put(referenceKey(p,"MatchSquadPlayer_Player"),p);
+        for(IMendixObject p:query("CompetitionPlayer","["+M+"CompetitionPlayer_Team="+id(team(r,side))+"]")){IMendixObject entry=bySheet.get(id(p));row(out,p,"Player",text(p,"MemberName"),entry==null?"Not on team sheet":text(entry,"Position")+" · "+squadStatus(entry,substitutions));}
+        // Sheet rows carry the roster player's key so the substitution features can select them.
+        for(IMendixObject entry:sheet){IMendixObject p=ref(entry,"MatchSquadPlayer_Player");if(p!=null)row(out,p,"Sheet",text(entry,"PlayerName"),text(entry,"Position")+" · "+squadStatus(entry,substitutions)+(onField(entry,substitutions)&&date(r,"StartedAt")!=null?" · On the field":""));}
+        teamSheetRows(out,r,false);return out;
+    }
+
+    private IMendixObject saveSquadPlayer(IMendixObject f,String position) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration"),p=required(f,"SelectedKey","CompetitionPlayer"),rule=ref(r,"MatchRegistration_Format");String side=side(f);
+        require(rule!=null,"This league's match format has no team sheet.");require(canEditSquad(r,side),"This team sheet is locked or belongs to another team.");if(date(r,"StartedAt")!=null)requireReason(f);
+        require(same(ref(p,"CompetitionPlayer_Team"),team(r,side)),"Choose a player from this team's registered roster.");
+        List<IMendixObject> sheet=squad(r,side);IMendixObject entry=null;for(IMendixObject o:sheet)if(referenceKey(o,"MatchSquadPlayer_Player").equals(id(p)))entry=o;
+        if(entry!=null&&!text(entry,"Position").equals(position))require(substitutions(r).stream().noneMatch(s->same(ref0(s,"MatchSubstitution_On"),p)||same(ref0(s,"MatchSubstitution_Off"),p)),"A player involved in a substitution cannot change position.");
+        long count=sheet.stream().filter(o->text(o,"Position").equals(position)&&!referenceKey(o,"MatchSquadPlayer_Player").equals(id(p))).count();
+        int limit=integer(rule,position.equals("Starter")?"MaxStarters":"MaxReserves");require(count<limit,"This format allows "+limit+" "+(position.equals("Starter")?"starters":"reserves")+" per team.");
+        String before=entry==null?"Not on team sheet":text(entry,"Position");
+        if(entry==null){entry=make("MatchSquadPlayer");put(entry,"Side",side);link(entry,"MatchSquadPlayer_Registration",r);link(entry,"MatchSquadPlayer_Player",p);put(entry,"PlayerName",text(p,"MemberName"));}
+        put(entry,"Position",position);put(entry,"Sequence",(int)count+1);save(entry);put(r,"WarningsAcknowledged",false);touch(r);
+        audit(r,null,null,date(r,"StartedAt")==null?"Team sheet saved":"Team sheet correction",reasonOr(f,"Captain team sheet entry"),id(p)+" "+text(p,"MemberName")+": "+before,position,date(r,"StartedAt")==null?side:"");
+        return squadView(r,side);
+    }
+
+    private IMendixObject removeSquadPlayer(IMendixObject f) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration"),p=required(f,"SelectedKey","CompetitionPlayer");String side=side(f);
+        require(canEditSquad(r,side),"This team sheet is locked or belongs to another team.");if(date(r,"StartedAt")!=null)requireReason(f);
+        IMendixObject entry=null;for(IMendixObject o:squad(r,side))if(referenceKey(o,"MatchSquadPlayer_Player").equals(id(p)))entry=o;require(entry!=null,"This player is not on the team sheet.");
+        require(substitutions(r).stream().noneMatch(s->same(ref0(s,"MatchSubstitution_On"),p)||same(ref0(s,"MatchSubstitution_Off"),p)),"A player involved in a substitution cannot be removed.");
+        audit(r,null,null,date(r,"StartedAt")==null?"Team sheet player removed":"Team sheet correction",reasonOr(f,"Captain team sheet entry"),id(p)+" "+text(p,"MemberName")+": "+text(entry,"Position"),"Not on team sheet",date(r,"StartedAt")==null?side:"");
+        dirty.remove(entry);Core.delete(ctx,entry);put(r,"WarningsAcknowledged",false);touch(r);return squadView(r,side);
+    }
+
+    private IMendixObject pickSubstitution(IMendixObject f,int slot) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration"),p=required(f,"SelectedKey","CompetitionPlayer");String side=side(f);require(canSubstitute(r),"Only the official records substitutions during the fixture.");
+        IMendixObject entry=null;for(IMendixObject o:squad(r,side))if(referenceKey(o,"MatchSquadPlayer_Player").equals(id(p)))entry=o;require(entry!=null,"Choose a player on this team sheet.");
+        List<IMendixObject> substitutions=substitutions(r);
+        if(slot==1)require(onField(entry,substitutions),"The player going off must be on the field.");
+        else require(text(entry,"Position").equals("Reserve")&&substitutions.stream().noneMatch(s->same(ref0(s,"MatchSubstitution_On"),p)),"The player coming on must be an unused reserve.");
+        put(f,"Player"+slot+"Key",id(p));put(f,"Player"+slot+"Name",text(p,"MemberName"));return f;
+    }
+
+    private IMendixObject saveSubstitution(IMendixObject f) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration"),off=required(f,"Player1Key","CompetitionPlayer"),on=required(f,"Player2Key","CompetitionPlayer");String side=side(f);
+        require(canSubstitute(r),"Only the official records substitutions during the fixture.");if(date(r,"SubmittedAt")!=null)requireReason(f);
+        int minute=integer(f,"Sequence");require(minute>=0&&minute<=200,"Enter the minute of the substitution (0-200).");
+        List<IMendixObject> sheet=squad(r,side),substitutions=substitutions(r);IMendixObject offEntry=null,onEntry=null;
+        for(IMendixObject o:sheet){if(referenceKey(o,"MatchSquadPlayer_Player").equals(id(off)))offEntry=o;if(referenceKey(o,"MatchSquadPlayer_Player").equals(id(on)))onEntry=o;}
+        require(offEntry!=null&&onField(offEntry,substitutions),"The player going off must be on the field.");
+        require(onEntry!=null&&text(onEntry,"Position").equals("Reserve")&&substitutions.stream().noneMatch(s->same(ref0(s,"MatchSubstitution_On"),on)),"The player coming on must be an unused reserve.");
+        IMendixObject s=make("MatchSubstitution");put(s,"Side",side);put(s,"Minute",minute);put(s,"OffName",text(off,"MemberName"));put(s,"OnName",text(on,"MemberName"));put(s,"Reason",text(f,"Reason").length()>200?text(f,"Reason").substring(0,200):text(f,"Reason"));put(s,"RecordedBy",actor);put(s,"RecordedAt",new Date());
+        link(s,"MatchSubstitution_Registration",r);link(s,"MatchSubstitution_Off",off);link(s,"MatchSubstitution_On",on);save(s);touch(r);
+        audit(r,null,null,date(r,"SubmittedAt")==null?"Substitution recorded":"Federation substitution correction",reasonOr(f,"Official substitution"),side+" "+minute+"' off: "+id(off)+" "+text(off,"MemberName"),"on: "+id(on)+" "+text(on,"MemberName"),"");
+        return squadView(r,side);
+    }
+
+    private boolean onField(IMendixObject entry,List<IMendixObject> substitutions) throws Exception {
+        IMendixObject p=ref(entry,"MatchSquadPlayer_Player");
+        boolean cameOn=substitutions.stream().anyMatch(s->same(ref0(s,"MatchSubstitution_On"),p)),wentOff=substitutions.stream().anyMatch(s->same(ref0(s,"MatchSubstitution_Off"),p));
+        return !wentOff&&(text(entry,"Position").equals("Starter")||cameOn);
+    }
+
+    private String side(IMendixObject f){String side=text(f,"Side");require(side.equals("Home")||side.equals("Away"),"Reopen the team sheet.");return side;}
+
+    private boolean canSeeSide(IMendixObject r,String side) throws Exception{return canRead(ref(r,"MatchRegistration_Fixture"))&&("SourceSnapshot".equals(text(r,"State"))||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,side+"CaptainKey")));}
+
+    /** Before start the captain or official edits within the lineup lock; afterwards only federation corrections, with a reason. */
+    private boolean canEditSquad(IMendixObject r,String side) throws Exception {if(date(r,"StartedAt")!=null)return override(r);return canEditLineup(r,side);}
+
+    private boolean canSubstitute(IMendixObject r) throws Exception {return date(r,"StartedAt")!=null&&((isLeader(r)&&date(r,"SubmittedAt")==null)||override(r));}
+
+    private List<IMendixObject> squad(IMendixObject r,String side) throws Exception {List<IMendixObject> list=query("MatchSquadPlayer","["+M+"MatchSquadPlayer_Registration="+id(r)+"][Side='"+side+"']");for(IMendixObject o:dirty)if(o.getType().equals(M+"MatchSquadPlayer")&&same(ref(o,"MatchSquadPlayer_Registration"),r)&&side.equals(text(o,"Side"))&&!list.contains(o))list.add(o);list.sort(Comparator.comparing((IMendixObject o)->text(o,"Position").equals("Starter")?0:1).thenComparingInt(o->integer(o,"Sequence")).thenComparing(o->text(o,"PlayerName")));return list;}
+
+    private List<IMendixObject> substitutions(IMendixObject r) throws Exception {List<IMendixObject> list=query("MatchSubstitution","["+M+"MatchSubstitution_Registration="+id(r)+"]");for(IMendixObject o:dirty)if(o.getType().equals(M+"MatchSubstitution")&&same(ref(o,"MatchSubstitution_Registration"),r)&&!list.contains(o))list.add(o);list.sort(Comparator.comparing((IMendixObject o)->text(o,"Side")).thenComparingInt(o->integer(o,"Minute")));return list;}
+
+    private IMendixObject ref0(IMendixObject o,String association){try{return ref(o,association);}catch(Exception e){throw new IllegalStateException(e);}}
+
     private IMendixObject setView(IMendixObject f,IMendixObject s) throws Exception {
 
         IMendixObject c=s==null?required(f,"ContestKey","MatchContest"):ref(s,"MatchSet_Contest"),r=ref(c,"MatchContest_Registration");require(canEnter(r),"Only the game leader may enter results before submission; afterward only the federation may correct them.");
@@ -746,11 +980,9 @@ public final class MatchRegistrationService {
 
         if(!raw.isEmpty())for(String line:raw.split("[\\r\\n;]+")){java.util.regex.Matcher m=java.util.regex.Pattern.compile("\\s*(\\d+)\\s*[-–:]\\s*(\\d+)(?:\\s*\\(\\s*(\\d+)\\s*[-–:]\\s*(\\d+)\\s*\\))?\\s*(MT)?\\s*",java.util.regex.Pattern.CASE_INSENSITIVE).matcher(line);require(m.matches(),"Enter one set per line, for example 21-19, 7-6 (7-4), or 10-8 MT.");scores.add(new MatchRules.SetScore(Integer.parseInt(m.group(1)),Integer.parseInt(m.group(2)),m.group(3)==null?0:Integer.parseInt(m.group(3)),m.group(4)==null?0:Integer.parseInt(m.group(4)),m.group(3)!=null,m.group(5)!=null));}
 
-        MatchRules.ContestResult result=MatchRules.contest(rules(ref(c,"MatchContest_Format")),scores,outcome,text(f,"Reason"));
+        MatchRules.ContestResult result=MatchRules.contest(contestRules(c),scores,outcome,text(f,"Reason"));
 
-        List<IMendixObject> old=sets(c);for(IMendixObject s:old){dirty.remove(s);Core.delete(ctx,s);}int sequence=0;
-
-        for(MatchRules.SetScore score:scores){IMendixObject s=make("MatchSet");put(s,"Sequence",++sequence);put(s,"Home",score.home);put(s,"Away",score.away);put(s,"HomeTie",score.homeTie);put(s,"AwayTie",score.awayTie);put(s,"HasTie",score.hasTie);put(s,"IsMatchTie",score.matchTie);link(s,"MatchSet_Contest",c);save(s);}
+        replaceSets(c,scores);
 
         if(bool(c,"RankingExcluded")!=bool(f,"RankingExcluded")){require(override(r),"Only the federation may exclude a contest from player ranking.");requireReason(f);}put(c,"RankingExcluded",bool(f,"RankingExcluded"));put(c,"Outcome",outcome);put(c,"Reason",text(f,"Reason"));applyResult(c,result);touch(c);touch(r);audit(r,null,null,"Complete contest score saved",reasonOr(f,"Official result entry"),before,raw+"; "+snapshot(c,"Outcome","RecordedWinner","OfficialWinner","Reason","RankingExcluded"),"");
 
@@ -863,7 +1095,10 @@ public final class MatchRegistrationService {
 
 
 
-    private String warnings(IMendixObject r) throws Exception {List<String> result=new ArrayList<>();for(IMendixObject c:contests(r))for(IMendixObject l:lineups(c)){String warning=lineupWarnings(r,c,l);if(!warning.isEmpty())result.add(text(c,"Name")+" · "+text(l,"Side")+": "+warning);}return String.join("\n",result);}
+    private String warnings(IMendixObject r) throws Exception {List<String> result=new ArrayList<>();for(IMendixObject c:contests(r))for(IMendixObject l:lineups(c)){String warning=lineupWarnings(r,c,l);if(!warning.isEmpty())result.add(text(c,"Name")+" · "+text(l,"Side")+": "+warning);}
+        IMendixObject rule=ref(r,"MatchRegistration_Format");int starters=rule==null?0:integer(rule,"MaxStarters");
+        if(starters>0)for(String side:Arrays.asList("Home","Away")){long named=squad(r,side).stream().filter(p->text(p,"Position").equals("Starter")).count();if(named<starters)result.add("Team sheet · "+side+": "+named+" of "+starters+" starters named");}
+        return String.join("\n",result);}
 
     private String lineupWarnings(IMendixObject r,IMendixObject c,IMendixObject l) throws Exception {
 
@@ -897,7 +1132,7 @@ public final class MatchRegistrationService {
 
 
 
-    private MatchRules.ContestResult calculate(IMendixObject c) throws Exception {List<MatchRules.SetScore> scores=new ArrayList<>();int expected=1;for(IMendixObject s:sets(c)){require(integer(s,"Sequence")==expected++,"Set order must be consecutive from one.");scores.add(new MatchRules.SetScore(integer(s,"Home"),integer(s,"Away"),integer(s,"HomeTie"),integer(s,"AwayTie"),bool(s,"HasTie"),bool(s,"IsMatchTie")));}return MatchRules.contest(rules(ref(c,"MatchContest_Format")),scores,text(c,"Outcome"),text(c,"Reason"));}
+    private MatchRules.ContestResult calculate(IMendixObject c) throws Exception {List<MatchRules.SetScore> scores=new ArrayList<>();int expected=1;for(IMendixObject s:sets(c)){require(integer(s,"Sequence")==expected++,"Set order must be consecutive from one.");scores.add(new MatchRules.SetScore(integer(s,"Home"),integer(s,"Away"),integer(s,"HomeTie"),integer(s,"AwayTie"),bool(s,"HasTie"),bool(s,"IsMatchTie")));}return MatchRules.contest(contestRules(c),scores,text(c,"Outcome"),text(c,"Reason"));}
 
     private void applyResult(IMendixObject c,MatchRules.ContestResult r){put(c,"RecordedWinner",r.recordedWinner);put(c,"OfficialWinner",r.officialWinner);put(c,"HomeSets",r.homeSets);put(c,"AwaySets",r.awaySets);put(c,"HomeTotal",r.homeTotal);put(c,"AwayTotal",r.awayTotal);put(c,"Excluded",r.excluded);put(c,"RankingEligible",r.rankingEligible&&!bool(c,"RankingExcluded")&&integer(c,"PlayersPerSide")>0);}
 
@@ -955,7 +1190,9 @@ public final class MatchRegistrationService {
 
     private IMendixObject required(IMendixObject f,String field,String type) throws Exception {IMendixObject o=optional(f,field,type);require(o!=null,"Select a valid "+type+".");return o;}
 
-    private IMendixObject optional(IMendixObject f,String field,String type) throws Exception {String key=text(f,field);if(key.isEmpty())return null;require(key.matches("[0-9]+"),"Invalid record reference.");IMendixObject o=Core.retrieveId(ctx,Core.createMendixIdentifier(Long.parseLong(key)));require(o!=null&&o.getType().equals(M+type),"Record is missing or has the wrong type.");return o;}
+    private IMendixObject optional(IMendixObject f,String field,String type) throws Exception {return byKey(text(f,field),type);}
+
+    private IMendixObject byKey(String key,String type) throws Exception {if(key.isEmpty())return null;require(key.matches("[0-9]+"),"Invalid record reference.");IMendixObject o=Core.retrieveId(ctx,Core.createMendixIdentifier(Long.parseLong(key)));require(o!=null&&o.getType().equals(M+type),"Record is missing or has the wrong type.");return o;}
 
     private IMendixObject ref(IMendixObject o,String association) throws Exception {if(o==null)return null;IMendixIdentifier id=o.getValue(ctx,M+association);return id==null?null:Core.retrieveId(ctx,id);}
 
@@ -991,10 +1228,11 @@ public final class MatchRegistrationService {
 
     private static String escape(String value){return value.replace("'","''");}
 
-    private void requireReason(IMendixObject f){require(!text(f,"Reason").trim().isEmpty(),"A reason is required and will be logged.");}
+    private void requireReason(IMendixObject f){require(!text(f,"Reason").trim().isEmpty(),"A comment is required for this change and will be logged.");}
 
     private String reasonOr(IMendixObject f,String fallback){return text(f,"Reason").trim().isEmpty()?fallback:text(f,"Reason");}
 
     private static void require(boolean condition,String message){if(!condition)throw new IllegalArgumentException(message);}
 
 }
+

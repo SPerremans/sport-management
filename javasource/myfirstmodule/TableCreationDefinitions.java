@@ -114,6 +114,8 @@ public final class TableCreationDefinitions {
  KEYS.put(TableDefinitions.get("MatchContest__competitionWidget137"),"MatchContest__competitionWidget137");
  KEYS.put(TableDefinitions.get("MatchContest__competitionWidget143"),"MatchContest__competitionWidget143");
  KEYS.put(TableDefinitions.get("MatchRoster__competitionWidget176"),"MatchRoster__competitionWidget176");
+ KEYS.put(TableDefinitions.get("MatchSquad__matchSquadRoster"),"MatchSquad__matchSquadRoster");
+ KEYS.put(TableDefinitions.get("MatchSquad__matchSquadSheet"),"MatchSquad__matchSquadSheet");
  KEYS.put(TableDefinitions.get("MatchEligibility__competitionWidget202"),"MatchEligibility__competitionWidget202");
  KEYS.put(TableDefinitions.get("MatchEligibility__competitionWidget205"),"MatchEligibility__competitionWidget205");
  KEYS.put(TableDefinitions.get("MatchAssignments__competitionWidget6"),"MatchAssignments__competitionWidget6");
@@ -126,6 +128,7 @@ public final class TableCreationDefinitions {
  KEYS.put(TableDefinitions.get("CompetitionLeague_Workspace__competitionWidget157"),"CompetitionLeague_Workspace__competitionWidget157");
  KEYS.put(TableDefinitions.get("CompetitionLeague_Workspace__competitionWidget160"),"CompetitionLeague_Workspace__competitionWidget160");
  KEYS.put(TableDefinitions.get("CompetitionLeague_Workspace__competitionWidget169"),"CompetitionLeague_Workspace__competitionWidget169");
+ KEYS.put(TableDefinitions.get("CompetitionPoule_Standings__pouleFixtures"),"CompetitionPoule_Standings__pouleFixtures");
  KEYS.put(TableDefinitions.get("CompetitionLeague_Workspace__competitionWidget178"),"CompetitionLeague_Workspace__competitionWidget178");
  KEYS.put(TableDefinitions.get("CompetitionFederation_Workspace__competitionWidget192"),"CompetitionFederation_Workspace__competitionWidget192");
  KEYS.put(TableDefinitions.get("CompetitionFederation_Workspace__competitionWidget195"),"CompetitionFederation_Workspace__competitionWidget195");
