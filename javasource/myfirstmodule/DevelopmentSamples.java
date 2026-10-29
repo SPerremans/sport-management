@@ -35,9 +35,10 @@ public final class DevelopmentSamples {
     private static final String TABLE_RETENTION_FEATURE = "features:table-actions-and-retention-v1";
     private static final String CHECKS_ROLE_FEATURE = "features:checks-role-examples-v1";
     private static final String FIXTURE_ENTRY_FEATURE = "features:fixture-entry-config-v1";
+    private static final String FIXTURE_WORKFLOW_FEATURE = "features:fixture-workflow-v1";
     private static final String[] RETENTION_TYPES = {"MyFirstModule.RecordLifecycle", "MyFirstModule.TableRetentionPolicy"};
     private static final String[] DIRECTORY_TYPES = {"MyFirstModule.ClubDirectoryCity", "MyFirstModule.AffiliationMutationClaim", "MyFirstModule.AccountAudit"};
-    private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility", "MyFirstModule.MatchSquadPlayer", "MyFirstModule.MatchSubstitution"};
+    private static final String[] MATCH_TYPES = {"MyFirstModule.MatchFormat", "MyFirstModule.MatchSlot", "MyFirstModule.MatchRegistration", "MyFirstModule.MatchContest", "MyFirstModule.MatchSet", "MyFirstModule.MatchLineup", "MyFirstModule.MatchAudit", "MyFirstModule.MatchEligibility", "MyFirstModule.MatchSquadPlayer", "MyFirstModule.MatchSubstitution", "MyFirstModule.MatchComment"};
     private static final String[] TYPES = {"MyFirstModule.PaymentVerification","MyFirstModule.InvoicePdf","MyFirstModule.Invoice","MyFirstModule.NewsItem","MyFirstModule.PlayerListRule","MyFirstModule.ClubEvent","MyFirstModule.FormResponse","MyFirstModule.FormField","MyFirstModule.RegistrationRequest","MyFirstModule.Membership","MyFirstModule.MembershipType","MyFirstModule.Club","MyFirstModule.FeeAdjustment","MyFirstModule.ClubStaff","MyFirstModule.ClubPermission","MyFirstModule.ClubRole","MyFirstModule.SeasonFee","MyFirstModule.Season","MyFirstModule.InvoiceMail","MyFirstModule.RenewalOffer","MyFirstModule.InvoiceLine","MyFirstModule.BillingPlan","MyFirstModule.ClubBillingPolicy","MyFirstModule.InvoiceStyle","MyFirstModule.FederationRegistration","MyFirstModule.FederationAffiliation","MyFirstModule.FederationRate","MyFirstModule.FederationType","MyFirstModule.TeamCategory","MyFirstModule.FederationGender","MyFirstModule.Federation","MyFirstModule.InvitationClaim","MyFirstModule.AccountInvitation","MyFirstModule.BillingClaim","MyFirstModule.CompetitionAudit","MyFirstModule.FederationCompetitionDelegate","MyFirstModule.FixtureChange","MyFirstModule.CompetitionFixture","MyFirstModule.ClubCompetitionPolicy","MyFirstModule.VenueAvailability","MyFirstModule.CompetitionVenue","MyFirstModule.CompetitionPoule","MyFirstModule.LeagueEntry","MyFirstModule.CompetitionPlayer","MyFirstModule.CompetitionTeam","MyFirstModule.CompetitionLeague","UserManagement.Person"};
     private static final Map<String, String[]> EDGES = new LinkedHashMap<>();
     static {
@@ -52,6 +53,7 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.MatchAudit", new String[]{"MyFirstModule.MatchAudit_Registration", "MyFirstModule.MatchAudit_Federation", "MyFirstModule.MatchAudit_League"});
         EDGES.put("MyFirstModule.MatchEligibility", new String[]{"MyFirstModule.MatchEligibility_Federation", "MyFirstModule.MatchEligibility_Player"});
         EDGES.put("MyFirstModule.MatchSquadPlayer", new String[]{"MyFirstModule.MatchSquadPlayer_Registration", "MyFirstModule.MatchSquadPlayer_Player"});
+        EDGES.put("MyFirstModule.MatchComment", new String[]{"MyFirstModule.MatchComment_Registration"});
         EDGES.put("MyFirstModule.MatchSubstitution", new String[]{"MyFirstModule.MatchSubstitution_Registration", "MyFirstModule.MatchSubstitution_Off", "MyFirstModule.MatchSubstitution_On"});
         EDGES.put("MyFirstModule.PaymentVerification", new String[]{"MyFirstModule.PaymentVerification_Invoice"});
         EDGES.put("MyFirstModule.InvoicePdf", new String[]{"MyFirstModule.InvoicePdf_Invoice"});
@@ -476,7 +478,7 @@ public final class DevelopmentSamples {
     /** Append a frozen public season once; real and user-edited demo records are never matched or rewritten. */
     private static void extendPublicCompetitionSamples(IContext ctx) throws Exception {
         IMendixObject manifest=batch(ctx);String summary=manifest.getValue(ctx,"Summary");
-        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);return;}
+        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);extendFixtureWorkflowSamples(ctx);return;}
         Seed s=new Seed(ctx);PublicCompetitionSamples.populate(ctx,s);
         Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));owned.addAll(ids(s.owned));
         Set<Long> publicOrganizations=new HashSet<>();
@@ -489,6 +491,25 @@ public final class DevelopmentSamples {
         extendLeagueResultSamples(ctx);
         extendTeamSheetSamples(ctx);
         extendFixtureEntrySamples(ctx);
+        extendFixtureWorkflowSamples(ctx);
+    }
+
+    /** Fixture workflow: starting hour, match ball / shuttle and team comments on started sample fixtures. Runs once; edited registrations keep their own values. */
+    private static void extendFixtureWorkflowSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");if(summary.contains(FIXTURE_WORKFLOW_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));int setups=0;List<IMendixObject> created=new ArrayList<>();java.text.SimpleDateFormat hour=new java.text.SimpleDateFormat("HH:mm");
+        for(IMendixObject registration:query(ctx,"//MyFirstModule.MatchRegistration[StartedAt!=empty]")){
+            if(!owned.contains(registration.getId().toLong())||!Objects.toString(registration.getValue(ctx,"StartTime"),"").isBlank())continue;
+            registration.setValue(ctx,"StartTime",hour.format((Date)registration.getValue(ctx,"StartedAt")));registration.setValue(ctx,"Equipment","Sample match ball / shuttle");
+            Core.commitWithoutEvents(ctx,registration);setups++;
+            if(created.size()<4){
+                String[][] notes={{"Home","Sample home captain","Thanks for the game. Sample comment, no real match."},{"Away","Sample away captain","One pairing was changed after an injury. Sample comment."}};
+                for(String[] note:notes){IMendixObject comment=Core.instantiate(ctx,"MyFirstModule.MatchComment");comment.setValue(ctx,"Side",note[0]);comment.setValue(ctx,"Author",note[1]);comment.setValue(ctx,"Message",note[2]);comment.setValue(ctx,"At",new Date());comment.setValue(ctx,"MyFirstModule.MatchComment_Registration",registration.getId());Core.commitWithoutEvents(ctx,comment);created.add(comment);}
+            }
+        }
+        owned.addAll(ids(created));manifest.setValue(ctx,"OwnedIds",encode(owned));
+        manifest.setValue(ctx,"Summary",summary+" Fixture workflow: "+setups+" started sample fixture(s) with starting hour and match ball / shuttle, "+created.size()+" sample team comments. "+FIXTURE_WORKFLOW_FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
     }
 
     /** Fixture entry switches: owned team-score formats record one final score and no players per game. Runs once; later edits are kept. */

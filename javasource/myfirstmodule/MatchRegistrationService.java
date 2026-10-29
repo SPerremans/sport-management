@@ -209,6 +209,10 @@ public final class MatchRegistrationService {
             case "PickHome": return pickPlayers(f,"Home");
             case "PickAway": return pickPlayers(f,"Away");
             case "SaveGame": return saveGame(f);
+            case "SaveSetup": return saveSetup(f);
+            case "AddComment": return addComment(f);
+            case "Confirm": return confirmResult(f);
+            case "DisputeResult": return disputeResult(f);
 
             case "Submit": return submit(f);
 
@@ -568,13 +572,17 @@ public final class MatchRegistrationService {
         IMendixObject f=form(text(fixture,"HomeName")+" — "+text(fixture,"AwayName")); put(f,"FixtureKey",id(fixture));put(f,"RecordKey",id(r));put(f,"Revision",integer(r,"Revision"));put(f,"LeaderName",text(r,"LeaderName"));
         CompetitionStandings.Policy pointsPolicy=leaguePolicy(ref(fixture,"CompetitionFixture_League"));put(f,"UseGameBreakdown",pointsPolicy.games());put(f,"Home",integer(r,"HomeScore"));put(f,"Away",integer(r,"AwayScore"));
 
-        put(f,"CanHome",club(fixture,"Home","Update"));put(f,"CanAway",club(fixture,"Away","Update"));put(f,"CanLead",isLeader(r));put(f,"CanOverride",override(r));put(f,"CanManage",manage(r));
+        put(f,"CanHome",club(fixture,"Home","Update"));put(f,"CanAway",club(fixture,"Away","Update"));put(f,"CanLead",controls(r));put(f,"CanOverride",override(r)||TableLifecycleService.admin(caller));put(f,"CanManage",manage(r));
+        put(f,"StartTime",text(r,"StartTime"));put(f,"Equipment",text(r,"Equipment"));put(f,"Stage",stage(r));
+        put(f,"CanSetup",controls(r)&&date(r,"SubmittedAt")==null&&!bool(r,"FederationFinal"));put(f,"CanFinalise",controls(r)&&date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null);
+        put(f,"CanConfirm",date(r,"SubmittedAt")!=null&&!bool(r,"FederationFinal")&&!bool(r,"Disputed")&&((userKey.equals(text(r,"HomeCaptainKey"))&&!bool(r,"HomeAccepted"))||(userKey.equals(text(r,"AwayCaptainKey"))&&!bool(r,"AwayAccepted"))));
+        put(f,"CanComment",commentSide(r)!=null);
 
         boolean sourceSnapshot="SourceSnapshot".equals(text(r,"State"));
         int drawnGames=pointsPolicy.pointsPerGame()?(int)contests(r).stream().filter(c->text(c,"OfficialWinner").equals("Draw")&&!bool(c,"Excluded")).count():0;
         BigDecimal homePoints=text(r,"Winner").isBlank()?BigDecimal.ZERO:pointsPolicy.points(integer(r,"HomeScore"),integer(r,"AwayScore"),drawnGames,text(r,"Winner"),"Home").add(decimal(r,"HomeAdjustment"));
         BigDecimal awayPoints=text(r,"Winner").isBlank()?BigDecimal.ZERO:pointsPolicy.points(integer(r,"AwayScore"),integer(r,"HomeScore"),drawnGames,text(r,"Winner"),"Away").add(decimal(r,"AwayAdjustment"));
-        put(f,"Info",text(r,"State")+" · "+(sourceSnapshot&&text(r,"Winner").isBlank()?"No published score":"Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"))+" · Official winner: "+text(r,"Winner")+" · Competition points "+CompetitionStandings.pointsText(homePoints)+" / "+CompetitionStandings.pointsText(awayPoints)+(sourceSnapshot?"\n"+text(fixture,"Issue")+"\n"+text(r,"Reason"):" · Home: "+text(r,"HomeAcceptance")+" until "+text(r,"HomeDeadline")+" · Away: "+text(r,"AwayAcceptance")+" until "+text(r,"AwayDeadline"))+(bool(r,"Disputed")?" · DISPUTED: "+text(r,"DisputeReason"):""));
+        put(f,"Info",resultLine(r,fixture,sourceSnapshot,homePoints,awayPoints));
 
         if(bool(f,"UseGameBreakdown"))for(IMendixObject c:contests(r))row(f,c,"Contest",integer(c,"Sequence")+". "+text(c,"Name"),fixtureContestDetail(r,c));
 
@@ -583,7 +591,8 @@ public final class MatchRegistrationService {
 
         for(IMendixObject a:query("MatchAudit","["+M+"MatchAudit_Registration="+id(r)+"]"))if(text(a,"PrivateSide").isEmpty()||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(a,"PrivateSide")+"CaptainKey")))row(f,a,"Audit",text(a,"At")+" · "+text(a,"Actor")+" · "+text(a,"Action"),text(a,"Reason")+" · Before: "+text(a,"BeforeValue")+" · After: "+text(a,"AfterValue"));
 
-        List<String> visibleWarnings=new ArrayList<>();for(IMendixObject c:contests(r))for(IMendixObject l:lineups(c))if(canSeeLineup(r,l)){String w=lineupWarnings(r,c,l);if(!w.isEmpty())visibleWarnings.add(text(c,"Name")+" · "+text(l,"Side")+": "+w);}put(f,"Info",text(f,"Info")+"\n"+String.join("\n",visibleWarnings));
+        List<String> visibleWarnings=new ArrayList<>();for(IMendixObject c:contests(r))for(IMendixObject l:lineups(c))if(canSeeLineup(r,l)){String w=lineupWarnings(r,c,l);if(!w.isEmpty())visibleWarnings.add(text(c,"Name")+" · "+text(l,"Side")+": "+w);}put(f,"Warnings",String.join("\n",visibleWarnings));
+        List<IMendixObject> comments=query("MatchComment","["+M+"MatchComment_Registration="+id(r)+"]");comments.sort(Comparator.comparing(m->date(m,"At")));for(IMendixObject m:comments){row(f,m,"Comment",text(m,"Side")+" · "+text(m,"Author")+" · "+text(m,"At"),text(m,"Message"));}
 
         copy(r,f,"HomeAdjustment","AwayAdjustment","WinnerOverride");return f;
 
@@ -640,7 +649,8 @@ public final class MatchRegistrationService {
             List<IMendixObject> sets=sets(c);for(int i=0;i<Math.min(5,sets.size());i++){put(row,"Set"+(i+1)+"Home",integer(sets.get(i),"Home"));put(row,"Set"+(i+1)+"Away",integer(sets.get(i),"Away"));}
             for(String side:Arrays.asList("Home","Away")){
                 IMendixObject l=first("MatchLineup","["+M+"MatchLineup_Contest="+id(c)+"][Side='"+side+"']");
-                boolean visible=l!=null&&canSeeLineup(r,l),edit=visible&&perSide>0&&!started&&canEditLineup(r,side);
+                boolean visible=l!=null&&canSeeLineup(r,l),edit=visible&&perSide>0&&(!started||!text(c,"Outcome").equals("Played"))&&canEditLineup(r,side);
+                if(visible&&started&&l!=null&&!text(l,"ChangeNote").isBlank())put(row,"Note",text(row,"Note")+(text(row,"Note").isEmpty()?"":" · ")+side+" changed: "+text(l,"ChangeNote"));
                 put(row,side+"Name",perSide==0?"":!visible?"Hidden until start":text(l,"Player1Name").isBlank()?"Not entered":text(l,"Player1Name")+(text(l,"Player2Name").isBlank()?"":" / "+text(l,"Player2Name")));
                 put(row,"CanEdit"+side,edit);if(!edit)continue;
                 Map<String,IMendixObject> roster=rosters.get(side);
@@ -676,12 +686,14 @@ public final class MatchRegistrationService {
     private IMendixObject pickPlayers(IMendixObject f,String side) throws Exception {
         IMendixObject c=required(f,"SelectedKey","MatchContest"),r=ref(c,"MatchContest_Registration"),fixture=ref(r,"MatchRegistration_Fixture");
         IMendixObject l=first("MatchLineup","["+M+"MatchLineup_Contest="+id(c)+"][Side='"+side+"']");
-        require(l!=null&&date(r,"StartedAt")==null&&canSeeLineup(r,l)&&canEditLineup(r,side),"Players are picked here before the start by the team captain or the game leader.");
+        boolean started=date(r,"StartedAt")!=null;
+        require(l!=null&&canSeeLineup(r,l)&&canEditLineup(r,side),"Players are picked by the team captain before the start, and by the game leader afterwards.");
+        if(started){require(!text(c,"Outcome").equals("Played"),"This game is already played; the federation can correct it after finalising.");requireReason(f);}
         IMendixObject row=gameRow(f,c),p1=picked(row,"MatchRow_"+side+"Pick1"),p2=integer(c,"PlayersPerSide")>1?picked(row,"MatchRow_"+side+"Pick2"):null;
         for(IMendixObject p:Arrays.asList(p1,p2))if(p!=null)require(same(ref(p,"CompetitionPlayer_Team"),team(r,side)),"Choose a player from the team's registered roster.");
         require(p1==null||p2==null||!same(p1,p2),"Choose two different players.");
-        String before=participants(l);link(l,"MatchLineup_Player1",p1);link(l,"MatchLineup_Player2",p2);put(l,"Player1Name",p1==null?"":text(p1,"MemberName"));put(l,"Player2Name",p2==null?"":text(p2,"MemberName"));put(l,"Warnings",lineupWarnings(r,c,l));touch(l);put(r,"WarningsAcknowledged",false);touch(r);
-        audit(r,null,null,"Lineup saved","Games table entry",before,participants(l),side);return fixture(fixture);
+        String before=participants(l);link(l,"MatchLineup_Player1",p1);link(l,"MatchLineup_Player2",p2);put(l,"Player1Name",p1==null?"":text(p1,"MemberName"));put(l,"Player2Name",p2==null?"":text(p2,"MemberName"));put(l,"Warnings",lineupWarnings(r,c,l));if(started)put(l,"ChangeNote",text(f,"Reason").trim());touch(l);if(!started){put(r,"WarningsAcknowledged",false);touch(r);}
+        audit(r,null,null,started?"Players changed after the start":"Lineup saved",started?text(f,"Reason").trim():"Games table entry",before,participants(l),started?"":side);return fixture(fixture);
     }
 
     /** Game leader saves one game's set scores from the games table; partial scores stay pending until a side has won. */
@@ -724,7 +736,7 @@ public final class MatchRegistrationService {
 
         IMendixObject r=required(f,"RecordKey","MatchRegistration"),fixture=ref(r,"MatchRegistration_Fixture");version(r,f);
 
-        require(userKey.equals(text(r,"HomeCaptainKey"))||override(r),"Only the home captain or federation may appoint the game leader.");require(date(r,"StartedAt")==null||override(r),"Only the federation can replace an official after fixture start.");
+        require(userKey.equals(text(r,"HomeCaptainKey"))||club(fixture,"Home","Update")||fedStaff(r),"Only the home team or the federation may appoint the game leader.");require(date(r,"StartedAt")==null||override(r)||TableLifecycleService.admin(caller),"Only the federation can replace an official after fixture start.");
 
         IMendixObject leader=Core.getUser(ctx,text(f,"LeaderName"))==null?null:Core.getUser(ctx,text(f,"LeaderName")).getMendixObject();require(leader!=null&&bool(leader,"Active"),"Choose an active account by its sign-in name.");
 
@@ -734,11 +746,76 @@ public final class MatchRegistrationService {
 
 
 
+    /** One short line under the stage: setup, result, points and the teams' confirmations. */
+    private String resultLine(IMendixObject r,IMendixObject fixture,boolean sourceSnapshot,BigDecimal homePoints,BigDecimal awayPoints){
+        List<String> parts=new ArrayList<>();
+        if(sourceSnapshot){parts.add(text(r,"Winner").isBlank()?"No published score":"Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"));if(!text(fixture,"Issue").isBlank())parts.add(text(fixture,"Issue"));if(!text(r,"Reason").isBlank())parts.add(text(r,"Reason"));return String.join(" · ",parts);}
+        if(!text(r,"StartTime").isBlank())parts.add("Started "+text(r,"StartTime"));
+        if(!text(r,"Equipment").isBlank())parts.add("Ball / shuttle: "+text(r,"Equipment"));
+        if(date(r,"StartedAt")!=null){parts.add("Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"));if(!text(r,"Winner").isBlank())parts.add("Winner: "+text(r,"Winner")+" · points "+CompetitionStandings.pointsText(homePoints)+" / "+CompetitionStandings.pointsText(awayPoints));}
+        if(date(r,"SubmittedAt")!=null)parts.add("Home "+(bool(r,"HomeAccepted")?"confirmed":"to confirm until "+text(r,"HomeDeadline"))+" · Away "+(bool(r,"AwayAccepted")?"confirmed":"to confirm until "+text(r,"AwayDeadline")));
+        if(bool(r,"Disputed"))parts.add("DISPUTED: "+text(r,"DisputeReason"));
+        return String.join(" · ",parts);
+    }
+
+    /** The five stages of a fixture, shown as one line above the page. */
+    private String stage(IMendixObject r){
+        if(bool(r,"FederationFinal"))return "Step 5 of 5 · Final result (federation ruling)";
+        if(date(r,"SubmittedAt")!=null)return bool(r,"Disputed")?"Step 5 of 5 · Disputed, waiting for the federation":bool(r,"HomeAccepted")&&bool(r,"AwayAccepted")?"Step 5 of 5 · Final result":"Step 4 of 5 · Waiting for team confirmation";
+        if(date(r,"StartedAt")!=null)return "Step 3 of 5 · Match in progress";
+        if(text(r,"LeaderKey").isEmpty())return "Step 1 of 5 · Home team appoints the game leader";
+        return "Step 2 of 5 · Game leader checks the team setup";
+    }
+
+    /** The label a comment from this user carries: their team, or Official for the people who run the fixture. */
+    private String commentSide(IMendixObject r) throws Exception {
+        IMendixObject fixture=ref(r,"MatchRegistration_Fixture");
+        if(userKey.equals(text(r,"HomeCaptainKey"))||club(fixture,"Home","Update"))return "Home";
+        if(userKey.equals(text(r,"AwayCaptainKey"))||club(fixture,"Away","Update"))return "Away";
+        return controls(r)?"Official":null;
+    }
+
+    /** Game leader (or club, federation or platform administrator) fills in the starting hour and the match ball / shuttle. */
+    private IMendixObject saveSetup(IMendixObject f) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration"),fixture=ref(r,"MatchRegistration_Fixture");
+        require(controls(r)&&date(r,"SubmittedAt")==null&&!bool(r,"FederationFinal"),"Only the game leader fills in the match setup, and only before the result is finalised.");
+        applySetup(r,f);return fixture(fixture);
+    }
+
+    private void applySetup(IMendixObject r,IMendixObject f) throws Exception {
+        String time=text(f,"StartTime").trim(),equipment=text(f,"Equipment").trim();
+        require(time.isEmpty()||time.matches("([01][0-9]|2[0-3]):[0-5][0-9]"),"Enter the starting hour as hours and minutes, for example 19:30.");
+        require(equipment.length()<=100,"The match ball or shuttle can have at most 100 characters.");
+        String before=snapshot(r,"StartTime","Equipment");put(r,"StartTime",time);put(r,"Equipment",equipment);touch(r);
+        audit(r,null,null,"Match setup saved","Starting hour and match ball / shuttle",before,snapshot(r,"StartTime","Equipment"),"");
+    }
+
+    /** Either team, and the officials, can add a comment that stays visible under the games. */
+    private IMendixObject addComment(IMendixObject f) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration");String side=commentSide(r),message=text(f,"CommentText").trim();
+        require(side!=null,"Only the teams' captains or managers and the officials can comment.");require(!message.isEmpty(),"Write a comment first.");require(message.length()<=1000,"A comment can have at most 1000 characters.");
+        IMendixObject m=make("MatchComment");put(m,"Side",side);put(m,"Author",actor);put(m,"Message",message);put(m,"At",new Date());link(m,"MatchComment_Registration",r);save(m);
+        audit(r,null,null,"Comment added",message,"","",side);return fixture(ref(r,"MatchRegistration_Fixture"));
+    }
+
+    /** A captain confirms the finalised result for their team; a captain who is also the game leader already confirmed by finalising. */
+    private IMendixObject confirmResult(IMendixObject f) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration");boolean confirmed=false;
+        for(String side:Arrays.asList("Home","Away"))if(userKey.equals(text(r,side+"CaptainKey"))){if(!bool(r,side+"Accepted"))accept(f,side);confirmed=true;}
+        require(confirmed,"Only the appointed captain of a team confirms the result.");return fixture(ref(r,"MatchRegistration_Fixture"));
+    }
+
+    private IMendixObject disputeResult(IMendixObject f) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration");
+        for(String side:Arrays.asList("Home","Away"))if(userKey.equals(text(r,side+"CaptainKey")))return dispute(f,side);
+        require(false,"Only the appointed captain of a team disputes the result.");return null;
+    }
+
     private IMendixObject start(IMendixObject f) throws Exception {
 
-        IMendixObject r=required(f,"RecordKey","MatchRegistration"),fixture=ref(r,"MatchRegistration_Fixture");version(r,f);require(isLeader(r),"Only the appointed game leader starts the fixture.");require(date(r,"StartedAt")==null&&date(r,"SubmittedAt")==null,"This fixture has already started.");require(text(fixture,"Status").equals("Published"),"Publish the scheduled fixture first.");
+        IMendixObject r=required(f,"RecordKey","MatchRegistration"),fixture=ref(r,"MatchRegistration_Fixture");version(r,f);require(controls(r),"Only the appointed game leader starts the fixture.");if(!text(f,"StartTime").isBlank()||!text(f,"Equipment").isBlank())applySetup(r,f);require(date(r,"StartedAt")==null&&date(r,"SubmittedAt")==null,"This fixture has already started.");require(text(fixture,"Status").equals("Published"),"Publish the scheduled fixture first.");
 
-        require(bool(f,"WarningsAcknowledged"),"The game leader must acknowledge the lineup and eligibility warnings.");String warnings=warnings(r);put(r,"WarningsAcknowledged",true);put(r,"WarningAcknowledgment",warnings);put(r,"StartedAt",new Date());put(r,"State","Started");touch(r);audit(r,null,null,"Fixture started","Official acknowledged eligibility warnings",warnings,"Lineups locked and revealed","");return fixture(fixture);
+        require(!text(r,"StartTime").isBlank(),"Fill in the starting hour before starting the match.");String warnings=warnings(r);put(r,"WarningsAcknowledged",true);put(r,"WarningAcknowledgment",warnings);put(r,"StartedAt",new Date());put(r,"State","Started");touch(r);audit(r,null,null,"Fixture started","Official acknowledged eligibility warnings",warnings,"Lineups locked and revealed","");return fixture(fixture);
 
     }
 
@@ -907,7 +984,7 @@ public final class MatchRegistrationService {
 
     private String side(IMendixObject f){String side=text(f,"Side");require(side.equals("Home")||side.equals("Away"),"Reopen the team sheet.");return side;}
 
-    private boolean canSeeSide(IMendixObject r,String side) throws Exception{return canRead(ref(r,"MatchRegistration_Fixture"))&&("SourceSnapshot".equals(text(r,"State"))||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,side+"CaptainKey")));}
+    private boolean canSeeSide(IMendixObject r,String side) throws Exception{return canRead(ref(r,"MatchRegistration_Fixture"))&&("SourceSnapshot".equals(text(r,"State"))||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||TableLifecycleService.admin(caller)||userKey.equals(text(r,side+"CaptainKey")));}
 
     /** Before start the captain or official edits within the lineup lock; afterwards only federation corrections, with a reason. */
     private boolean canEditSquad(IMendixObject r,String side) throws Exception {if(date(r,"StartedAt")!=null)return override(r);return canEditLineup(r,side);}
@@ -994,9 +1071,9 @@ public final class MatchRegistrationService {
 
     private IMendixObject submit(IMendixObject f) throws Exception {
 
-        IMendixObject r=required(f,"RecordKey","MatchRegistration");version(r,f);require(isLeader(r)&&date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null,"Only the appointed game leader can submit a started fixture once.");
+        IMendixObject r=required(f,"RecordKey","MatchRegistration");version(r,f);require(controls(r)&&date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null,"Only the appointed game leader can finalise a started fixture once.");
 
-        require(bool(f,"WarningsAcknowledged"),"Acknowledge the final participant and eligibility warnings.");put(r,"WarningAcknowledgment",warnings(r));put(r,"WarningsAcknowledged",true);recalculate(r,false);
+        put(r,"WarningAcknowledgment",warnings(r));put(r,"WarningsAcknowledged",true);recalculate(r,false);
 
         put(r,"SubmittedAt",new Date());MatchRules.Deadlines d=MatchRules.deadlines(rules(ref(r,"MatchRegistration_Format")),instant(ref(r,"MatchRegistration_Fixture"),"StartsAt"),instant(r,"StartedAt"),instant(r,"SubmittedAt"));put(r,"HomeDeadline",Date.from(d.home));put(r,"AwayDeadline",Date.from(d.away));put(r,"State","Provisional");
 
@@ -1152,13 +1229,20 @@ public final class MatchRegistrationService {
 
     private boolean isLeader(IMendixObject r){return userKey.equals(text(r,"LeaderKey"));}
 
-    private boolean canEnter(IMendixObject r) throws Exception{return date(r,"StartedAt")!=null&&((isLeader(r)&&date(r,"SubmittedAt")==null)||override(r));}
+    /** Federation administrators and platform administrators may always step in; they also see both sides before the start. */
+    private boolean fedStaff(IMendixObject r) throws Exception{return TableLifecycleService.admin(caller)||override(r)||manage(r);}
+
+    /** Runs the fixture: the game leader, a club administrator of either team, federation staff or a platform administrator. */
+    private boolean controls(IMendixObject r) throws Exception{IMendixObject fixture=ref(r,"MatchRegistration_Fixture");return isLeader(r)||fedStaff(r)||club(fixture,"Home","Update")||club(fixture,"Away","Update");}
+
+    private boolean canEnter(IMendixObject r) throws Exception{return date(r,"StartedAt")!=null&&((controls(r)&&date(r,"SubmittedAt")==null)||override(r)||TableLifecycleService.admin(caller));}
 
     private boolean independentLeader(IMendixObject r){return isLeader(r)&&!userKey.equals(text(r,"HomeCaptainKey"))&&!userKey.equals(text(r,"AwayCaptainKey"));}
 
-    private boolean canSeeLineup(IMendixObject r,IMendixObject l) throws Exception{return canRead(ref(r,"MatchRegistration_Fixture"))&&("SourceSnapshot".equals(text(r,"State"))||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(l,"Side")+"CaptainKey")));}
+    private boolean canSeeLineup(IMendixObject r,IMendixObject l) throws Exception{return canRead(ref(r,"MatchRegistration_Fixture"))&&("SourceSnapshot".equals(text(r,"State"))||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||TableLifecycleService.admin(caller)||userKey.equals(text(r,text(l,"Side")+"CaptainKey")));}
 
-    private boolean canEditLineup(IMendixObject r,String side) throws Exception {if(date(r,"SubmittedAt")!=null)return override(r);if(date(r,"StartedAt")!=null)return isLeader(r);IMendixObject rule=ref(r,"MatchRegistration_Format"),fixture=ref(r,"MatchRegistration_Fixture");return (isLeader(r)||userKey.equals(text(r,side+"CaptainKey")))&&MatchRules.lineupEditable(text(rule,"LineupLock"),integer(rule,"LockMinutes"),instant(fixture,"StartsAt"),null,Instant.now());}
+    /** Before the start a side is picked by its captain, its club administrator or the game leader; after the start only the people who run the fixture can change players, always with a comment. */
+    private boolean canEditLineup(IMendixObject r,String side) throws Exception {if(date(r,"SubmittedAt")!=null)return override(r)||TableLifecycleService.admin(caller);if(date(r,"StartedAt")!=null)return controls(r);IMendixObject rule=ref(r,"MatchRegistration_Format"),fixture=ref(r,"MatchRegistration_Fixture");return (isLeader(r)||fedStaff(r)||userKey.equals(text(r,side+"CaptainKey"))||club(fixture,side,"Update"))&&MatchRules.lineupEditable(text(rule,"LineupLock"),integer(rule,"LockMinutes"),instant(fixture,"StartsAt"),null,Instant.now());}
 
     private IMendixObject team(IMendixObject r,String side) throws Exception{return ref(ref(ref(r,"MatchRegistration_Fixture"),"CompetitionFixture_"+side),"LeagueEntry_Team");}
 
