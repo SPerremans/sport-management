@@ -595,7 +595,7 @@ public final class MatchRegistrationService {
         if(rule!=null){put(f,"MaxStarters",integer(rule,"MaxStarters"));put(f,"MaxReserves",integer(rule,"MaxReserves"));}teamSheetRows(f,r,true);
         gameTable(f,r,rule);
 
-        for(IMendixObject a:query("MatchAudit","["+M+"MatchAudit_Registration="+id(r)+"]"))if(text(a,"PrivateSide").isEmpty()||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(a,"PrivateSide")+"CaptainKey"))){IMendixObject ar=row(f,a,"Audit",text(a,"Action"),auditDetail(a));put(ar,"AuditAt",date(a,"At"));put(ar,"AuditActor",text(a,"Actor"));put(ar,"AuditAction",text(a,"Action"));}
+        for(IMendixObject a:auditEntries(r))if(text(a,"PrivateSide").isEmpty()||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(a,"PrivateSide")+"CaptainKey"))){IMendixObject ar=row(f,a,"Audit",text(a,"Action"),auditDetail(a));put(ar,"AuditAt",date(a,"At"));put(ar,"AuditActor",text(a,"Actor"));put(ar,"AuditAction",text(a,"Action"));}
 
         List<String> visibleWarnings=new ArrayList<>();for(IMendixObject c:contests(r))for(IMendixObject l:lineups(c))if(canSeeLineup(r,l)){String w=lineupWarnings(r,c,l);if(!w.isEmpty())visibleWarnings.add(text(c,"Name")+" · "+text(l,"Side")+": "+w);}put(f,"Warnings",String.join("\n",visibleWarnings));
         List<IMendixObject> comments=query("MatchComment","["+M+"MatchComment_Registration="+id(r)+"]");for(IMendixObject o:dirty)if(o.getType().equals(M+"MatchComment")&&same(ref(o,"MatchComment_Registration"),r)&&!comments.contains(o))comments.add(o);
@@ -764,6 +764,13 @@ public final class MatchRegistrationService {
         if(date(r,"SubmittedAt")!=null&&!bool(r,"FederationFinal"))parts.add("Home "+(bool(r,"HomeAccepted")?"confirmed":"to confirm until "+text(r,"HomeDeadline"))+" · Away "+(bool(r,"AwayAccepted")?"confirmed":"to confirm until "+text(r,"AwayDeadline")));
         if(bool(r,"Disputed"))parts.add("DISPUTED: "+text(r,"DisputeReason"));
         return String.join(" · ",parts);
+    }
+
+    /** Audit entries saved earlier plus the ones written by the current command, which are committed only at the end. */
+    private List<IMendixObject> auditEntries(IMendixObject r) throws Exception {
+        List<IMendixObject> list=query("MatchAudit","["+M+"MatchAudit_Registration="+id(r)+"]");
+        for(IMendixObject o:dirty)if(o.getType().equals(M+"MatchAudit")&&same(ref(o,"MatchAudit_Registration"),r)&&!list.contains(o))list.add(o);
+        list.sort(Comparator.comparing(o->date(o,"At")));return list;
     }
 
     /** Reason first, then what changed; empty parts are left out. */
