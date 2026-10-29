@@ -49,3 +49,15 @@ The 121 football fixtures marked Full Time carry their published final score. In
 - **Runtime scenarios:** administrator generation, upgrading an older batch, repeating generation, private ownership coverage, edited-record preservation, scoped cleanup and signed-in fixture/format screens are implemented or prepared but **not executed** for this extension. Computer Use ended because it could not determine Chrome's current URL with enough confidence to enforce policy. No alternative authentication or administrator guard bypass was used.
 
 Generation now asserts public fixture/result-sheet coverage and absence of administrator associations on newly imported public clubs. The existing rollback-only **Verify development examples** workflow exercises fresh generation, upgrade/repetition, manifest coverage, preservation and cleanup. Those assertions are not reported as passing until that administrator workflow actually runs.
+
+## Match sheet details: game leader, shuttle, start hour (29 October 2026)
+
+The published badminton match sheets list **Wedstrijdleider** (game leader), **Gebruikte shuttle** (shuttle used), **Aanvangsuur** (start hour) and **Einduur** (end hour). `build-competition-snapshot.py` now reads them from the already cached sheets (no new public requests; counts unchanged, only the resource hash changed). 541 of the 597 sheets that show a game leader row carry all four values; the others publish them empty and stay empty.
+
+The administrator **Generate sample data** action adds them once, under `features:public-match-sheet-details-v1`, to fresh and existing batches:
+
+- Start hour goes to `MatchRegistration.StartTime`, the shuttle to `Equipment` (**Match ball / shuttle**) and the leader's name to `LeaderName`. The leader is shown by name only: no account is created or attached, as for all imported names.
+- Only untouched imported sheets are filled (revision 1 and no start hour, shuttle or leader name yet), so edited sheets keep their values and a second run changes nothing.
+- The end hour is not stored: the registration has no end-hour field. No new record types, so the ownership manifest and cleanup lists are unchanged.
+- The registration page shows the values on the summary line ("Started 19:15 · Shuttle: Victor Maxima") and under the title ("Game leader: …").
+- Executed on 29 October 2026 under the Admin session: the upgrade of the existing batch reported 541 sheets updated, and the Wit-Wit 1G against Olve 3G fixture of the Flemish mixed 2nd league showed the published game leader, start hour and shuttle on its registration page. A repeat run, a fresh generation and the cleanup were not executed for this change. Imported sheets show the stage "Imported public match sheet, read only".

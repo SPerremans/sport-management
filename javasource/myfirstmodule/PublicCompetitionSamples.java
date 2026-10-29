@@ -135,6 +135,7 @@ final class PublicCompetitionSamples {
 
     private static void result(IContext ctx,DevelopmentSamples.Seed s,IMendixObject fixture,IMendixObject format,JSONObject f,String sport) throws Exception {
         IMendixObject reg = s.make("MatchRegistration","State","SourceSnapshot","Revision",1L,"Reason","Public source snapshot: " + f.getString("url"));
+        applyMatchDetails(ctx,reg,f);
         applySourceTotals(ctx,reg,f);
         if(sport.equals("Football")){reg.setValue(ctx,"HasFixtureScore",true);Core.commitWithoutEvents(ctx,reg);}
         s.link(reg,"MatchRegistration_Fixture",fixture); s.link(reg,"MatchRegistration_Format",format);
@@ -184,6 +185,33 @@ final class PublicCompetitionSamples {
             IMendixObject fixture=Core.retrieveId(ctx,reg.getValue(ctx,"MyFirstModule.MatchRegistration_Fixture"));String pair=fixture.getValue(ctx,"PairKey");
             if(pair==null||!pair.startsWith(PREFIX))continue;String[] parts=pair.split(":");JSONObject source=rows.get(parts[parts.length-2]+":"+parts[parts.length-1]);if(source!=null)applySourceTotals(ctx,reg,source);
         }
+    }
+
+    static final String MATCH_DETAILS_FEATURE = "features:public-match-sheet-details-v1";
+
+    /** Game leader name, used shuttle and start hour as published on the match sheet; all optional. */
+    private static void applyMatchDetails(IContext ctx,IMendixObject reg,JSONObject fixture) throws Exception {
+        String time=fixture.optString("startedAt",""),shuttle=fixture.optString("shuttle","").trim(),leader=fixture.optString("leader","").trim();
+        if(time.matches("([01][0-9]|2[0-3]):[0-5][0-9]"))reg.setValue(ctx,"StartTime",time);
+        if(!shuttle.isBlank())reg.setValue(ctx,"Equipment",shuttle.length()>100?shuttle.substring(0,100):shuttle);
+        if(!leader.isBlank())reg.setValue(ctx,"LeaderName",leader.length()>200?leader.substring(0,200):leader);
+        Core.commitWithoutEvents(ctx,reg);
+    }
+
+    /** Backfill only untouched imported sheets (revision 1, no start hour, shuttle or leader name yet). */
+    static int initializeMatchDetails(IContext ctx,Set<Long> owned) throws Exception {
+        Map<String,JSONObject> rows=new HashMap<>();
+        for(Object source:array(snapshot().getJSONArray("sources")))for(Object draw:array(((JSONObject)source).getJSONArray("draws")))for(Object item:array(((JSONObject)draw).getJSONArray("fixtures"))){JSONObject f=(JSONObject)item;rows.put(((JSONObject)source).getString("id")+":"+f.getString("id"),f);}
+        int changed=0;
+        for(IMendixObject reg:Core.createXPathQuery("//MyFirstModule.MatchRegistration[State='SourceSnapshot'][Revision=1]").execute(ctx)){
+            if(!owned.contains(reg.getId().toLong()))continue;
+            if(!Objects.toString(reg.getValue(ctx,"StartTime"),"").isBlank()||!Objects.toString(reg.getValue(ctx,"Equipment"),"").isBlank()||!Objects.toString(reg.getValue(ctx,"LeaderName"),"").isBlank())continue;
+            IMendixObject fixture=Core.retrieveId(ctx,reg.getValue(ctx,"MyFirstModule.MatchRegistration_Fixture"));String pair=fixture.getValue(ctx,"PairKey");
+            if(pair==null||!pair.startsWith(PREFIX))continue;String[] parts=pair.split(":");JSONObject source=rows.get(parts[parts.length-2]+":"+parts[parts.length-1]);
+            if(source==null||(!source.has("leader")&&!source.has("shuttle")&&!source.has("startedAt")))continue;
+            applyMatchDetails(ctx,reg,source);changed++;
+        }
+        return changed;
     }
 
     private static void applySourceTotals(IContext ctx,IMendixObject reg,JSONObject fixture) throws Exception {

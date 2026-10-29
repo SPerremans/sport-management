@@ -36,6 +36,17 @@ def iso_date(raw):
     # A date without a published time remains a date, never a fabricated midnight fixture.
     return local.date().isoformat(), (local.replace(tzinfo=ZoneInfo("Europe/Brussels")).isoformat() if m[2] else None)
 
+def match_info(path):
+    """Published match-sheet facts: game leader, used shuttle and start/end hour (all optional)."""
+    wanted = {"Wedstrijdleider:": "leader", "Gebruikte shuttle:": "shuttle", "Aanvangsuur:": "startedAt", "Einduur:": "endedAt"}
+    info = {}
+    for th in page(path).select("th"):
+        name = wanted.get(text(th))
+        value = text(th.find_next_sibling("td"))
+        if name and value:
+            info[name] = value
+    return info
+
 def detail(path):
     p = page(path)
     games = []
@@ -128,6 +139,7 @@ def badminton(ident):
                                url=f"https://www.toernooi.nl/sport/teammatch.aspx?id={ident}&match={mid}")
                 if source_score:
                     fixture["games"], fixture["points"], fixture["totals"] = detail(CACHE / f"{ident}-match-{mid}.html")
+                    fixture.update(match_info(CACHE / f"{ident}-match-{mid}.html"))
                     if "Niet gespeeld" in source_score:
                         for game in fixture["games"]:
                             if not game["sourceScore"]:

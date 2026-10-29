@@ -478,7 +478,7 @@ public final class DevelopmentSamples {
     /** Append a frozen public season once; real and user-edited demo records are never matched or rewritten. */
     private static void extendPublicCompetitionSamples(IContext ctx) throws Exception {
         IMendixObject manifest=batch(ctx);String summary=manifest.getValue(ctx,"Summary");
-        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);extendFixtureWorkflowSamples(ctx);return;}
+        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);extendFixtureWorkflowSamples(ctx);extendPublicMatchDetailSamples(ctx);return;}
         Seed s=new Seed(ctx);PublicCompetitionSamples.populate(ctx,s);
         Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));owned.addAll(ids(s.owned));
         Set<Long> publicOrganizations=new HashSet<>();
@@ -492,6 +492,15 @@ public final class DevelopmentSamples {
         extendTeamSheetSamples(ctx);
         extendFixtureEntrySamples(ctx);
         extendFixtureWorkflowSamples(ctx);
+        extendPublicMatchDetailSamples(ctx);
+    }
+
+    /** Published game leader, used shuttle and start hour on untouched imported badminton sheets. Runs once; edited sheets keep their own values. */
+    private static void extendPublicMatchDetailSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");if(summary.contains(PublicCompetitionSamples.MATCH_DETAILS_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));int changed=PublicCompetitionSamples.initializeMatchDetails(ctx,owned);
+        manifest.setValue(ctx,"Summary",summary+" Public match sheets: "+changed+" untouched source sheet(s) received the published game leader name, used shuttle and start hour. "+PublicCompetitionSamples.MATCH_DETAILS_FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
     }
 
     /** Fixture workflow: starting hour, match ball / shuttle and team comments on started sample fixtures. Runs once; edited registrations keep their own values. */

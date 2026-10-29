@@ -756,7 +756,7 @@ public final class MatchRegistrationService {
     /** One short line under the stage: setup, result, points and the teams' confirmations. */
     private String resultLine(IMendixObject r,IMendixObject fixture,boolean sourceSnapshot,BigDecimal homePoints,BigDecimal awayPoints) throws Exception {
         List<String> parts=new ArrayList<>();
-        if(sourceSnapshot){parts.add(text(r,"Winner").isBlank()?"No published score":"Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"));if(!text(fixture,"Issue").isBlank())parts.add(text(fixture,"Issue"));if(!text(r,"Reason").isBlank())parts.add(text(r,"Reason"));return String.join(" · ",parts);}
+        if(sourceSnapshot){if(!text(r,"StartTime").isBlank())parts.add("Started "+text(r,"StartTime"));if(!text(r,"Equipment").isBlank())parts.add("Shuttle: "+text(r,"Equipment"));parts.add(text(r,"Winner").isBlank()?"No published score":"Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"));if(!text(fixture,"Issue").isBlank())parts.add(text(fixture,"Issue"));if(!text(r,"Reason").isBlank())parts.add(text(r,"Reason"));return String.join(" · ",parts);}
         if(!text(r,"StartTime").isBlank())parts.add("Started "+text(r,"StartTime"));
         if(!text(r,"Equipment").isBlank())parts.add("Ball / shuttle: "+text(r,"Equipment"));
         if(date(r,"SubmittedAt")!=null){parts.add("Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore")+" in game points");if(!text(r,"Winner").isBlank())parts.add("Winner: "+text(r,"Winner")+" · competition points "+CompetitionStandings.pointsText(homePoints)+" / "+CompetitionStandings.pointsText(awayPoints));}
@@ -825,6 +825,7 @@ public final class MatchRegistrationService {
 
     /** The five stages of a fixture, shown as one line above the page. */
     private String stage(IMendixObject r){
+        if("SourceSnapshot".equals(text(r,"State")))return "Imported public match sheet, read only";
         if(bool(r,"FederationFinal"))return "Step 5 of 5 · Final result (federation ruling)";
         if(date(r,"SubmittedAt")!=null)return bool(r,"Disputed")?"Step 5 of 5 · Disputed, waiting for the federation":bool(r,"HomeAccepted")&&bool(r,"AwayAccepted")?"Step 5 of 5 · Final result":"Step 4 of 5 · Waiting for team confirmation";
         if(date(r,"StartedAt")!=null)return "Step 3 of 5 · Match in progress";
