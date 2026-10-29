@@ -478,7 +478,7 @@ public final class DevelopmentSamples {
     /** Append a frozen public season once; real and user-edited demo records are never matched or rewritten. */
     private static void extendPublicCompetitionSamples(IContext ctx) throws Exception {
         IMendixObject manifest=batch(ctx);String summary=manifest.getValue(ctx,"Summary");
-        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);extendFixtureWorkflowSamples(ctx);extendPublicMatchDetailSamples(ctx);return;}
+        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);extendFixtureWorkflowSamples(ctx);extendPublicMatchDetailSamples(ctx);extendPublicStarterSamples(ctx);return;}
         Seed s=new Seed(ctx);PublicCompetitionSamples.populate(ctx,s);
         Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));owned.addAll(ids(s.owned));
         Set<Long> publicOrganizations=new HashSet<>();
@@ -493,6 +493,17 @@ public final class DevelopmentSamples {
         extendFixtureEntrySamples(ctx);
         extendFixtureWorkflowSamples(ctx);
         extendPublicMatchDetailSamples(ctx);
+        extendPublicStarterSamples(ctx);
+    }
+
+    /** Everyone named on an imported badminton sheet played and is a starter; display-only roster players join the ownership manifest. Runs once. */
+    private static void extendPublicStarterSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");if(summary.contains(PublicCompetitionSamples.STARTERS_FEATURE))return;
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));Seed s=new Seed(ctx);
+        int changed=PublicCompetitionSamples.initializeStarters(ctx,s,owned);
+        owned.addAll(ids(s.owned));manifest.setValue(ctx,"OwnedIds",encode(owned));
+        manifest.setValue(ctx,"Summary",summary+" Public match sheets: "+changed+" untouched badminton sheet(s) received starters (everyone who played) and display-only roster players linked to the lineups. "+PublicCompetitionSamples.STARTERS_FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
     }
 
     /** Published game leader, used shuttle and start hour on untouched imported badminton sheets. Runs once; edited sheets keep their own values. */

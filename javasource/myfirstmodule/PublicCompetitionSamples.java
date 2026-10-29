@@ -173,6 +173,7 @@ final class PublicCompetitionSamples {
             contest.setValue(ctx,"HomeSets",(long)hs);contest.setValue(ctx,"AwaySets",(long)as);contest.setValue(ctx,"HomeTotal",(long)ht);contest.setValue(ctx,"AwayTotal",(long)at);
             contest.setValue(ctx,"RecordedWinner",recorded);contest.setValue(ctx,"OfficialWinner",official);Core.commitWithoutEvents(ctx,contest);
         }
+        if(sport.equals("Badminton"))fillStarters(ctx,s,reg);
     }
 
     /** Backfill only untouched imported sheets with the provider's credited retirement/forfeit totals. */
@@ -185,6 +186,56 @@ final class PublicCompetitionSamples {
             IMendixObject fixture=Core.retrieveId(ctx,reg.getValue(ctx,"MyFirstModule.MatchRegistration_Fixture"));String pair=fixture.getValue(ctx,"PairKey");
             if(pair==null||!pair.startsWith(PREFIX))continue;String[] parts=pair.split(":");JSONObject source=rows.get(parts[parts.length-2]+":"+parts[parts.length-1]);if(source!=null)applySourceTotals(ctx,reg,source);
         }
+    }
+
+    static final String STARTERS_FEATURE = "features:public-match-sheet-starters-v1";
+
+    /**
+     * The captains' forms are not published, so everyone named on a published sheet played and is a starter. Display-only roster players
+     * (no membership, no account) are created per team once and linked to the lineups so the registration page shows them.
+     */
+    static int fillStarters(IContext ctx,DevelopmentSamples.Seed s,IMendixObject reg) throws Exception {
+        if(!Core.retrieveByPath(ctx,reg,"MyFirstModule.MatchSquadPlayer_Registration").isEmpty())return 0;
+        IMendixObject fixture=Core.retrieveId(ctx,reg.getValue(ctx,"MyFirstModule.MatchRegistration_Fixture"));
+        Map<String,IMendixObject> teams=new HashMap<>();
+        for(String side:Arrays.asList("Home","Away")){IMendixObject entry=Core.retrieveId(ctx,fixture.getValue(ctx,"MyFirstModule.CompetitionFixture_"+side));teams.put(side,Core.retrieveId(ctx,entry.getValue(ctx,"MyFirstModule.LeagueEntry_Team")));}
+        Map<String,LinkedHashMap<String,IMendixObject>> starters=new HashMap<>();starters.put("Home",new LinkedHashMap<>());starters.put("Away",new LinkedHashMap<>());
+        List<IMendixObject> contests=new ArrayList<>(Core.retrieveByPath(ctx,reg,"MyFirstModule.MatchContest_Registration"));
+        contests.sort(Comparator.comparingLong(c->((Number)c.getValue(ctx,"Sequence")).longValue()));
+        for(IMendixObject contest:contests)for(IMendixObject lineup:Core.retrieveByPath(ctx,contest,"MyFirstModule.MatchLineup_Contest")){
+            String side=Objects.toString(lineup.getValue(ctx,"Side"),"");IMendixObject team=teams.get(side);if(team==null)continue;
+            for(int position=1;position<=2;position++){
+                String raw=Objects.toString(lineup.getValue(ctx,"Player"+position+"Name"),"").trim();if(raw.isBlank())continue;
+                String clean=raw.replaceAll("\\s*\\(\\d+\\)\\s*$","").trim();String key="public:"+team.getId().toLong()+":"+clean;
+                IMendixObject player=first(ctx,"//MyFirstModule.CompetitionPlayer[MemberKey=$k]",key);
+                if(player==null){player=s.make("CompetitionPlayer","MemberName",clean,"MemberKey",key,"PersonKey",key);s.link(player,"CompetitionPlayer_Team",team);}
+                s.link(lineup,"MatchLineup_Player"+position,player);starters.get(side).putIfAbsent(clean,player);
+            }
+        }
+        int created=0;
+        for(String side:Arrays.asList("Home","Away")){int sequence=0;for(Map.Entry<String,IMendixObject> e:starters.get(side).entrySet()){
+            IMendixObject member=s.make("MatchSquadPlayer","Side",side,"Position","Starter","PlayerName",e.getKey(),"Sequence",++sequence);
+            s.link(member,"MatchSquadPlayer_Registration",reg);s.link(member,"MatchSquadPlayer_Player",e.getValue());created++;}}
+        return created;
+    }
+
+    private static IMendixObject first(IContext ctx,String xpath,String key) throws Exception {
+        List<IMendixObject> rows=Core.createXPathQuery(xpath).setVariable("k",key).setAmount(1).execute(ctx);return rows.isEmpty()?null:rows.get(0);
+    }
+
+    /** Backfill untouched imported badminton sheets (revision 1, no team sheet yet) and show the team sheet on their formats. */
+    static int initializeStarters(IContext ctx,DevelopmentSamples.Seed s,Set<Long> owned) throws Exception {
+        int changed=0;
+        for(IMendixObject format:Core.createXPathQuery("//MyFirstModule.MatchFormat[Sport='Badminton'][MaxStarters=0]").execute(ctx)){
+            if(owned.contains(format.getId().toLong())){format.setValue(ctx,"MaxStarters",8L);Core.commitWithoutEvents(ctx,format);}
+        }
+        for(IMendixObject reg:Core.createXPathQuery("//MyFirstModule.MatchRegistration[State='SourceSnapshot'][Revision=1]").execute(ctx)){
+            if(!owned.contains(reg.getId().toLong()))continue;
+            IMendixObject format=Core.retrieveId(ctx,reg.getValue(ctx,"MyFirstModule.MatchRegistration_Format"));
+            if(format==null||!"Badminton".equals(format.getValue(ctx,"Sport")))continue;
+            if(fillStarters(ctx,s,reg)>0)changed++;
+        }
+        return changed;
     }
 
     static final String MATCH_DETAILS_FEATURE = "features:public-match-sheet-details-v1";
