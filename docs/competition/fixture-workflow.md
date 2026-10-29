@@ -36,10 +36,37 @@ Comments from either team and from the officials are listed under the games tabl
 
 `DevelopmentSamples` adds `features:fixture-workflow-v1` once, to fresh and existing batches: every owned, started sample registration with no starting hour gets one (taken from its start time) and a sample ball/shuttle, and up to two of them get a home and an away sample comment. `MatchComment` is in the ownership list and the cleanup edges, so **Remove sample data** deletes the comments with their registration. Edited registrations keep their values; a second run changes nothing.
 
+## Result, winner and rulings
+
+- The fixture result and winner are calculated only when the game leader presses **Finalise result**. Before that the page only says how many games are still to finish.
+- The game leader can finalise only when every game is decided: played, awarded, or excluded by the federation. A fixture result counts game points: the side that won more games wins; excluded games do not count, so fewer than all games can count.
+- Federation and platform administrators overrule at game level, in the games table: tick games (or **Select all**) and press **Award to home**, **Award to away**, **Exclude from result** or **Restore played result**. This replaces the former fixture-level adjustment and winner text fields. On an already finalised or disputed fixture the result is recalculated and becomes the federation's final ruling.
+
+## Comment popup
+
+Actions that need a reason (player change after the start, dispute, award, exclude) open the reusable **Comment dialog** instead of showing an error. The comment is mandatory, is stored with the action and appears in the audit trail.
+
+- Page `CommentDialog_Edit` and non-persistent entity `CommentDialog` (title, prompt, comment, action key) are generic. Another screen opens it by creating a `CommentDialog`, then adds its own continuation inside `ACT_CommentDialog_Confirm` and `ACT_CommentDialog_Cancel`; today they run the match command named by the action key.
+- Match specific: `ACT_Match_ReasonOpen` opens the dialog; `ACT_Match_PickAskHome` / `ACT_Match_PickAskAway` open it for player changes after the start and otherwise pick directly.
+- Housekeeping for Studio Pro: `CommentDialog_Edit` and the `ACT_CommentDialog_*` microflows currently sit in Competition/Results and can be dragged to a shared folder. `ACT_Match_ReasonConfirm` and `ACT_Match_ReasonCancel` are obsolete leftovers and can be deleted.
+
+## Audit trail
+
+The audit table has separate **When**, **Who**, **Action** and **Details** columns. **When** is stored as a timezone independent date and shown in the viewer's local time, formatted like 29 Oct 2026, 11:46. The grid refreshes every 5 seconds, which also lets other viewers follow the registration.
+
+## Errors
+
+The registration microflows (`ACT_Match_Command`, `ACT_Match_GameSave`, `ACT_Match_GamePickHome/Away`) catch service errors, reload the page data and show the real message, for example "Tick the games to overrule first." instead of "An error occurred".
+
 ## Verification
 
-- **Model consistency:** the global check reports **No errors found** (after Update security).
+- **Model consistency:** the global check reports **No errors found**.
 - **Compilation:** `MatchRegistrationService.java` and `DevelopmentSamples.java` compile with JDK 21 against the Mendix 11.15 runtime jars (standalone `javac`), and the app builds and starts in Studio Pro.
-- **Runtime scenarios, 29 October 2026, signed in as the local Admin on the badminton demo fixture Leuven Noord Shuttle 1H against Mechelse Racketkring 1H.** Executed and working: opening the page, claiming home captain, appointing the game leader, saving starting hour and match ball / shuttle, starting the match, saving set scores per game (including a third set and an away win), adding a team comment (shown in the list after reopening), the unfinished-games hint, finalising (single home confirmation because captain and leader are the same person), and the stage line at each step.
-- **Defects found and fixed while testing:** text fields capped at 200 characters, stale data in command responses, a read-only games list, a wrong member name when saving scores, empty 0-0 set boxes counting as entered sets, and comments missing from the response.
-- **Not exercised:** changing a player after the start with and without a comment (all games were already played), the away captain confirming or disputing, a club administrator and other non-admin roles, read-only viewing by other users, and the sample-data generator under an administrator session. Business-rule refusals still reach the user as a generic "An error occurred" dialog, as elsewhere in the app.
+- **Runtime scenarios, 29 October 2026, local Admin and View as user.** Executed and working:
+  - Setup flow on the badminton and tennis demo fixtures: claiming captain, appointing the leader, saving the starting hour, starting the match, set scores per game, comments, finalising.
+  - Player change after the start: without a comment it was refused with a readable message; with a comment (through the popup) it changed the pairing, showed the note and was audited.
+  - Federation mass rulings: select all, award to home, exclude two games, finalise (result 6–0 in game points, winner Home); award on a disputed fixture turned it into the federation's final ruling.
+  - Away captain dispute through the popup; plain User leader (demo_user) finalising without being a captain and without seeing federation buttons.
+  - Sample data generator under the Admin session: the upgrade added the fixture-workflow examples once (10 started fixtures, 4 comments); a second run changed nothing.
+- **Not exercised:** the away captain pressing **Confirm result** (the dispute used the same fixture), club administrator and federation administrator sessions (no enabled test accounts exist: the generated organisation accounts are disabled and View as user cannot open disabled accounts), a read-only viewer without any role on the fixture (the available User account has no club, so no navigation path leads to the fixture), and **Remove sample data** (not run, to keep the demo data).
+- **Defects found and fixed while testing:** text limits, stale response data, read-only games list, member names, 0–0 set boxes, comments missing in the response, finalise gate, error messages, selection lost after a refused action, and the audit grid not refreshing.

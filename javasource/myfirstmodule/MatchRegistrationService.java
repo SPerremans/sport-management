@@ -211,7 +211,13 @@ public final class MatchRegistrationService {
             case "SaveGame": return saveGame(f);
             case "SaveSetup": return saveSetup(f);
             case "AddComment": return addComment(f);
+            case "Refresh": return refreshKeeping(f);
             case "Confirm": return confirmResult(f);
+            case "SelectGames": return selectGames(f);
+            case "RuleAwardHome": return gameRuling(f,"AwardHome");
+            case "RuleAwardAway": return gameRuling(f,"AwardAway");
+            case "RuleExclude": return gameRuling(f,"Exclude");
+            case "RuleRestore": return gameRuling(f,"Restore");
             case "DisputeResult": return disputeResult(f);
 
             case "Submit": return submit(f);
@@ -574,7 +580,7 @@ public final class MatchRegistrationService {
 
         put(f,"CanHome",club(fixture,"Home","Update"));put(f,"CanAway",club(fixture,"Away","Update"));put(f,"CanLead",controls(r));put(f,"CanOverride",override(r)||TableLifecycleService.admin(caller));put(f,"CanManage",manage(r));
         put(f,"StartTime",text(r,"StartTime"));put(f,"Equipment",text(r,"Equipment"));put(f,"Stage",stage(r));
-        put(f,"CanSetup",controls(r)&&date(r,"SubmittedAt")==null&&!bool(r,"FederationFinal"));put(f,"CanFinalise",controls(r)&&date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null);
+        put(f,"CanSetup",controls(r)&&date(r,"SubmittedAt")==null&&!bool(r,"FederationFinal"));put(f,"CanFinalise",controls(r)&&date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null&&openGames(r)==0);put(f,"CanRule",(override(r)||TableLifecycleService.admin(caller))&&date(r,"StartedAt")!=null&&!"SourceSnapshot".equals(text(r,"State")));
         put(f,"CanConfirm",date(r,"SubmittedAt")!=null&&!bool(r,"FederationFinal")&&!bool(r,"Disputed")&&((userKey.equals(text(r,"HomeCaptainKey"))&&!bool(r,"HomeAccepted"))||(userKey.equals(text(r,"AwayCaptainKey"))&&!bool(r,"AwayAccepted"))));
         put(f,"CanComment",commentSide(r)!=null);
 
@@ -589,7 +595,7 @@ public final class MatchRegistrationService {
         if(rule!=null){put(f,"MaxStarters",integer(rule,"MaxStarters"));put(f,"MaxReserves",integer(rule,"MaxReserves"));}teamSheetRows(f,r,true);
         gameTable(f,r,rule);
 
-        for(IMendixObject a:query("MatchAudit","["+M+"MatchAudit_Registration="+id(r)+"]"))if(text(a,"PrivateSide").isEmpty()||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(a,"PrivateSide")+"CaptainKey")))row(f,a,"Audit",text(a,"At")+" · "+text(a,"Actor")+" · "+text(a,"Action"),text(a,"Reason")+" · Before: "+text(a,"BeforeValue")+" · After: "+text(a,"AfterValue"));
+        for(IMendixObject a:query("MatchAudit","["+M+"MatchAudit_Registration="+id(r)+"]"))if(text(a,"PrivateSide").isEmpty()||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(a,"PrivateSide")+"CaptainKey"))){IMendixObject ar=row(f,a,"Audit",text(a,"Action"),auditDetail(a));put(ar,"AuditAt",date(a,"At"));put(ar,"AuditActor",text(a,"Actor"));put(ar,"AuditAction",text(a,"Action"));}
 
         List<String> visibleWarnings=new ArrayList<>();for(IMendixObject c:contests(r))for(IMendixObject l:lineups(c))if(canSeeLineup(r,l)){String w=lineupWarnings(r,c,l);if(!w.isEmpty())visibleWarnings.add(text(c,"Name")+" · "+text(l,"Side")+": "+w);}put(f,"Warnings",String.join("\n",visibleWarnings));
         List<IMendixObject> comments=query("MatchComment","["+M+"MatchComment_Registration="+id(r)+"]");for(IMendixObject o:dirty)if(o.getType().equals(M+"MatchComment")&&same(ref(o,"MatchComment_Registration"),r)&&!comments.contains(o))comments.add(o);
@@ -644,8 +650,8 @@ public final class MatchRegistrationService {
         Map<String,Map<String,IMendixObject>> rosters=new HashMap<>();List<IMendixObject> gameRows=new ArrayList<>();
         for(IMendixObject c:contests(r)){
             int perSide=players?integer(c,"PlayersPerSide"):0,columns=setColumns(c);widest=Math.max(widest,columns);
-            IMendixObject row=row(f,c,"Game",text(c,"Name"),text(c,"OfficialWinner"));gameRows.add(row);
-            put(row,"Position",integer(c,"Sequence"));put(row,"PlayersPerSide",perSide);put(row,"CanScore",scoring&&!bool(c,"Excluded"));
+            IMendixObject row=row(f,c,"Game",text(c,"Name"),bool(c,"Excluded")?"Excluded":text(c,"OfficialWinner"));gameRows.add(row);
+            put(row,"Position",integer(c,"Sequence"));put(row,"CanSelect",(override(r)||TableLifecycleService.admin(caller))&&started);put(row,"PlayersPerSide",perSide);put(row,"CanScore",scoring&&!bool(c,"Excluded"));
             String scores=scoreText(c).replace("\n",", "),outcome=text(c,"Outcome");put(row,"ResultSummary",outcome.equals("Played")||outcome.equals("Pending")?scores:(scores.isBlank()?outcome:scores+" ("+outcome+")"));
             List<IMendixObject> sets=sets(c);for(int i=0;i<Math.min(5,sets.size());i++){put(row,"Set"+(i+1)+"Home",integer(sets.get(i),"Home"));put(row,"Set"+(i+1)+"Away",integer(sets.get(i),"Away"));}
             for(String side:Arrays.asList("Home","Away")){
@@ -753,11 +759,61 @@ public final class MatchRegistrationService {
         if(sourceSnapshot){parts.add(text(r,"Winner").isBlank()?"No published score":"Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"));if(!text(fixture,"Issue").isBlank())parts.add(text(fixture,"Issue"));if(!text(r,"Reason").isBlank())parts.add(text(r,"Reason"));return String.join(" · ",parts);}
         if(!text(r,"StartTime").isBlank())parts.add("Started "+text(r,"StartTime"));
         if(!text(r,"Equipment").isBlank())parts.add("Ball / shuttle: "+text(r,"Equipment"));
-        if(date(r,"StartedAt")!=null){parts.add("Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"));if(!text(r,"Winner").isBlank())parts.add("Winner: "+text(r,"Winner")+" · points "+CompetitionStandings.pointsText(homePoints)+" / "+CompetitionStandings.pointsText(awayPoints));}
-        if(date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null){long open=contests(r).stream().filter(c->text(c,"Outcome").equals("Pending")&&!bool(c,"Excluded")).count();if(open>0)parts.add(open+(open==1?" game":" games")+" still to finish before the result can be finalised");}
-        if(date(r,"SubmittedAt")!=null)parts.add("Home "+(bool(r,"HomeAccepted")?"confirmed":"to confirm until "+text(r,"HomeDeadline"))+" · Away "+(bool(r,"AwayAccepted")?"confirmed":"to confirm until "+text(r,"AwayDeadline")));
+        if(date(r,"SubmittedAt")!=null){parts.add("Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore")+" in game points");if(!text(r,"Winner").isBlank())parts.add("Winner: "+text(r,"Winner")+" · competition points "+CompetitionStandings.pointsText(homePoints)+" / "+CompetitionStandings.pointsText(awayPoints));}
+        if(date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null){long open=contests(r).stream().filter(c->text(c,"Outcome").equals("Pending")&&!bool(c,"Excluded")).count();parts.add(open==0?"All games decided, the game leader can finalise the result":open+(open==1?" game":" games")+" still to finish before the result can be finalised");}
+        if(date(r,"SubmittedAt")!=null&&!bool(r,"FederationFinal"))parts.add("Home "+(bool(r,"HomeAccepted")?"confirmed":"to confirm until "+text(r,"HomeDeadline"))+" · Away "+(bool(r,"AwayAccepted")?"confirmed":"to confirm until "+text(r,"AwayDeadline")));
         if(bool(r,"Disputed"))parts.add("DISPUTED: "+text(r,"DisputeReason"));
         return String.join(" · ",parts);
+    }
+
+    /** Reason first, then what changed; empty parts are left out. */
+    private String auditDetail(IMendixObject a){List<String> p=new ArrayList<>();if(!text(a,"Reason").isBlank())p.add(text(a,"Reason"));if(!text(a,"BeforeValue").isBlank())p.add("Before: "+text(a,"BeforeValue"));if(!text(a,"AfterValue").isBlank())p.add("After: "+text(a,"AfterValue"));return String.join(" · ",p);}
+
+    /** Games that still need a result: not yet decided and not excluded. */
+    private long openGames(IMendixObject r) throws Exception {return contests(r).stream().filter(c->text(c,"Outcome").equals("Pending")&&!bool(c,"Excluded")).count();}
+
+    /** Federation game-level ruling for the ticked games: award a game, exclude it from the result, or restore the played result. */
+    private IMendixObject gameRuling(IMendixObject f,String action) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration"),fixture=ref(r,"MatchRegistration_Fixture");
+        require(override(r)||TableLifecycleService.admin(caller),"Only the federation can overrule games.");require(date(r,"StartedAt")!=null,"Start the fixture before overruling games.");
+        if(!action.equals("Restore"))requireReason(f);
+        List<IMendixObject> picked=new ArrayList<>();
+        for(IMendixObject row:Core.retrieveByPath(caller,f,M+"MatchRow_Form"))if("Game".equals(text(row,"Kind"))&&Boolean.TRUE.equals(row.getValue(caller,"Selected")))picked.add(row);
+        require(!picked.isEmpty(),"Tick the games to overrule first.");
+        for(IMendixObject row:picked){
+            IMendixObject c=byKey(text(row,"RecordKey"),"MatchContest");require(same(ref(c,"MatchContest_Registration"),r),"Reopen the fixture; this game is no longer on the page.");
+            String before=snapshot(c,"Outcome","OfficialWinner","Excluded","Reason");
+            String outcome=action.equals("AwardHome")?"AwayForfeit":action.equals("AwardAway")?"HomeForfeit":action.equals("Exclude")?"Excluded":restoredOutcome(c);
+            put(c,"Outcome",outcome);put(c,"Reason",action.equals("Restore")?"":text(f,"Reason").trim());applyResult(c,calculate(c));touch(c);
+            audit(r,null,null,"Federation game ruling: "+action,text(f,"Reason").trim(),before,snapshot(c,"Outcome","OfficialWinner","Excluded"),"");
+        }
+        if(date(r,"SubmittedAt")!=null){recalculate(r,true);put(r,"Reason",text(f,"Reason").trim());touch(r);}
+        return fixture(fixture);
+    }
+
+    /** Back to the played result when the scores complete the game, otherwise pending. */
+    private String restoredOutcome(IMendixObject c) throws Exception {
+        put(c,"Outcome","Played");
+        try{if(!calculate(c).recordedWinner.isEmpty())return "Played";}catch(RuntimeException e){}
+        return "Pending";
+    }
+
+    /** Reloads the page data after a refused action without losing the ticked games or the typed texts. */
+    private IMendixObject refreshKeeping(IMendixObject f) throws Exception {
+        Set<String> ticked=new HashSet<>();
+        for(IMendixObject row:Core.retrieveByPath(caller,f,M+"MatchRow_Form"))if("Game".equals(text(row,"Kind"))&&Boolean.TRUE.equals(row.getValue(caller,"Selected")))ticked.add(text(row,"RecordKey"));
+        IMendixObject out=fixture(required(f,"FixtureKey","CompetitionFixture"));put(out,"Reason",text(f,"Reason"));put(out,"CommentText",text(f,"CommentText"));
+        for(IMendixObject row:Core.retrieveByPath(caller,out,M+"MatchRow_Form"))if("Game".equals(text(row,"Kind"))&&ticked.contains(text(row,"RecordKey")))put(row,"Selected",true);
+        return out;
+    }
+
+    /** Ticks every game for a mass ruling, or clears the ticks when all are already ticked. */
+    private IMendixObject selectGames(IMendixObject f) throws Exception {
+        IMendixObject r=required(f,"RecordKey","MatchRegistration");require(override(r)||TableLifecycleService.admin(caller),"Only the federation can overrule games.");
+        boolean all=true;for(IMendixObject row:Core.retrieveByPath(caller,f,M+"MatchRow_Form"))if("Game".equals(text(row,"Kind"))&&!Boolean.TRUE.equals(row.getValue(caller,"Selected")))all=false;
+        IMendixObject out=fixture(ref(r,"MatchRegistration_Fixture"));put(out,"Reason",text(f,"Reason"));put(out,"CommentText",text(f,"CommentText"));
+        for(IMendixObject row:Core.retrieveByPath(caller,out,M+"MatchRow_Form"))if("Game".equals(text(row,"Kind")))put(row,"Selected",!all);
+        return out;
     }
 
     /** The five stages of a fixture, shown as one line above the page. */
@@ -1075,7 +1131,7 @@ public final class MatchRegistrationService {
 
         IMendixObject r=required(f,"RecordKey","MatchRegistration");version(r,f);require(controls(r)&&date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null,"Only the appointed game leader can finalise a started fixture once.");
 
-        put(r,"WarningAcknowledgment",warnings(r));put(r,"WarningsAcknowledged",true);recalculate(r,false);
+        require(openGames(r)==0,"Every game must be played, or overruled by the federation, before the result can be finalised.");put(r,"WarningAcknowledgment",warnings(r));put(r,"WarningsAcknowledged",true);recalculate(r,false);
 
         put(r,"SubmittedAt",new Date());MatchRules.Deadlines d=MatchRules.deadlines(rules(ref(r,"MatchRegistration_Format")),instant(ref(r,"MatchRegistration_Fixture"),"StartsAt"),instant(r,"StartedAt"),instant(r,"SubmittedAt"));put(r,"HomeDeadline",Date.from(d.home));put(r,"AwayDeadline",Date.from(d.away));put(r,"State","Provisional");
 

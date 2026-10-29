@@ -334,7 +334,7 @@
 .nexio-fixture-entry-rows > ul > li.mx-listview-item { padding: 0; border: 0; background: var(--nexio-surface); }
 .nexio-fixture-entry-rows > ul > li.mx-listview-item:nth-child(even) { background: var(--nexio-light); }
 @for $sets from 1 through 5 {
-  .nexio-entry-grid.nexio-sets-#{$sets} { grid-template-columns: 64px minmax(170px, 2fr) minmax(170px, 2fr) repeat(#{$sets}, 104px) 150px; min-width: 520px + $sets * 104px; }
+  .nexio-entry-grid.nexio-sets-#{$sets} { grid-template-columns: 104px minmax(170px, 2fr) minmax(170px, 2fr) repeat(#{$sets}, 104px) 150px; min-width: 560px + $sets * 104px; }
   .nexio-no-players .nexio-entry-grid.nexio-sets-#{$sets} { grid-template-columns: minmax(120px, 1fr) repeat(#{$sets}, 104px) 150px; min-width: 300px + $sets * 104px; }
 }
 .nexio-no-players .nexio-entry-grid > .nexio-table-cell:nth-child(2),
