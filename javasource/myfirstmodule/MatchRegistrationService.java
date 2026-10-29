@@ -592,7 +592,8 @@ public final class MatchRegistrationService {
         for(IMendixObject a:query("MatchAudit","["+M+"MatchAudit_Registration="+id(r)+"]"))if(text(a,"PrivateSide").isEmpty()||date(r,"StartedAt")!=null||independentLeader(r)||override(r)||userKey.equals(text(r,text(a,"PrivateSide")+"CaptainKey")))row(f,a,"Audit",text(a,"At")+" · "+text(a,"Actor")+" · "+text(a,"Action"),text(a,"Reason")+" · Before: "+text(a,"BeforeValue")+" · After: "+text(a,"AfterValue"));
 
         List<String> visibleWarnings=new ArrayList<>();for(IMendixObject c:contests(r))for(IMendixObject l:lineups(c))if(canSeeLineup(r,l)){String w=lineupWarnings(r,c,l);if(!w.isEmpty())visibleWarnings.add(text(c,"Name")+" · "+text(l,"Side")+": "+w);}put(f,"Warnings",String.join("\n",visibleWarnings));
-        List<IMendixObject> comments=query("MatchComment","["+M+"MatchComment_Registration="+id(r)+"]");comments.sort(Comparator.comparing(m->date(m,"At")));for(IMendixObject m:comments){row(f,m,"Comment",text(m,"Side")+" · "+text(m,"Author")+" · "+text(m,"At"),text(m,"Message"));}
+        List<IMendixObject> comments=query("MatchComment","["+M+"MatchComment_Registration="+id(r)+"]");for(IMendixObject o:dirty)if(o.getType().equals(M+"MatchComment")&&same(ref(o,"MatchComment_Registration"),r)&&!comments.contains(o))comments.add(o);
+        comments.sort(Comparator.comparing(m->date(m,"At")));for(IMendixObject m:comments){row(f,m,"Comment",text(m,"Side")+" · "+text(m,"Author")+" · "+text(m,"At"),text(m,"Message"));}
 
         copy(r,f,"HomeAdjustment","AwayAdjustment","WinnerOverride");return f;
 
@@ -703,7 +704,7 @@ public final class MatchRegistrationService {
         IMendixObject row=gameRow(f,c);int columns=setColumns(c);MatchRules.Format rules=contestRules(c);
         List<MatchRules.SetScore> scores=new ArrayList<>();List<String> raw=new ArrayList<>();
         for(int i=1;i<=5;i++){
-            Object home=row.getValue(caller,M+"MatchRow.Set"+i+"Home"),away=row.getValue(caller,M+"MatchRow.Set"+i+"Away");if(home==null&&away==null)continue;
+            Object home=row.getValue(caller,"Set"+i+"Home"),away=row.getValue(caller,"Set"+i+"Away");if((home==null||((Number)home).intValue()==0)&&(away==null||((Number)away).intValue()==0))continue; // an untouched set box holds 0-0
             require(i<=columns,"This game has "+columns+(columns==1?" score.":" sets."));require(home!=null&&away!=null,"Enter both scores for set "+i+".");require(scores.size()==i-1,"Fill in the sets in order; set "+(scores.size()+1)+" is empty.");
             int h=((Number)home).intValue(),a=((Number)away).intValue();require(h>=0&&a>=0,"Scores cannot be negative.");
             boolean deciding=rules.family.equals("Games")&&rules.decidingTarget>0&&i-1==2*rules.setsToWin-2;
@@ -747,12 +748,13 @@ public final class MatchRegistrationService {
 
 
     /** One short line under the stage: setup, result, points and the teams' confirmations. */
-    private String resultLine(IMendixObject r,IMendixObject fixture,boolean sourceSnapshot,BigDecimal homePoints,BigDecimal awayPoints){
+    private String resultLine(IMendixObject r,IMendixObject fixture,boolean sourceSnapshot,BigDecimal homePoints,BigDecimal awayPoints) throws Exception {
         List<String> parts=new ArrayList<>();
         if(sourceSnapshot){parts.add(text(r,"Winner").isBlank()?"No published score":"Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"));if(!text(fixture,"Issue").isBlank())parts.add(text(fixture,"Issue"));if(!text(r,"Reason").isBlank())parts.add(text(r,"Reason"));return String.join(" · ",parts);}
         if(!text(r,"StartTime").isBlank())parts.add("Started "+text(r,"StartTime"));
         if(!text(r,"Equipment").isBlank())parts.add("Ball / shuttle: "+text(r,"Equipment"));
         if(date(r,"StartedAt")!=null){parts.add("Result "+integer(r,"HomeScore")+"–"+integer(r,"AwayScore"));if(!text(r,"Winner").isBlank())parts.add("Winner: "+text(r,"Winner")+" · points "+CompetitionStandings.pointsText(homePoints)+" / "+CompetitionStandings.pointsText(awayPoints));}
+        if(date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null){long open=contests(r).stream().filter(c->text(c,"Outcome").equals("Pending")&&!bool(c,"Excluded")).count();if(open>0)parts.add(open+(open==1?" game":" games")+" still to finish before the result can be finalised");}
         if(date(r,"SubmittedAt")!=null)parts.add("Home "+(bool(r,"HomeAccepted")?"confirmed":"to confirm until "+text(r,"HomeDeadline"))+" · Away "+(bool(r,"AwayAccepted")?"confirmed":"to confirm until "+text(r,"AwayDeadline")));
         if(bool(r,"Disputed"))parts.add("DISPUTED: "+text(r,"DisputeReason"));
         return String.join(" · ",parts);
@@ -1278,11 +1280,14 @@ public final class MatchRegistrationService {
 
     private IMendixObject byKey(String key,String type) throws Exception {if(key.isEmpty())return null;require(key.matches("[0-9]+"),"Invalid record reference.");IMendixObject o=Core.retrieveId(ctx,Core.createMendixIdentifier(Long.parseLong(key)));require(o!=null&&o.getType().equals(M+type),"Record is missing or has the wrong type.");return o;}
 
-    private IMendixObject ref(IMendixObject o,String association) throws Exception {if(o==null)return null;IMendixIdentifier id=o.getValue(ctx,M+association);return id==null?null:Core.retrieveId(ctx,id);}
+    private IMendixObject ref(IMendixObject o,String association) throws Exception {if(o==null)return null;IMendixIdentifier id=o.getValue(ctx,M+association);return id==null?null:fresh(Core.retrieveId(ctx,id));}
 
-    private List<IMendixObject> query(String type,String constraint) throws Exception{return new ArrayList<>(Core.createXPathQuery("//"+M+type+constraint).execute(ctx));}
+    /** Records changed in this command are only committed at the end, so every read inside the command must see the in-memory copy, not the database row. */
+    private IMendixObject fresh(IMendixObject o){if(o!=null)for(IMendixObject d:dirty)if(d!=o&&same(d,o))return d;return o;}
 
-    private IMendixObject first(String type,String constraint) throws Exception {List<IMendixObject> list=Core.createXPathQuery("//"+M+type+constraint).setAmount(1).execute(ctx);return list.isEmpty()?null:list.get(0);}
+    private List<IMendixObject> query(String type,String constraint) throws Exception{List<IMendixObject> list=new ArrayList<>();for(IMendixObject o:Core.createXPathQuery("//"+M+type+constraint).execute(ctx))list.add(fresh(o));return list;}
+
+    private IMendixObject first(String type,String constraint) throws Exception {List<IMendixObject> list=Core.createXPathQuery("//"+M+type+constraint).setAmount(1).execute(ctx);return list.isEmpty()?null:fresh(list.get(0));}
 
     private void link(IMendixObject o,String association,IMendixObject target){o.setValue(ctx,M+association,target==null?null:target.getId());}
 

@@ -345,3 +345,32 @@
 .nexio-set-inputs .form-group { margin: 0; }
 .nexio-set-inputs .form-control { width: 46px; padding: 4px 6px; text-align: center; }
 .nexio-entry-actions { display: flex; gap: 6px; justify-content: flex-end; }
+
+/* Fixture workflow pages (registration and detail): calm spacing, soft panels, one accent. */
+.nexio-fixture-page { padding: 8px 16px 24px; }
+.nexio-fixture-page .mx-dataview-content > * { margin-bottom: 16px; }
+.nexio-fixture-page h3, .nexio-fixture-page h4 { margin: 12px 0 8px; color: var(--nexio-navy); }
+.nexio-stage {
+  display: block; padding: 10px 16px; border-radius: 8px; font-weight: 600;
+  background: var(--nexio-info-tint); color: var(--nexio-info-ink);
+}
+.nexio-setup-form {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;
+  padding: 16px 20px; border: 1px solid var(--nexio-line); border-radius: 8px; background: var(--nexio-light);
+}
+.nexio-setup-form .form-group { margin: 0; flex: 1 1 220px; }
+.nexio-setup-form .btn { margin: 0; }
+.nexio-warning-note {
+  padding: 12px 16px; border-radius: 8px; line-height: 1.6;
+  background: var(--nexio-warning-tint); color: var(--nexio-warning-ink);
+}
+.nexio-fixture-page .nexio-fixture-entry { margin: 4px 0 8px; }
+.nexio-entry-grid > .nexio-table-cell { padding: 10px 12px; }
+.nexio-fixture-page .nexio-team-sheet-list li { padding: 6px 0; border: 0; }
+.nexio-fixture-page .nexio-page-actions { margin-bottom: 20px; }
+/* Player dropdowns in the games table must look like inputs, not plain text. */
+.nexio-entry-grid .nexio-player-pick .form-control,
+.nexio-entry-grid .nexio-player-pick [role="combobox"] {
+  border: 1px solid var(--nexio-line); border-radius: 6px; background: var(--nexio-surface);
+  padding: 6px 10px; min-height: 36px;
+}
