@@ -1,0 +1,333 @@
+[
+ {
+  "leagueId": "00000000-0000-4000-8000-00000000F001",
+  "drawId": "1",
+  "division": "Gemengd 1e Fictief – A",
+  "round": "",
+  "venue": "Fictieve sporthal",
+  "id": "5001",
+  "key": "00000000-0000-4000-8000-00000000F001:5001",
+  "home": "Fictief 1G",
+  "away": "Proefdorp 1G",
+  "homeTeamId": "21",
+  "awayTeamId": "31",
+  "date": "2026-09-19",
+  "startsAt": "2026-09-19T19:00:00+02:00",
+  "sourceScore": "5-3",
+  "sourceStatus": "",
+  "url": "https://example.invalid/match/5001",
+  "games": [
+   {
+    "name": "HD",
+    "discipline": "HD",
+    "home": [
+     {
+      "sourceId": "100",
+      "name": "An Fictief",
+      "level": 7
+     },
+     {
+      "sourceId": "101",
+      "name": "Bo Fictief",
+      "level": 7
+     }
+    ],
+    "away": [
+     {
+      "sourceId": "200",
+      "name": "An Proef",
+      "level": 8
+     },
+     {
+      "sourceId": "201",
+      "name": "Bo Proef",
+      "level": 8
+     }
+    ],
+    "sets": [
+     [
+      21,
+      15
+     ],
+     [
+      21,
+      18
+     ]
+    ],
+    "sourceScore": "21-15 21-18",
+    "outcome": "Played",
+    "winner": "home"
+   },
+   {
+    "name": "DD",
+    "discipline": "DD",
+    "home": [
+     {
+      "sourceId": "104",
+      "name": "Els Fictief",
+      "level": 7
+     },
+     {
+      "sourceId": "105",
+      "name": "Fien Fictief",
+      "level": 7
+     }
+    ],
+    "away": [
+     {
+      "sourceId": "204",
+      "name": "Els Proef",
+      "level": 8
+     },
+     {
+      "sourceId": "205",
+      "name": "Fien Proef",
+      "level": 8
+     }
+    ],
+    "sets": [
+     [
+      21,
+      15
+     ],
+     [
+      21,
+      18
+     ]
+    ],
+    "sourceScore": "21-15 21-18",
+    "outcome": "Played",
+    "winner": "home"
+   },
+   {
+    "name": "HE1",
+    "discipline": "HE",
+    "home": [
+     {
+      "sourceId": "100",
+      "name": "An Fictief",
+      "level": 7
+     }
+    ],
+    "away": [
+     {
+      "sourceId": "200",
+      "name": "An Proef",
+      "level": 8
+     }
+    ],
+    "sets": [
+     [
+      18,
+      21
+     ],
+     [
+      15,
+      21
+     ]
+    ],
+    "sourceScore": "18-21 15-21",
+    "outcome": "Played",
+    "winner": "away"
+   },
+   {
+    "name": "DE1",
+    "discipline": "DE",
+    "home": [
+     {
+      "sourceId": "104",
+      "name": "Els Fictief",
+      "level": 7
+     }
+    ],
+    "away": [
+     {
+      "sourceId": "204",
+      "name": "Els Proef",
+      "level": 8
+     }
+    ],
+    "sets": [
+     [
+      21,
+      15
+     ],
+     [
+      21,
+      18
+     ]
+    ],
+    "sourceScore": "21-15 21-18",
+    "outcome": "Played",
+    "winner": "home"
+   },
+   {
+    "name": "HE2",
+    "discipline": "HE",
+    "home": [
+     {
+      "sourceId": "101",
+      "name": "Bo Fictief",
+      "level": 7
+     }
+    ],
+    "away": [
+     {
+      "sourceId": "201",
+      "name": "Bo Proef",
+      "level": 8
+     }
+    ],
+    "sets": [
+     [
+      21,
+      15
+     ],
+     [
+      21,
+      18
+     ]
+    ],
+    "sourceScore": "21-15 21-18",
+    "outcome": "Played",
+    "winner": "home"
+   },
+   {
+    "name": "DE2",
+    "discipline": "DE",
+    "home": [
+     {
+      "sourceId": "105",
+      "name": "Fien Fictief",
+      "level": 7
+     }
+    ],
+    "away": [
+     {
+      "sourceId": "205",
+      "name": "Fien Proef",
+      "level": 8
+     }
+    ],
+    "sets": [
+     [
+      18,
+      21
+     ],
+     [
+      15,
+      21
+     ]
+    ],
+    "sourceScore": "18-21 15-21",
+    "outcome": "Played",
+    "winner": "away"
+   },
+   {
+    "name": "GD1",
+    "discipline": "GD",
+    "home": [
+     {
+      "sourceId": "102",
+      "name": "Cas Fictief",
+      "level": 7
+     },
+     {
+      "sourceId": "106",
+      "name": "Greet Fictief",
+      "level": 7
+     }
+    ],
+    "away": [
+     {
+      "sourceId": "202",
+      "name": "Cas Proef",
+      "level": 8
+     },
+     {
+      "sourceId": "206",
+      "name": "Greet Proef",
+      "level": 8
+     }
+    ],
+    "sets": [
+     [
+      21,
+      15
+     ],
+     [
+      21,
+      18
+     ]
+    ],
+    "sourceScore": "21-15 21-18",
+    "outcome": "Played",
+    "winner": "home"
+   },
+   {
+    "name": "GD2",
+    "discipline": "GD",
+    "home": [
+     {
+      "sourceId": "103",
+      "name": "Dirk Fictief",
+      "level": 7
+     },
+     {
+      "sourceId": "107",
+      "name": "Hanne Fictief",
+      "level": 7
+     }
+    ],
+    "away": [
+     {
+      "sourceId": "203",
+      "name": "Dirk Proef",
+      "level": 8
+     },
+     {
+      "sourceId": "207",
+      "name": "Hanne Proef",
+      "level": 8
+     }
+    ],
+    "sets": [
+     [
+      21,
+      15
+     ],
+     [
+      21,
+      18
+     ]
+    ],
+    "sourceScore": "21-15 21-18",
+    "outcome": "Played",
+    "winner": "home"
+   }
+  ],
+  "leader": "Lea Leider",
+  "shuttle": "Fictie Shuttle",
+  "startedAt": "19:15",
+  "endedAt": "22:05"
+ },
+ {
+  "leagueId": "00000000-0000-4000-8000-00000000F001",
+  "drawId": "1",
+  "division": "Gemengd 1e Fictief – A",
+  "round": "",
+  "venue": "Fictieve sporthal",
+  "id": "5002",
+  "key": "00000000-0000-4000-8000-00000000F001:5002",
+  "home": "Proefdorp 2G",
+  "away": "Fictief 2G",
+  "homeTeamId": "32",
+  "awayTeamId": "22",
+  "date": "2027-02-06",
+  "startsAt": null,
+  "sourceScore": "",
+  "sourceStatus": "",
+  "url": "https://example.invalid/match/5002",
+  "games": []
+ }
+]

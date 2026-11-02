@@ -2,7 +2,7 @@
 
 Platform administrators open **Application accounts**, filter by name/login, email, role or status, select rows with the checkboxes, then use the toolbar above the table. The directory is one paginated table with a single header, a selection column and readable minimum column widths. Filters wrap to two columns and then one column on smaller screens. Account details use a separate compact summary, with an audit table below it.
 
-`Accounts_Overview`, `Account_Detail`, `DS_Admin_Accounts`, `SUB_Admin_AccountRow`, `DS_Account_Audit` and `SUB_Account_Audit` are in the **Accounts** model folder. Detail pages are reached from an account row because they require a selected account; they do not have a context-free navigation entry.
+`Account_Overview`, `Account_View`, `DS_Admin_Accounts`, `SUB_Admin_AccountRow`, `DS_Account_Audit` and `SUB_Account_Audit` are in the **Accounts** model folder. Detail pages are reached from an account row because they require a selected account; they do not have a context-free navigation entry.
 
 The non-persistent summary exposes identity, roles, status, last sign-in and a read-only account reference. It never exposes a password, hash or invitation/session token. Its account reference scopes the history by stable identity even if a login name changes. Both pages, the projection entity, history entity and history data source are restricted to the platform Administrator. The data source also checks the current Administrator role on the server. Clients cannot create, edit or delete audit entries.
 
@@ -20,9 +20,9 @@ The grid uses multi selection (checkboxes, select-all). Each toolbar button pass
 
 | Action | Selection | Behavior |
 | --- | --- | --- |
-| View account | exactly one | Opens `Account_Detail`. |
-| View as user | exactly one | Ineligible accounts show their availability reason. Eligible ones open the `Account_ViewAsUser` confirmation popup, whose **Continue** link goes to the existing guarded controller (reason, CSRF, local-runtime checks unchanged). |
-| Edit | one or more | Opens the `AccountBulkEdit_Edit` modal. One account: prefilled. Several: empty, and only filled fields are overwritten. Fields: username and email (single account only, because both are unique), full name, status (Active/Disabled/Blocked) and roles (chosen roles replace all roles). |
+| View account | exactly one | Opens `Account_View`. |
+| View as user | exactly one | Ineligible accounts show their availability reason. Eligible ones open the `AccountAsUser_View` confirmation popup, whose **Continue** link goes to the existing guarded controller (reason, CSRF, local-runtime checks unchanged). |
+| Edit | one or more | Opens the `AccountBulk_Edit` modal. One account: prefilled. Several: empty, and only filled fields are overwritten. Fields: username and email (single account only, because both are unique), full name, status (Active/Disabled/Blocked) and roles (chosen roles replace all roles). |
 | Enable | selection contains disabled accounts | Sets Active = true on the disabled accounts in the selection; active ones are skipped. |
 | Deactivate | selection contains active accounts | After confirmation sets Active = false on the active accounts in the selection. Undo with Enable. |
 | Export | one or more | Downloads a UTF-8 CSV of the selected rows (username, name, email, roles, status, last sign-in). Values are quoted and formula-leading characters are prefixed. `AccountExport` files are readable only by their creator and deleted after download. |
@@ -47,7 +47,7 @@ The rollback-only sample verifier checks ownership and timestamps, in addition t
 
 ## Verification — 20 October 2026 (multi-select toolbar)
 
-- **Model consistency:** global diagnostics return **No errors found** after **Update security** was run in the domain model editor and `AccountBulkEdit_Edit` was moved into Accounts.
+- **Model consistency:** global diagnostics return **No errors found** after **Update security** was run in the domain model editor and `AccountBulk_Edit` was moved into Accounts.
 - **Compilation:** not run.
 - **Runtime scenarios:** not executed (selection passing, edit/deactivate/export, guards, audit writes, grid refresh).
 

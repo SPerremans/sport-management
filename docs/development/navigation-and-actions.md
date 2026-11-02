@@ -4,8 +4,8 @@
 
 Every full-screen page (`Atlas_Default` layout) without its own Close or Cancel action starts with a `nexioBackBar`: a **← Back** link (`ClosePageClientAction`, one page) that returns to the previous page. Popups already have their close button and footer actions. Three pages are deliberately excluded:
 
-- `Member_Dashboard`: the start page; there is nothing to go back to.
-- `PasswordReset`: reached from an email link, outside the app's page history.
+- `Member_Overview`: the start page; there is nothing to go back to.
+- `PasswordReset`: excluded because nothing opens it and it has no URL; see [page naming](../page-naming.md).
 - `Invoice_Detail_Styled`: excluded from the project.
 
 New full-screen pages should include the same back bar, unless they already have a Close or Cancel action. Styling is in `_nexio.scss` (`.nexio-back-bar`).

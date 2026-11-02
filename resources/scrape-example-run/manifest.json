@@ -1,0 +1,77 @@
+{
+ "schemaVersion": 1,
+ "status": "complete",
+ "stopReason": null,
+ "source": "fictional example, not scraped",
+ "startedAt": "2026-11-01T12:00:00+01:00",
+ "finishedAt": "2026-11-01T12:00:00+01:00",
+ "filters": {
+  "sport": "badminton",
+  "country": "BEL",
+  "season": "2026-2027",
+  "league": "Fictieve",
+  "division": null,
+  "since": null,
+  "until": null,
+  "include": [
+   "clubs",
+   "players",
+   "rankings",
+   "matches"
+  ],
+  "rankingCategories": null,
+  "rankingTop": 200
+ },
+ "requests": {
+  "sent": 0,
+  "reusedFromCache": 0,
+  "delaySeconds": 0,
+  "cap": 0
+ },
+ "counts": {
+  "leagues": 1,
+  "clubs": 2,
+  "teams": 4,
+  "players": 17,
+  "rankings": 5,
+  "matches": 2,
+  "games": 8,
+  "youthRankingEntriesLeftOut": 0
+ },
+ "files": {
+  "leagues.json": {
+   "sha256": "1e75ce5f0bd43a2b8d6d319f0c51038476c037a142af39892c255cd70357c7b0",
+   "bytes": 264,
+   "records": 1
+  },
+  "clubs.json": {
+   "sha256": "ad4f5c4c8f5c099f6c0a60f47490d041c96d68d6f071924486ba43495f244445",
+   "bytes": 556,
+   "records": 2
+  },
+  "teams.json": {
+   "sha256": "44784356d1f36225f27d7919aedf3e2e503f8f88670ac4b466fef9ac2bd96fbe",
+   "bytes": 674,
+   "records": 4
+  },
+  "players.json": {
+   "sha256": "02996b1c2ca9a1cb61aafaaf5680fee30eeddda60de49fbd57480d4d5e06e54a",
+   "bytes": 5035,
+   "records": 17
+  },
+  "rankings.json": {
+   "sha256": "fcfc2bcf6ffdac2dc1781df8281afca660af530445eaa6e0d09561469bc03fd7",
+   "bytes": 1267,
+   "records": 5
+  },
+  "matches.json": {
+   "sha256": "cff22833299164fc42c2a93beb8c1a1e182928cd36ec5f39c58fd8d0ab6b685c",
+   "bytes": 5231,
+   "records": 2
+  }
+ },
+ "warnings": [
+  "Fictional example: every name, club and result here is invented."
+ ],
+ "note": "Hand-made fictional example for the import page; not scraper output."
+}

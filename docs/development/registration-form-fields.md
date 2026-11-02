@@ -6,7 +6,7 @@ A member registration asks the club's own questions and the fields the federatio
 
 | Owner | Where | What |
 | --- | --- | --- |
-| Federation | Federation workspace › **Registration requirements** (`ACT_FederationField_Create`, `FormField_Edit`) | Fields every registration with an affiliated club must contain, such as date of birth and gender. A field is a `FormField` linked by `FormField_Federation`. New fields start as required and inactive. |
+| Federation | Federation workspace › **Registration requirements** (`ACT_FederationField_Create`, `FormField_NewEdit`) | Fields every registration with an affiliated club must contain, such as date of birth and gender. A field is a `FormField` linked by `FormField_Federation`. New fields start as required and inactive. |
 | Club | Club workspace › **Registration form** | The club's own questions (`FormField_Club`). Below them, **Federation requirements** lists the active fields of every active federation the club is affiliated with (approved, not ended), and shows which club question covers each field. |
 
 ## Mapping club questions to federation fields
@@ -25,7 +25,7 @@ One club question can cover the same field of several federations. For example, 
 - every active club question;
 - every active field of the membership type's federation (membership type › federation type › federation) that no active club question of this club covers.
 
-Existing registrations keep their snapshot. `Registration_Edit` shows the snapshot as a stacked form: one question per row, with the label above the input, `*` for required questions and the help text below. The input depends on the answer type:
+Existing registrations keep their snapshot. `Registration_NewEdit` shows the snapshot as a stacked form: one question per row, with the label above the input, `*` for required questions and the help text below. The input depends on the answer type:
 
 - **Text and Number:** text box.
 - **Date:** date picker (`AnswerDate`).
@@ -34,12 +34,12 @@ Existing registrations keep their snapshot. `Registration_Edit` shows the snapsh
 
 `Answer` remains the canonical text value. `ACT_Registration_Submit` copies `AnswerDate` (as `yyyy-MM-dd`) and `AnswerChoice` (as `yes`/`no`) into `Answer` before its existing validation, so staff review and validation are unchanged. A draft answer typed as text before this change, for a Date or YesNo question, must be entered again in the new control.
 
-The answer list on `Registration_Edit` is an editable list view. A non-editable list view renders every input inside it read-only.
+The answer list on `Registration_NewEdit` is an editable list view. A non-editable list view renders every input inside it read-only.
 
 ## Restarting and finding registrations
 
-- **Start a new registration** shows on `Registration_Edit` only for the member's own withdrawn or rejected registration. `ACT_Registration_Restart` closes the page and runs `ACT_Registration_Begin` for the same membership type. Begin rechecks availability, the current season and price, duplicates, and the current club and federation questions. The ended registration stays as history, and its answers are not copied.
-- **My registrations** (`Registrations`) uses the standard Data grid 2 filters: a search box (member, season, next action) in the filter bar, and multi-select dropdown filters on the Registration, Approval, Payment and Club columns.
+- **Start a new registration** shows on `Registration_NewEdit` only for the member's own withdrawn or rejected registration. `ACT_Registration_Restart` closes the page and runs `ACT_Registration_Begin` for the same membership type. Begin rechecks availability, the current season and price, duplicates, and the current club and federation questions. The ended registration stays as history, and its answers are not copied.
+- **My registrations** (`Registration_Overview`) uses the standard Data grid 2 filters: a search box (member, season, next action) in the filter bar, and multi-select dropdown filters on the Registration, Approval, Payment and Club columns.
 
 ## Access
 

@@ -8,13 +8,13 @@ Federations decide three things that clubs and members then follow:
 
 ## Gender options
 
-Federation workspace › **Genders and teams** › **Add gender option** (`ACT_FederationGender_Create`, `FederationGender_Edit`). Each option has a name, a code, a position and an active switch. Options belong to one federation (`FederationGender_Federation`), so a federation can add values such as X, or retire one, without affecting other federations.
+Federation workspace › **Genders and teams** › **Add gender option** (`ACT_FederationGender_Create`, `FederationGender_NewEdit`). Each option has a name, a code, a position and an active switch. Options belong to one federation (`FederationGender_Federation`), so a federation can add values such as X, or retire one, without affecting other federations.
 
 A registration question with answer type **Gender (federation options)** shows a combo box with the active options of the membership type's federation (`DS_FormResponse_GenderOptions`). `OCH_FormResponse_Gender` copies the chosen name into `Answer`, so review and validation keep working on text.
 
 ## Team categories and team names
 
-On the same tab, **Add team category** (`ACT_TeamCategory_Create`, `TeamCategory_Edit`) defines:
+On the same tab, **Add team category** (`ACT_TeamCategory_Create`, `TeamCategory_NewEdit`) defines:
 
 - a code, such as H, D or G;
 - a name, such as Men, Women or Mixed;
@@ -22,7 +22,7 @@ On the same tab, **Add team category** (`ACT_TeamCategory_Create`, `TeamCategory
 
 Each team gets a category and a number, and its name is the number followed by the code. For badminton that gives 1H and 2H for men's teams, 1D and 2D for women's teams, and 1G and 2G for mixed teams.
 
-**Create a club team** (`CompetitionTeam_Edit`) offers the active categories of the club's current federations (approved, not ended), through `DS_CompetitionForm_CategoryOptions`. `ACT_CompetitionTeam_Save` then:
+**Create a club team** (`Team_New`) offers the active categories of the club's current federations (approved, not ended), through `DS_CompetitionForm_CategoryOptions`. `ACT_CompetitionTeam_Save` then:
 
 1. Rechecks that the category belongs to one of those federations.
 2. Gives the team the club's next number in that category for the season. It takes the highest existing number, including inactive teams, so numbers are not reused.
@@ -37,11 +37,11 @@ Not covered yet:
 
 ## One registration per player
 
-`FederationType.OnePerPlayer` (switch on `FederationType_Edit`) limits a player to one open or active registration of that federation type, such as one competition registration. `SUB_Registration_FederationTypeLimit` enforces it in `ACT_Registration_Begin` and `ACT_Registration_Submit`.
+`FederationType.OnePerPlayer` (switch on `FederationType_NewEdit`) limits a player to one open or active registration of that federation type, such as one competition registration. `SUB_Registration_FederationTypeLimit` enforces it in `ACT_Registration_Begin` and `ACT_Registration_Submit`.
 
 ## My club competitions
 
-Navigation › **My club competitions** (`MyClub_Competitions`) is for members. "My club" means every club where the user holds an active registration (`Membership.Status = Active`).
+Navigation › **My club competitions** (`MyClubLeague_Overview`) is for members. "My club" means every club where the user holds an active registration (`Membership.Status = Active`).
 
 The page shows one section per active federation of those clubs, ordered by sport, so different sports stay apart. Each section has:
 
@@ -53,7 +53,7 @@ The page is read-only and has no buttons the user cannot use. All data sources a
 - Published fixtures are readable by every signed-in user.
 - Members read their clubs' active teams through the member rule on `CompetitionTeam`.
 
-Player lists are not shown here. They stay governed by the club's player list rules and the viewer's membership type (`Club_Players`).
+Player lists are not shown here. They stay governed by the club's player list rules and the viewer's membership type (`ClubPlayer_Overview`).
 
 ## Development examples
 

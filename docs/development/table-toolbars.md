@@ -46,14 +46,14 @@ Leagues and fixtures have no active state, so they only use `SelectedCount`. Aft
 
 | Table | Single row | One or more rows | Server scope check |
 | --- | --- | --- | --- |
-| Clubs › Platform_Clubs (Administrator) | Assign administrator | Edit, Unpublish, Publish, Export | `SUB_Clubs_CanManage` → `SUB_Club_AdministratorOrOwner` |
+| Clubs › ClubSetup_Overview (Administrator) | Assign administrator | Edit, Unpublish, Publish, Export | `SUB_Clubs_CanManage` → `SUB_Club_AdministratorOrOwner` |
 | Federations › Federation_Overview (Administrator, FederationAdmin) | Open | Edit, Deactivate, Enable, Export | `SUB_Federations_CanManage` → `SUB_Federation_HasAccess` (Administrator, or FederationAdmin assigned to that federation) |
 | Competition_Overview › Leagues | Open | Edit, Export | `SUB_CompetitionLeagues_CanManage` → `SUB_Competition_FederationPermission(Federation, 'Manage')` |
 | Competition_Overview › My clubs › Teams | Open | Edit, Deactivate, Enable, Export | `SUB_CompetitionTeams_CanManage` → `SUB_Competition_ClubPermission(Club, 'Update')` |
 | Competition_Overview › My clubs › Venues | Open | Edit, Deactivate, Enable, Export | `SUB_CompetitionVenues_CanManage` → `SUB_Competition_ClubPermission(Club, 'Update')` |
 | Competition_Overview › Published fixtures | Propose date change, Placement | Export | the existing fixture-change and placement microflows |
 
-All Competition_Overview toolbar buttons are available to every role that can open the page. Club staff with a Competition permission and federation competition delegates can manage teams, venues or leagues without the ClubAdmin or FederationAdmin role, so the scope check alone decides. Platform_Clubs and Federation_Overview actions are limited to their page roles. A mixed selection is refused as a whole: nothing changes, and the message asks the user to deselect rows they cannot manage.
+All Competition_Overview toolbar buttons are available to every role that can open the page. Club staff with a Competition permission and federation competition delegates can manage teams, venues or leagues without the ClubAdmin or FederationAdmin role, so the scope check alone decides. ClubSetup_Overview and Federation_Overview actions are limited to their page roles. A mixed selection is refused as a whole: nothing changes, and the message asks the user to deselect rows they cannot manage.
 
 **Edit**
 - **One row:** opens the existing editor: Club_Edit, `ACT_Federation_Settings`, `ACT_CompetitionLeague_Edit`, or the team or venue workspace.
@@ -61,11 +61,11 @@ All Competition_Overview toolbar buttons are available to every role that can op
 
 | Modal | Fields |
 | --- | --- |
-| `ClubBulkEdit_Edit` | published, registrations require approval, registrations require payment |
-| `FederationBulkEdit_Edit` | active |
-| `CompetitionLeagueBulkEdit_Edit` | registration opens/closes, changes open/close |
-| `CompetitionTeamBulkEdit_Edit` | active, season |
-| `CompetitionVenueBulkEdit_Edit` | active |
+| `ClubBulk_Edit` | published, registrations require approval, registrations require payment |
+| `FederationBulk_Edit` | active |
+| `LeagueBulk_Edit` | registration opens/closes, changes open/close |
+| `TeamBulk_Edit` | active, season |
+| `VenueBulk_Edit` | active |
 
 Yes/no fields use the `BulkFlagChoice` enumeration; empty means keep the current value. League edits fail as a whole if any resulting window would close before it opens, and each changed league gets a `CompetitionAudit` entry ("Bulk edit"). Team, venue and league changes take the competition mutation claim (`SUB_Competition_Lock`) first, as the existing saves do.
 

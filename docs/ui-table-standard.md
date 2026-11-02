@@ -27,7 +27,7 @@ Only one row of buttons may sit above a tab bar or a table.
 - **Tab or table actions** go in a `nexio-tab-toolbar` container at the top of the tab, or directly above the table they act on: at most one Primary button (the main next step, e.g. "Publish schedule", "Create league", "Add player"), the rest Default.
 - Never place loose action buttons next to each other: always wrap them in one of these two containers (compact 36px buttons, 8px gap).
 
-Applied to: CompetitionLeague_Workspace (Allocate poules moved to the Poules tab; Generate / Plan draft / Publish moved to the Fixtures tab), Federation_Workspace, CompetitionFederation_Workspace, CompetitionTeam_Workspace and MatchFormats.
+Applied to: League_Workspace (Allocate poules moved to the Poules tab; Generate / Plan draft / Publish moved to the Fixtures tab), Federation_Workspace, FederationLeague_Overview, Team_Workspace and MatchFormats.
 
 ## Reuse
 
@@ -42,10 +42,10 @@ Mendix has no parameterised table component that can be reused for different ent
 Conforming: all application tables in MyFirstModule. Reworked in this change:
 
 - Federation workspace membership types (fees moved to the type page, Yes/No column, one Edit), federation club links (Approve/Decline moved to the link page), club player list access rules (Yes/No columns, Delete moved into the rule popup).
-- Club_Workspace → Registrations: one **Open** button to the new `Registration/Registration_Review` page (request summary, the answers table, Approve / Put on hold / Cancel registration). The nested answers column is gone. The page takes the request and the club; it loads `DS_Club_Capabilities` for the club so the buttons keep the workspace's visibility rules (`CanUpdateRegistrations`, `CanDeleteRegistrations`, pending status for Put on hold). The microflows still do their own server checks.
+- Club_Workspace → Registrations: one **Open** button to the new `Registration/Registration_View` page (request summary, the answers table, Approve / Put on hold / Cancel registration). The nested answers column is gone. The page takes the request and the club; it loads `DS_Club_Capabilities` for the club so the buttons keep the workspace's visibility rules (`CanUpdateRegistrations`, `CanDeleteRegistrations`, pending status for Put on hold). The microflows still do their own server checks.
 - Club_Workspace → Members: one **Edit** button. Create invoice and Cancel membership moved to `Membership_Edit` under "Membership actions", with the same `CanCreateInvoices` / `CanDeleteMembers` visibility through `DS_Club_Capabilities`. `Membership_Edit` now also takes the club.
-- CompetitionLeague_Workspace → Fixtures: one **Open** button to the new `Competition/Fixtures/CompetitionFixture_Detail` page with Propose date change, Federation placement / override and Register match. These had no visibility rules in the row; the microflows check permissions.
-- CompetitionLeague_Workspace → Date proposals: Home approved / Away approved show Yes/No, and one **Open** button leads to the new `Competition/FixtureChanges/FixtureChange_Review` page. Approve for home club, Approve for away club and Reject proposal show only while the proposal is pending (and that side hasn't approved yet), which matches the microflows' own checks.
+- League_Workspace → Fixtures: one **Open** button to the `Fixture_Edit` page (the former `CompetitionFixture_Detail`, now deleted) with Propose date change, Federation placement / override and Register match. These had no visibility rules in the row; the microflows check permissions.
+- League_Workspace → Date proposals: Home approved / Away approved show Yes/No, and one **Open** button leads to the new `Competition/FixtureChanges/FixtureChange_View` page. Approve for home club, Approve for away club and Reject proposal show only while the proposal is pending (and that side hasn't approved yet), which matches the microflows' own checks.
 
 Nested data views can't have a footer in Mendix, so on these pages the action buttons sit in a plain row inside the data view, spaced by the global sibling margin.
 

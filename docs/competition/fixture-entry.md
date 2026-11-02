@@ -2,7 +2,7 @@
 
 The stages around this table (game leader, setup, finalise, confirm, comments) are in [fixture-workflow.md](fixture-workflow.md). The per-row Save and Details buttons described below were replaced by saving when the away score box of a set loses focus.
 
-The **Register match** page (`MatchFixture`) has a **Games** table that replaces the old games grid. It has one row per game the federation configured, and one column per set the format allows.
+The **Register match** page (`Fixture_Edit`) has a **Games** table that replaces the old games grid. It has one row per game the federation configured, and one column per set the format allows.
 
 ## Federation configuration
 

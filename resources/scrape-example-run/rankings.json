@@ -1,0 +1,72 @@
+[
+ {
+  "rank": 1,
+  "previousRank": 1,
+  "sourceId": "1",
+  "name": "An Fictief",
+  "club": "Fictief Pluimen BC",
+  "level": 7,
+  "points": 900,
+  "rankingId": 0,
+  "publicationId": "1",
+  "week": "44-2026",
+  "categoryId": "1",
+  "category": "HE/SM"
+ },
+ {
+  "rank": 2,
+  "previousRank": 2,
+  "sourceId": "2",
+  "name": "An Proef",
+  "club": "Proefdorp Shuttles",
+  "level": 8,
+  "points": 700,
+  "rankingId": 0,
+  "publicationId": "1",
+  "week": "44-2026",
+  "categoryId": "1",
+  "category": "HE/SM"
+ },
+ {
+  "rank": 1,
+  "previousRank": 1,
+  "sourceId": "1",
+  "name": "Els Fictief",
+  "club": "Fictief Pluimen BC",
+  "level": 7,
+  "points": 880,
+  "rankingId": 0,
+  "publicationId": "1",
+  "week": "44-2026",
+  "categoryId": "2",
+  "category": "DE/SD"
+ },
+ {
+  "rank": 1,
+  "previousRank": 1,
+  "sourceId": "1",
+  "name": "An Fictief",
+  "club": "Fictief Pluimen BC",
+  "level": 6,
+  "points": 950,
+  "rankingId": 0,
+  "publicationId": "1",
+  "week": "44-2026",
+  "categoryId": "3",
+  "category": "HD/DM"
+ },
+ {
+  "rank": 1,
+  "previousRank": 1,
+  "sourceId": "1",
+  "name": "Cas Fictief",
+  "club": "Fictief Pluimen BC",
+  "level": 7,
+  "points": 600,
+  "rankingId": 0,
+  "publicationId": "1",
+  "week": "44-2026",
+  "categoryId": "5",
+  "category": "GD/DM"
+ }
+]

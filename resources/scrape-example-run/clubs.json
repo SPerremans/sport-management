@@ -1,0 +1,26 @@
+[
+ {
+  "id": "1",
+  "name": "Fictief Pluimen BC",
+  "number": 90001,
+  "teamCount": 2,
+  "playerCount": 8,
+  "menCount": 4,
+  "womenCount": 4,
+  "place": "Voorbeeldstad",
+  "leagueId": "00000000-0000-4000-8000-00000000F001",
+  "key": "00000000-0000-4000-8000-00000000F001:1"
+ },
+ {
+  "id": "2",
+  "name": "Proefdorp Shuttles",
+  "number": 90002,
+  "teamCount": 2,
+  "playerCount": 8,
+  "menCount": 4,
+  "womenCount": 4,
+  "place": "Voorbeeldstad",
+  "leagueId": "00000000-0000-4000-8000-00000000F001",
+  "key": "00000000-0000-4000-8000-00000000F001:2"
+ }
+]

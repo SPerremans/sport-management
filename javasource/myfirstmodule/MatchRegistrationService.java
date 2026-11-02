@@ -212,6 +212,9 @@ public final class MatchRegistrationService {
             case "SaveSetup": return saveSetup(f);
             case "AddComment": return addComment(f);
             case "Refresh": return refreshKeeping(f);
+            case "LinkFixture": return linkFixture(required(f,"FixtureKey","CompetitionFixture"),f);
+            case "OpenFixtureLink": return fixture(resolveFixtureLink(text(f,"Name"),text(f,"Sport")));
+            case "Finalise": return submit(f);
             case "Confirm": return confirmResult(f);
             case "SelectGames": return selectGames(f);
             case "RuleAwardHome": return gameRuling(f,"AwardHome");
@@ -573,12 +576,13 @@ public final class MatchRegistrationService {
 
     private IMendixObject fixture(IMendixObject fixture) throws Exception {
 
-        require(canRead(fixture),"You cannot access this fixture."); IMendixObject r=registration(fixture,true), rule=ref(r,"MatchRegistration_Format"); refreshAcceptance(r);
+        require(canRead(fixture),"You cannot access this fixture."); IMendixObject r=registration(fixture,canInitialize(fixture));if(r==null)return fixtureReadOnly(fixture);IMendixObject rule=ref(r,"MatchRegistration_Format"); refreshAcceptance(r);
 
         IMendixObject f=form(text(fixture,"HomeName")+" — "+text(fixture,"AwayName")); put(f,"FixtureKey",id(fixture));put(f,"RecordKey",id(r));put(f,"Revision",integer(r,"Revision"));put(f,"LeaderName",text(r,"LeaderName"));
         CompetitionStandings.Policy pointsPolicy=leaguePolicy(ref(fixture,"CompetitionFixture_League"));put(f,"UseGameBreakdown",pointsPolicy.games());put(f,"Home",integer(r,"HomeScore"));put(f,"Away",integer(r,"AwayScore"));
 
-        put(f,"CanHome",club(fixture,"Home","Update"));put(f,"CanAway",club(fixture,"Away","Update"));put(f,"CanLead",controls(r));put(f,"CanOverride",override(r)||TableLifecycleService.admin(caller));put(f,"CanManage",manage(r));
+        put(f,"CanHome",club(fixture,"Home","Update"));put(f,"CanAway",club(fixture,"Away","Update"));fixtureFacts(f,fixture);put(f,"IsSubmitted",date(r,"SubmittedAt")!=null);
+        put(f,"CanLead",controls(r));put(f,"CanOverride",override(r)||TableLifecycleService.admin(caller));put(f,"CanManage",manage(r));
         put(f,"StartTime",text(r,"StartTime"));put(f,"Equipment",text(r,"Equipment"));put(f,"Stage",stage(r));
         put(f,"CanSetup",controls(r)&&date(r,"SubmittedAt")==null&&!bool(r,"FederationFinal"));put(f,"CanFinalise",controls(r)&&date(r,"StartedAt")!=null&&date(r,"SubmittedAt")==null&&openGames(r)==0);put(f,"CanRule",(override(r)||TableLifecycleService.admin(caller))&&date(r,"StartedAt")!=null&&!"SourceSnapshot".equals(text(r,"State")));
         put(f,"CanConfirm",date(r,"SubmittedAt")!=null&&!bool(r,"FederationFinal")&&!bool(r,"Disputed")&&((userKey.equals(text(r,"HomeCaptainKey"))&&!bool(r,"HomeAccepted"))||(userKey.equals(text(r,"AwayCaptainKey"))&&!bool(r,"AwayAccepted"))));
@@ -604,6 +608,50 @@ public final class MatchRegistrationService {
 
         copy(r,f,"HomeAdjustment","AwayAdjustment","WinnerOverride");return f;
 
+    }
+
+    /** Lower case ASCII words joined by dashes, for readable links. */
+    static String slug(String value){
+        String plain=java.text.Normalizer.normalize(value==null?"":value,java.text.Normalizer.Form.NFD).replaceAll("\\p{M}+","").toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+","-").replaceAll("^-+|-+$","");
+        return plain.length()>90?plain.substring(0,90).replaceAll("-+$",""):plain;
+    }
+
+    private String leagueSlug(IMendixObject league){return slug(text(league,"Name"));}
+
+    private String baseMatchSlug(IMendixObject fixture){
+        Date at=date(fixture,"StartsAt");String day=at==null?"unscheduled":at.toInstant().atZone(java.time.ZoneId.of("Europe/Brussels")).toLocalDate().toString();
+        return slug(text(fixture,"HomeName"))+"-vs-"+slug(text(fixture,"AwayName"))+"-"+day;
+    }
+
+    /** Fixtures that share home, away and day get -2, -3 ... in a stable order. */
+    private String matchSlug(IMendixObject fixture) throws Exception {
+        String base=baseMatchSlug(fixture);IMendixObject league=ref(fixture,"CompetitionFixture_League");int position=0;
+        List<IMendixObject> all=query("CompetitionFixture","["+M+"CompetitionFixture_League="+id(league)+"]");all.sort(Comparator.comparingLong(o->o.getId().toLong()));
+        for(IMendixObject other:all){if(!baseMatchSlug(other).equals(base))continue;position++;if(same(other,fixture))break;}
+        return position<=1?base:base+"-"+position;
+    }
+
+    /** Readable link parts for a fixture, returned in Name (division) and Sport (match) of the transport form. */
+    private IMendixObject linkFixture(IMendixObject fixture,IMendixObject f) throws Exception {
+        require(canRead(fixture),"You cannot access this fixture.");put(f,"Name",leagueSlug(ref(fixture,"CompetitionFixture_League")));put(f,"Sport",matchSlug(fixture));return f;
+    }
+
+    private IMendixObject resolveFixtureLink(String leagueLink,String matchLink) throws Exception {
+        for(IMendixObject league:query("CompetitionLeague",""))if(leagueSlug(league).equals(leagueLink))
+            for(IMendixObject candidate:query("CompetitionFixture","["+M+"CompetitionFixture_League="+id(league)+"]"))if(matchSlug(candidate).equals(matchLink))return candidate;
+        require(false,"This fixture link is not valid.");return null;
+    }
+
+    /** Only the people who may start a registration create one by opening the fixture; everyone else sees what exists. */
+    private boolean canInitialize(IMendixObject fixture) throws Exception {return TableLifecycleService.admin(caller)||fedPermission(ref(ref(fixture,"CompetitionFixture_League"),"CompetitionLeague_Federation"),"Manage")||club(fixture,"Home","Update")||club(fixture,"Away","Update");}
+
+    /** Teams, start, venue and status shown at the top of the fixture page. */
+    private void fixtureFacts(IMendixObject f,IMendixObject fixture) throws Exception {put(f,"HomeTeam",text(fixture,"HomeName"));put(f,"AwayTeam",text(fixture,"AwayName"));put(f,"Venue",text(fixture,"VenueName"));put(f,"FixtureStatus",text(fixture,"Status"));put(f,"StartsAt",date(fixture,"StartsAt"));put(f,"Name",leagueSlug(ref(fixture,"CompetitionFixture_League")));put(f,"Sport",matchSlug(fixture));link(f,"MatchForm_CompetitionFixture",fixture);}
+
+    /** A fixture nobody registered yet, opened by someone who cannot start a registration. */
+    private IMendixObject fixtureReadOnly(IMendixObject fixture) throws Exception {
+        IMendixObject f=form(text(fixture,"HomeName")+" — "+text(fixture,"AwayName"));put(f,"FixtureKey",id(fixture));fixtureFacts(f,fixture);
+        put(f,"Stage","No match registration yet");put(f,"Info","No games or players have been registered for this fixture yet.");return f;
     }
 
     /** Read-only game and player breakdown for the fixture detail page; never creates a registration. */
@@ -647,7 +695,7 @@ public final class MatchRegistrationService {
 
     /** Fixture games table: one row per configured game, player pickers per side before the start and set-score boxes once started. */
     private void gameTable(IMendixObject f,IMendixObject r,IMendixObject rule) throws Exception {
-        boolean players=rule==null||bool(rule,"RecordPlayers"),started=date(r,"StartedAt")!=null,scoring=canEnter(r)&&date(r,"SubmittedAt")==null;int widest=0;
+        boolean players=rule==null||bool(rule,"RecordPlayers"),started=date(r,"StartedAt")!=null,scoring=(canEnter(r)&&date(r,"SubmittedAt")==null)||((override(r)||TableLifecycleService.admin(caller))&&date(r,"StartedAt")!=null&&!"SourceSnapshot".equals(text(r,"State")));int widest=0;
         Map<String,Map<String,IMendixObject>> rosters=new HashMap<>();List<IMendixObject> gameRows=new ArrayList<>();
         for(IMendixObject c:contests(r)){
             int perSide=players?integer(c,"PlayersPerSide"):0,columns=setColumns(c);widest=Math.max(widest,columns);
@@ -707,7 +755,7 @@ public final class MatchRegistrationService {
     /** Game leader saves one game's set scores from the games table; partial scores stay pending until a side has won. */
     private IMendixObject saveGame(IMendixObject f) throws Exception {
         IMendixObject c=required(f,"SelectedKey","MatchContest"),r=ref(c,"MatchContest_Registration");
-        require(canEnter(r)&&date(r,"SubmittedAt")==null,"The game leader enters scores after the start and before submission. Corrections go through the game page.");
+        boolean afterSubmit=date(r,"SubmittedAt")!=null;require(afterSubmit?(override(r)||TableLifecycleService.admin(caller)):canEnter(r),"The game leader enters scores after the start and before finalising; afterwards only the federation can correct them.");if(afterSubmit)requireReason(f);
         IMendixObject row=gameRow(f,c);int columns=setColumns(c);MatchRules.Format rules=contestRules(c);
         List<MatchRules.SetScore> scores=new ArrayList<>();List<String> raw=new ArrayList<>();
         for(int i=1;i<=5;i++){
@@ -720,8 +768,8 @@ public final class MatchRegistrationService {
         String current=text(c,"Outcome"),outcome=current.equals("Pending")||current.equals("Played")?"Pending":current;
         MatchRules.ContestResult result=MatchRules.contest(rules,scores,outcome,text(c,"Reason"));
         if(outcome.equals("Pending")&&!result.recordedWinner.isEmpty()){outcome="Played";result=MatchRules.contest(rules,scores,outcome,text(c,"Reason"));}
-        String before=scoreText(c)+"; "+snapshot(c,"Outcome","RecordedWinner","OfficialWinner");replaceSets(c,scores);put(c,"Outcome",outcome);applyResult(c,result);touch(c);touch(r);
-        audit(r,null,null,"Game score saved","Games table entry",before,String.join(", ",raw)+"; "+snapshot(c,"Outcome","RecordedWinner","OfficialWinner"),"");
+        String before=scoreText(c)+"; "+snapshot(c,"Outcome","RecordedWinner","OfficialWinner");replaceSets(c,scores);put(c,"Outcome",outcome);applyResult(c,result);touch(c);touch(r);if(afterSubmit){save(c);recalculate(r,true);put(r,"Reason",text(f,"Reason").trim());}
+        audit(r,null,null,afterSubmit?"Federation score correction":"Game score saved",afterSubmit?text(f,"Reason").trim():"Games table entry",before,String.join(", ",raw)+"; "+snapshot(c,"Outcome","RecordedWinner","OfficialWinner"),"");
         return fixture(ref(r,"MatchRegistration_Fixture"));
     }
 

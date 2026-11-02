@@ -15,6 +15,14 @@ public final class MatchRegistrationBridge {
             TableLifecycleService.dispatch(context, command);
             return;
         }
+        if (command != null && command.startsWith("Ranking|")) {
+            RankingService.dispatch(context, command.substring(8));
+            return;
+        }
+        if (command != null && command.startsWith("ScrapedRun|")) {
+            ScrapedRunImport.dispatch(context, command.substring(11));
+            return;
+        }
         if ("Initialize".equals(command)) {
             if (!context.isSudo()) throw new SecurityException("Private startup action.");
             AdminUserView.initialize();
@@ -22,7 +30,7 @@ public final class MatchRegistrationBridge {
                 if (!expiryScheduled) {
                     Core.scheduleAtFixedRate("MyFirstModule.SE_Match_AcceptanceExpiry",new Date(System.currentTimeMillis()+60000),1,java.util.concurrent.TimeUnit.MINUTES,"MatchAcceptanceExpiry","Accept undisputed submitted results after federation-configured deadlines");
                     Core.scheduleAtFixedRate("MyFirstModule.SE_TableRetention_Purge",new Date(System.currentTimeMillis()+300000),24,java.util.concurrent.TimeUnit.HOURS,"TableRetentionPurge","Delete eligible archived records only when their global and organisation policies explicitly enable it");
-                    expiryScheduled=true;
+                    expiryScheduled=true;RankingService.startScheduler();
                 }
             }
             return;
@@ -71,6 +79,8 @@ public final class MatchRegistrationBridge {
         // These are non-persistent view rows; detach them without deleting any business data.
         for(IMendixObject row:oldRows) row.setValue(context,"MyFirstModule.MatchRow_Form",null);
         for(IMetaPrimitive attribute:next.getMetaObject().getMetaPrimitives()) target.setValue(context,attribute.getName(),next.getValue(context,attribute.getName()));
+        // The fixture the page belongs to travels as a reference, not as a primitive.
+        target.setValue(context,"MyFirstModule.MatchForm_CompetitionFixture",next.getValue(context,"MyFirstModule.MatchForm_CompetitionFixture"));
         for(IMendixObject row:newRows) row.setValue(context,"MyFirstModule.MatchRow_Form",target.getId());
     }
 }

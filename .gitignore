@@ -1,5 +1,6 @@
 /*.launch
 /deployment/
+/tools/scraper/scrapes/
 /packages/
 /releases/
 /.mendix-cache/

@@ -1,6 +1,6 @@
 # Fixture workflow: from game leader to confirmed result
 
-The **Register match** page (`MatchFixture`) follows five stages. The line under the title always shows the current one.
+The **Register match** page (`Fixture_Edit`) follows five stages. The line under the title always shows the current one.
 
 | Stage | Who | What happens on the page |
 | --- | --- | --- |
@@ -46,9 +46,9 @@ Comments from either team and from the officials are listed under the games tabl
 
 Actions that need a reason (player change after the start, dispute, award, exclude) open the reusable **Comment dialog** instead of showing an error. The comment is mandatory, is stored with the action and appears in the audit trail.
 
-- Page `CommentDialog_Edit` and non-persistent entity `CommentDialog` (title, prompt, comment, action key) are generic. Another screen opens it by creating a `CommentDialog`, then adds its own continuation inside `ACT_CommentDialog_Confirm` and `ACT_CommentDialog_Cancel`; today they run the match command named by the action key.
+- Page `Comment_Edit` and non-persistent entity `CommentDialog` (title, prompt, comment, action key) are generic. Another screen opens it by creating a `CommentDialog`, then adds its own continuation inside `ACT_CommentDialog_Confirm` and `ACT_CommentDialog_Cancel`; today they run the match command named by the action key.
 - Match specific: `ACT_Match_ReasonOpen` opens the dialog; `ACT_Match_PickAskHome` / `ACT_Match_PickAskAway` open it for player changes after the start and otherwise pick directly.
-- Housekeeping for Studio Pro: `CommentDialog_Edit` and the `ACT_CommentDialog_*` microflows currently sit in Competition/Results and can be dragged to a shared folder. `ACT_Match_ReasonConfirm` and `ACT_Match_ReasonCancel` are obsolete leftovers and can be deleted.
+- Housekeeping for Studio Pro: `Comment_Edit` and the `ACT_CommentDialog_*` microflows currently sit in Competition/Results and can be dragged to a shared folder. `ACT_Match_ReasonConfirm` and `ACT_Match_ReasonCancel` are obsolete leftovers and can be deleted.
 
 ## Audit trail
 
@@ -70,3 +70,14 @@ The registration microflows (`ACT_Match_Command`, `ACT_Match_GameSave`, `ACT_Mat
   - Sample data generator under the Admin session: the upgrade added the fixture-workflow examples once (10 started fixtures, 4 comments); a second run changed nothing.
 - **Not exercised:** the away captain pressing **Confirm result** (the dispute used the same fixture), club administrator and federation administrator sessions (no enabled test accounts exist: the generated organisation accounts are disabled and View as user cannot open disabled accounts), a read-only viewer without any role on the fixture (the available User account has no club, so no navigation path leads to the fixture), and **Remove sample data** (not run, to keep the demo data).
 - **Defects found and fixed while testing:** text limits, stale response data, read-only games list, member names, 0–0 set boxes, comments missing in the response, finalise gate, error messages, selection lost after a refused action, and the audit grid not refreshing.
+
+## One fixture page (29 October 2026)
+
+The former **Fixture** detail page and the separate **Register match** page are one page: `Fixture_Edit`, titled **Fixture**. Every table that has a fixture **View** action (league workspace, poule standings, competition overview) now opens it through `ACT_TablePage_CompetitionFixture_Detail` → `ACT_Match_FixtureEntry`. `CompetitionFixture_Detail` was deleted on 31 October 2026.
+
+- **Action bar:** all buttons sit in one `nexio-page-actions` row under the title: Propose date change, Federation placement / override, I am the home/away captain, Appoint game leader, Save setup, Start match, Finalise result, Confirm result, Dispute result. Each shows only when its stage and the user's rights allow it, and the one next step is primary. The leader name and setup fields stay in a panel below; the comment box and Add comment button stay in the comments section; the federation game toolbar stays on the games table.
+- **Facts line:** start (shown in the viewer's local time), venue and status of the fixture, from `MatchForm.StartsAt`, `Venue`, `FixtureStatus`; the buttons for date change and placement read the fixture through the association `MatchForm_CompetitionFixture`.
+- **Viewers:** anyone who may read the fixture can open the page. Only the people who may start a registration (federation management, team managers, platform administrators) create one by opening it; for everybody else a fixture without a registration shows "No match registration yet" and an empty games area (`fixtureReadOnly`).
+- **Federation edits in this view:** after the result is finalised, federation override and platform administrators still see editable players and score boxes in the games table. Saving a score or changing a player then opens the comment dialog; the correction recalculates the result as a federation final result and is audited as *Federation score correction*. Score saves go through `ACT_Match_GameSaveAsk`, which asks for the comment only on a finalised fixture.
+- **Imported public sheets** stay read only.
+- **Shareable link:** the page URL is `fixture` with two optional parameters, `LeagueSlug` and `MatchSlug`, for example `/p/fixture?LeagueSlug=<division>&MatchSlug=<home>-<away>-<date>`. Both are readable text built from the division and team names (no ids or guids). The page data source `DS_Match_FixtureForm` resolves them (`OpenFixtureLink`) and applies the normal read access. Studio Pro does not accept primitive path segments for required parameters, so the values travel in the query string. Opening a fixture from any table (`LinkFixture`) sets the slugs on the form; `fixtureFacts` also sets them, so the legacy `ACT_Match_*` flows still reopen the same page.

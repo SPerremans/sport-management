@@ -55,6 +55,14 @@ public final class DevelopmentSamples {
         EDGES.put("MyFirstModule.MatchSquadPlayer", new String[]{"MyFirstModule.MatchSquadPlayer_Registration", "MyFirstModule.MatchSquadPlayer_Player"});
         EDGES.put("MyFirstModule.MatchComment", new String[]{"MyFirstModule.MatchComment_Registration"});
         EDGES.put("MyFirstModule.MatchSubstitution", new String[]{"MyFirstModule.MatchSubstitution_Registration", "MyFirstModule.MatchSubstitution_Off", "MyFirstModule.MatchSubstitution_On"});
+        EDGES.put("MyFirstModule.RankingScheme", new String[]{"MyFirstModule.RankingScheme_Federation"});
+        EDGES.put("MyFirstModule.RankingDiscipline", new String[]{"MyFirstModule.RankingDiscipline_Scheme"});
+        EDGES.put("MyFirstModule.RankingLevel", new String[]{"MyFirstModule.RankingLevel_Scheme"});
+        EDGES.put("MyFirstModule.RankingMoment", new String[]{"MyFirstModule.RankingMoment_Scheme"});
+        EDGES.put("MyFirstModule.PlayerRanking", new String[]{"MyFirstModule.PlayerRanking_Scheme", "MyFirstModule.PlayerRanking_Discipline"});
+        EDGES.put("MyFirstModule.RankingChange", new String[]{"MyFirstModule.RankingChange_Scheme", "MyFirstModule.RankingChange_PlayerRanking", "MyFirstModule.RankingChange_Moment"});
+        EDGES.put("MyFirstModule.RankingDataset", new String[]{"MyFirstModule.RankingDataset_Scheme"});
+        EDGES.put("MyFirstModule.RankingScenario", new String[]{"MyFirstModule.RankingScenario_Scheme"});
         EDGES.put("MyFirstModule.PaymentVerification", new String[]{"MyFirstModule.PaymentVerification_Invoice"});
         EDGES.put("MyFirstModule.InvoicePdf", new String[]{"MyFirstModule.InvoicePdf_Invoice"});
         EDGES.put("MyFirstModule.Invoice", new String[]{"MyFirstModule.Invoice_RegistrationRequest","MyFirstModule.Invoice_Membership","MyFirstModule.Invoice_Club","MyFirstModule.Invoice_RenewalOffer","MyFirstModule.Invoice_RecipientClub","MyFirstModule.Invoice_Federation","MyFirstModule.Invoice_BillingPlan","MyFirstModule.Invoice_Person"});
@@ -108,7 +116,7 @@ public final class DevelopmentSamples {
     }
     private DevelopmentSamples() {}
 
-    private static void authorize(IContext caller) {
+    static void authorize(IContext caller) {
         if (!Core.getConfiguration().isInDevelopment() || !unittesting.ConfigurationManager.isLocalDevelopment())
             throw new IllegalStateException("Sample data is available only in the local Studio Pro development runtime.");
         if (caller.getSession() == null || !caller.getSession().getUserRolesNames().contains("Administrator"))
@@ -122,6 +130,36 @@ public final class DevelopmentSamples {
     public static synchronized void remove(IContext caller) throws Exception {
         authorize(caller);
         transact(DevelopmentSamples::removeIn);
+    }
+    /** The manifest summary holds the feature markers; empty without a batch. Only for the local import page, after authorize. */
+    static String batchSummary() throws Exception {
+        IMendixObject manifest=batch(Core.createSystemContext());return manifest==null?"":Objects.toString(manifest.getValue(Core.createSystemContext(),"Summary"),"");
+    }
+    /** Appends one verified scraper run to the batch, atomically and once per run. */
+    static synchronized String importScrapedRun(IContext caller, ScrapedRunImport.Run run) throws Exception {
+        authorize(caller);
+        String[] outcome=new String[1];
+        transact(ctx->{require(batch(ctx)!=null,"Generate sample data first: the import adds to the existing sample batch.");outcome[0]=appendScrapedRun(ctx,run);});
+        return outcome[0];
+    }
+    private static String appendScrapedRun(IContext ctx, ScrapedRunImport.Run run) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");
+        if(summary.contains(run.marker))return "This run is already imported. Nothing was added.";
+        require(!ScrapedRunImport.otherVersionImported(summary,run),ScrapedRunImport.OTHER_VERSION);
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds")),publicOrganizations=decode(manifest.getValue(ctx,"PublicCompetitionOrganizationIds"));Seed s=new Seed(ctx);
+        String added=ScrapedRunImport.populate(ctx,s,run);
+        owned.addAll(ids(s.owned));
+        // Like the frozen capture, public organization copies never acquire test login accounts on a later generation.
+        for(IMendixObject record:s.owned)if(record.getType().equals("MyFirstModule.Club")||record.getType().equals("MyFirstModule.Federation"))publicOrganizations.add(record.getId().toLong());
+        manifest.setValue(ctx,"OwnedIds",encode(owned));manifest.setValue(ctx,"PublicCompetitionOrganizationIds",encode(publicOrganizations));
+        manifest.setValue(ctx,"Summary",summary+" Scraper run "+run.folder+": "+added+". "+run.marker);
+        Core.commitWithoutEvents(ctx,manifest);
+        ScrapedRunImport.verify(ctx,owned,s.marker);
+        return "Imported "+run.folder+": "+added+".";
+    }
+    /** The bundled fictional run gives the import page and its records an example in fresh and existing batches. Runs once. */
+    private static void extendScrapedRunSamples(IContext ctx) throws Exception {
+        appendScrapedRun(ctx,ScrapedRunImport.example());
     }
     /** Private developer verification. Every database change is rolled back, including cleanup. */
     static synchronized String verifyMatchLifecycle(IContext caller) throws Exception {
@@ -253,6 +291,7 @@ public final class DevelopmentSamples {
         for (String type : RETENTION_TYPES) result.addAll(query(ctx, "//" + type));
         for (String type : TYPES) result.addAll(query(ctx, "//" + type));
         for (String type : MATCH_TYPES) result.addAll(query(ctx, "//" + type));
+        for (String type : RankingService.TYPES) result.addAll(query(ctx, "//" + type));
         return result;
     }
     private static Set<Long> ids(Collection<IMendixObject> objects) {
@@ -478,7 +517,7 @@ public final class DevelopmentSamples {
     /** Append a frozen public season once; real and user-edited demo records are never matched or rewritten. */
     private static void extendPublicCompetitionSamples(IContext ctx) throws Exception {
         IMendixObject manifest=batch(ctx);String summary=manifest.getValue(ctx,"Summary");
-        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);extendFixtureWorkflowSamples(ctx);extendPublicMatchDetailSamples(ctx);extendPublicStarterSamples(ctx);return;}
+        if(summary!=null&&summary.contains(PublicCompetitionSamples.FEATURE)){extendLeagueResultSamples(ctx);extendTeamSheetSamples(ctx);extendFixtureEntrySamples(ctx);extendFixtureWorkflowSamples(ctx);extendPublicMatchDetailSamples(ctx);extendPublicStarterSamples(ctx);extendRankingSamples(ctx);extendScrapedRunSamples(ctx);return;}
         Seed s=new Seed(ctx);PublicCompetitionSamples.populate(ctx,s);
         Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));owned.addAll(ids(s.owned));
         Set<Long> publicOrganizations=new HashSet<>();
@@ -494,6 +533,89 @@ public final class DevelopmentSamples {
         extendFixtureWorkflowSamples(ctx);
         extendPublicMatchDetailSamples(ctx);
         extendPublicStarterSamples(ctx);
+        extendRankingSamples(ctx);
+        extendScrapedRunSamples(ctx);
+    }
+
+    /**
+     * Individual rankings: one scheme for the public Badminton Vlaanderen federation only (football and the other federations have none),
+     * seeded from the levels shown on the imported match sheets, a monthly review schedule that is NOT automatic and a simulation of the next review
+     * that is NOT applied. Runs once per batch; an existing scheme or edited rankings are never replaced. Batches of the earlier versions
+     * are upgraded: schedule fields and discipline mapping are filled where empty, planned moments are replaced by the simulation.
+     */
+    private static void extendRankingSamples(IContext ctx) throws Exception {
+        IMendixObject manifest=batch(ctx);String summary=Objects.toString(manifest.getValue(ctx,"Summary"),"");if(summary.contains(RankingService.FEATURE))return;
+        if(summary.contains(RankingService.FEATURE_V3)){extendRankingDesignSamples(ctx,manifest,summary);return;}
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));List<IMendixObject> created=new ArrayList<>();int players=0,upgraded=0,simulated=0;String text;
+        RankingService service=RankingService.forSamples(ctx,created);
+        int testChanges=0;
+        if(summary.contains(RankingService.FEATURE_V1)||summary.contains(RankingService.FEATURE_V2)){
+            for(IMendixObject scheme:query(ctx,"//MyFirstModule.RankingScheme")){
+                if(!owned.contains(scheme.getId().toLong()))continue;
+                upgraded+=service.upgradeScheme(scheme);
+                if(query(ctx,"//MyFirstModule.RankingMoment[MyFirstModule.RankingMoment_Scheme='"+scheme.getId().toLong()+"'][Status='Simulated'][Basis!='Test values']").isEmpty()){
+                    IMendixObject review=service.review(scheme,service.nextReviewOf(scheme),false,"Simulation",false);simulated+=(int)(((Number)review.getValue(ctx,"Promoted")).longValue()+((Number)review.getValue(ctx,"Demoted")).longValue());
+                }
+                testChanges=Math.max(testChanges,service.createSampleTestValues(scheme));
+            }
+            text=" Individual rankings v3: "+upgraded+" value(s) upgraded on existing sample schemes, sample test values (promotion and demotion averages 20 % lower, not approved) with a simulation of "+Math.max(0,testChanges)+" changes (not applied); edited values and existing test values are kept. ";
+        } else {
+            IMendixObject federation=null;
+            for(IMendixObject f:query(ctx,"//MyFirstModule.Federation[Name='[DEMO] Badminton Vlaanderen vzw']"))if(owned.contains(f.getId().toLong()))federation=f;
+            if(federation!=null&&query(ctx,"//MyFirstModule.RankingScheme[MyFirstModule.RankingScheme_Federation='"+federation.getId().toLong()+"']").isEmpty()){
+                IMendixObject scheme=service.createScheme(federation,"[DEMO] Badminton Vlaanderen individual ranking");
+                players=service.seedPlayers(scheme);
+                IMendixObject review=service.review(scheme,service.nextReviewOf(scheme),false,"Simulation",false);simulated=(int)(((Number)review.getValue(ctx,"Promoted")).longValue()+((Number)review.getValue(ctx,"Demoted")).longValue());
+                testChanges=Math.max(0,service.createSampleTestValues(scheme));
+            }
+            text=" Individual rankings: "+(federation==null?"no badminton federation to rank":"1 scheme with 12 levels (published points, sample thresholds), 5 configurable disciplines, a monthly review schedule that is not automatic, "+players+" player rankings seeded from match sheets, "+simulated+" simulated (not applied) changes, sample test values (not approved) with "+testChanges+" simulated changes")+"; football has no ranking scheme. ";
+        }
+        owned.addAll(ids(created));manifest.setValue(ctx,"OwnedIds",encode(owned));
+        summary=summary+text+RankingService.FEATURE_V3;
+        manifest.setValue(ctx,"Summary",summary);
+        Core.commitWithoutEvents(ctx,manifest);
+        extendRankingDesignSamples(ctx,manifest,summary);
+    }
+
+    /**
+     * Ranking design examples: frozen public Belgian game data on the badminton scheme with scenarios to compare, and a tennis federation whose ranking is a pyramid with named levels.
+     * Adds each data set once; existing data sets, scenarios and edited designs are kept. No player of the badminton scheme changes level.
+     */
+    private static void extendRankingDesignSamples(IContext ctx,IMendixObject manifest,String summary) throws Exception {
+        Set<Long> owned=decode(manifest.getValue(ctx,"OwnedIds"));List<IMendixObject> created=new ArrayList<>();
+        RankingService service=RankingService.forSamples(ctx,created);RankingWorkbench lab=new RankingWorkbench(service,ctx,"Development sample");
+        com.mendix.thirdparty.org.json.JSONObject resource=new com.mendix.thirdparty.org.json.JSONObject(java.nio.file.Files.readString(Core.getConfiguration().getResourcesPath().toPath().resolve("ranking-history-public.json")));
+        Map<String,com.mendix.thirdparty.org.json.JSONObject> sets=new HashMap<>();
+        for(int i=0;i<resource.getJSONArray("datasets").length();i++){com.mendix.thirdparty.org.json.JSONObject d=resource.getJSONArray("datasets").getJSONObject(i);sets.put(d.getString("key"),d);}
+        String text=" Ranking design:";
+        IMendixObject badminton=null;
+        for(IMendixObject scheme:query(ctx,"//MyFirstModule.RankingScheme"))if(owned.contains(scheme.getId().toLong())&&"Badminton".equalsIgnoreCase(Objects.toString(scheme.getValue(ctx,"Sport"),"")))badminton=scheme;
+        if(badminton!=null&&query(ctx,"//MyFirstModule.RankingDataset[MyFirstModule.RankingDataset_Scheme='"+badminton.getId().toLong()+"']").isEmpty()){
+            com.mendix.thirdparty.org.json.JSONObject d=sets.get("badminton-be");
+            IMendixObject data=lab.createDataset(badminton,d.getString("title"),"Badminton","Public sheets captured "+resource.getString("capturedOn")+" from toernooi.nl, adult league only.",RankingWorkbench.readGames(d));
+            String[] twelve={"1","2","3","4","5","6","7","8","9","10","11","12"};
+            IMendixObject current=lab.sampleScenario(badminton,data,"Average points, as published","BadmintonAverage",null,true);
+            lab.sampleScenario(badminton,data,"Running rating, FIDE style","Elo",twelve,false);
+            lab.sampleScenario(badminton,data,"Best 10 results in a pyramid","WorldBest",twelve,false);
+            lab.useAsWorking(badminton,current);
+            text+=" badminton scheme got "+data.getValue(ctx,"GameCount")+" public games and 3 scenarios;";
+        }
+        IMendixObject tennis=null;
+        for(IMendixObject f:query(ctx,"//MyFirstModule.Federation[Name='[DEMO] Belgian club tennis']"))if(owned.contains(f.getId().toLong()))tennis=f;
+        if(tennis==null){
+            tennis=service.make("Federation","Name","[DEMO] Belgian club tennis","Sport","Tennis","IsActive",true,"Currency","EUR","CensusMonth",1L,"CensusDay",1L,"BillingMethod","ACTIVE_AT_CENSUS","Description","Local development federation for the ranking examples. Games are public results of Belgian club tournaments; it is not a real federation.");
+            com.mendix.thirdparty.org.json.JSONObject d=sets.get("tennis-be");
+            IMendixObject scheme=service.createScheme(tennis,"[DEMO] Belgian club tennis ranking","TennisPyramid",null);
+            IMendixObject data=lab.createDataset(scheme,d.getString("title"),"Tennis","Public results captured "+resource.getString("capturedOn")+" from toernooi.nl, adult events only.",RankingWorkbench.readGames(d));
+            IMendixObject pyramid=lab.sampleScenario(scheme,data,"Best 6 results in a pyramid","TennisPyramid",null,true);
+            lab.sampleScenario(scheme,data,"Running rating, German table tennis style","TableTennis",null,false);
+            lab.useAsWorking(scheme,pyramid);
+            int seeded=lab.seedFromResult(scheme,lab.working(scheme));
+            text+=" tennis federation with named levels, "+data.getValue(ctx,"GameCount")+" public games, 2 scenarios and "+seeded+" player rankings from the simulation;";
+        }
+        owned.addAll(ids(created));manifest.setValue(ctx,"OwnedIds",encode(owned));
+        manifest.setValue(ctx,"Summary",summary+text+" existing records kept. "+RankingService.FEATURE);
+        Core.commitWithoutEvents(ctx,manifest);
     }
 
     /** Everyone named on an imported badminton sheet played and is a starter; display-only roster players join the ownership manifest. Runs once. */

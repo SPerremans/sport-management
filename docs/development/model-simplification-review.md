@@ -72,7 +72,7 @@ No complete unused-element proof was possible from the connector's exposed read 
 | Area | Observation | Limit |
 | --- | --- | --- |
 | Model consistency | Initial fresh Mendixx check: 703 errors (check 23). Later fresh check: 924 errors (check 32). | Not passing. Only the first 100 problems in each fresh result were inspected; later pagination of check 23 was rejected as stale. |
-| Representative model errors | Out-of-scope `tableState_*`/`clubSelection` variables in button visibility; later results also show arguments not matching `ACT_TableContext_*` parameters. | Examples include CompetitionTeam_Workspace, MyClub_Competitions, Platform_Clubs and MatchFixture. The complete error set was not classified. |
+| Representative model errors | Out-of-scope `tableState_*`/`clubSelection` variables in button visibility; later results also show arguments not matching `ACT_TableContext_*` parameters. | Examples include Team_Workspace, MyClubLeague_Overview, ClubSetup_Overview and MatchFixture. The complete error set was not classified. |
 | Compilation | Not run for this review. | Existing model errors prevent claiming that the current source builds. Historical build records do not verify this snapshot. |
 | Runtime status | Mendixx reported running=true, launching=false, URL http://localhost:8080/. | A running runtime does not prove it contains or supports the currently edited model. |
 | Runtime scenarios | Not executed. | No claim that existing behavior or any proposed refactoring passed interaction/regression tests. |

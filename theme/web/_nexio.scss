@@ -213,7 +213,38 @@ section p {
 }
 /* Back link at the top of every full-screen page: closes the page and returns to the previous one. */
 .nexio-back-bar { margin: 0 0 12px; }
-.nexio-back-bar .nexio-back-button { min-height: 0; padding: 4px 0; font-weight: 600; }
+.nexio-back-bar { margin: 0 0 20px; }
+.nexio-back-bar .nexio-back-button,
+.nexio-back-bar .nexio-back-button.btn-default {
+  min-height: 40px;
+  min-width: 104px;
+  padding: 8px 24px;
+  font-weight: 600;
+  background: var(--brand-default);
+  color: var(--nexio-navy);
+  border: 1px solid #6B8299;
+}
+/* Link-style back buttons carry an arrow or an icon in their caption: show the same plain "Back" as the button version. */
+.nexio-back-bar a.nexio-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-size: 0;
+  line-height: 1;
+  text-decoration: none;
+  border-radius: 12px;
+}
+.nexio-back-bar a.nexio-back-button::after {
+  content: "Back";
+  font-size: 15px;
+  font-weight: 600;
+}
+.nexio-back-bar .nexio-back-button:hover,
+.nexio-back-bar .nexio-back-button:focus-visible {
+  background: var(--nexio-pale);
+  color: var(--nexio-navy);
+}
 .btn, .mx-button {
   min-height: 44px;
   border-radius: 12px;

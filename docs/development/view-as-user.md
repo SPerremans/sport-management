@@ -16,7 +16,7 @@ The controller sends `Referrer-Policy: same-origin`. The earlier `no-referrer` h
 
 Implementation:
 
-- The existing `MyFirstModule.Platform_Accounts` page remains in the **Accounts** model folder and links to the account picker.
+- The existing `MyFirstModule.Invitation_Overview` page remains in the **Accounts** model folder and links to the account picker.
 - `AdminUserView.java` registers the `/admin-user-view/` controller through the existing guarded application-startup bridge. It uses Mendix's public RequestHandler, initializeSession and addMendixCookies APIs.
 - `theme/web/admin-user-view.js` adds the banner to the normal application page using text-only DOM operations. The endpoint returns status only for the bound viewing session. No iframe or external browser service is involved.
 - `_nexio-user-view.scss` provides the compact picker and banner styles.

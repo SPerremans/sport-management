@@ -111,7 +111,7 @@ final class PublicCompetitionSamples {
         }
     }
 
-    private static IMendixObject format(IContext ctx,DevelopmentSamples.Seed s,IMendixObject fed,JSONObject source,String category) throws Exception {
+    static IMendixObject format(IContext ctx,DevelopmentSamples.Seed s,IMendixObject fed,JSONObject source,String category) throws Exception {
         boolean football = source.getString("sport").equals("Football"), national = source.getString("level").equals("National");
         IMendixObject format = s.make("MatchFormat"); MatchRegistrationService.defaults(ctx,format);
         format.setValue(ctx,"Name","[DEMO] " + (football ? "Football" : "Badminton " + category) + (national ? " national" : "") + " 2026-2027");
@@ -133,7 +133,7 @@ final class PublicCompetitionSamples {
         return format;
     }
 
-    private static void result(IContext ctx,DevelopmentSamples.Seed s,IMendixObject fixture,IMendixObject format,JSONObject f,String sport) throws Exception {
+    static void result(IContext ctx,DevelopmentSamples.Seed s,IMendixObject fixture,IMendixObject format,JSONObject f,String sport) throws Exception {
         IMendixObject reg = s.make("MatchRegistration","State","SourceSnapshot","Revision",1L,"Reason","Public source snapshot: " + f.getString("url"));
         applyMatchDetails(ctx,reg,f);
         applySourceTotals(ctx,reg,f);
@@ -219,7 +219,7 @@ final class PublicCompetitionSamples {
         return created;
     }
 
-    private static IMendixObject first(IContext ctx,String xpath,String key) throws Exception {
+    static IMendixObject first(IContext ctx,String xpath,String key) throws Exception {
         List<IMendixObject> rows=Core.createXPathQuery(xpath).setVariable("k",key).setAmount(1).execute(ctx);return rows.isEmpty()?null:rows.get(0);
     }
 
